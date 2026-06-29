@@ -47,12 +47,24 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
   bool get _canActivate =>
       _items.every((p) => _statuses[p]?.isGranted == true);
 
+  Future<PermissionStatus> _checkItem(_PermItem item) async {
+    if (item == _PermItem.bluetooth) {
+      final results = await [
+        Permission.bluetoothScan.status,
+        Permission.bluetoothConnect.status,
+      ].wait;
+      if (results.every((s) => s.isGranted)) return PermissionStatus.granted;
+      if (results.any((s) => s.isPermanentlyDenied)) return PermissionStatus.permanentlyDenied;
+      return PermissionStatus.denied;
+    }
+    return item.permission.status;
+  }
+
   Future<void> _checkAll() async {
     setState(() => _checking = true);
-    final results = await Future.wait(_items.map((p) => p.permission.status));
     final map = <_PermItem, PermissionStatus>{};
-    for (var i = 0; i < _items.length; i++) {
-      map[_items[i]] = results[i];
+    for (final item in _items) {
+      map[item] = await _checkItem(item);
     }
     if (mounted) setState(() { _statuses = map; _checking = false; });
   }
@@ -60,7 +72,19 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
   Future<void> _request(_PermItem item) async {
     PermissionStatus status;
 
-    if (item == _PermItem.locationAlways) {
+    if (item == _PermItem.bluetooth) {
+      final results = await [
+        Permission.bluetoothScan,
+        Permission.bluetoothConnect,
+      ].request();
+      if (results.values.every((s) => s.isGranted)) {
+        status = PermissionStatus.granted;
+      } else if (results.values.any((s) => s.isPermanentlyDenied)) {
+        status = PermissionStatus.permanentlyDenied;
+      } else {
+        status = PermissionStatus.denied;
+      }
+    } else if (item == _PermItem.locationAlways) {
       // Must request locationWhenInUse first, then locationAlways
       final whenInUse = await Permission.locationWhenInUse.status;
       if (!whenInUse.isGranted) {
@@ -182,7 +206,7 @@ enum _PermItem {
   notifications;
 
   Permission get permission => switch (this) {
-        bluetooth => Permission.bluetooth,
+        bluetooth => Permission.bluetoothConnect,
         locationAlways => Permission.locationAlways,
         activityRecognition => Permission.activityRecognition,
         notifications => Permission.notification,
