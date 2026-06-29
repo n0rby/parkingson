@@ -114,6 +114,10 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
     if (snapshot == null) return;
     if (await _ignoredRepo.isIgnored(snapshot)) return;
     await _ignoredRepo.saveLastParkingLocation(snapshot);
+    await Future.wait([
+      NotificationService().showParkingReminder(payload: snapshot.encode()),
+      NotificationService().playAlarm(),
+    ]);
     if (mounted) {
       setState(() {
         _reminderLocation = snapshot;
@@ -184,10 +188,11 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
                   longitude: 0,
                   capturedAtMillis: DateTime.now().millisecondsSinceEpoch,
                 );
-            // Show notification with sound, then open reminder screen
-            await NotificationService().showParkingReminder(
-              payload: snapshot.encode(),
-            );
+            // Show notification + play alarm sound in foreground
+            await Future.wait([
+              NotificationService().showParkingReminder(payload: snapshot.encode()),
+              NotificationService().playAlarm(),
+            ]);
             if (mounted) {
               setState(() {
                 _reminderLocation = snapshot;

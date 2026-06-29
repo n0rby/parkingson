@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 const _channelId = 'parking_reminder';
 const _channelName = 'Parkeringspåmindelser';
@@ -64,6 +65,10 @@ class NotificationService {
       const NotificationDetails(android: androidDetails, iOS: iosDetails),
       payload: payload,
     );
+  }
+
+  Future<void> playAlarm() async {
+    await FlutterRingtonePlayer().playAlarm(looping: false);
   }
 
   String? Function(NotificationResponse)? get onNotificationTap => null;
