@@ -22,7 +22,6 @@
     <!-- Foreground service (background monitoring) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <!-- Notifications (API 33+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -62,7 +61,7 @@
         <!-- flutter_background_service foreground service -->
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
-            android:foregroundServiceType="connectedDevice|location"
+            android:foregroundServiceType="connectedDevice"
             android:exported="true"
             tools:replace="android:exported" />
 
