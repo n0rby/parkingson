@@ -17,6 +17,22 @@ class NotificationService {
     await _plugin.initialize(
       const InitializationSettings(android: androidSettings, iOS: iosSettings),
     );
+
+    // Create all notification channels up front so the background service
+    // can post its foreground notification immediately on start.
+    final android = _plugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    await android?.createNotificationChannel(const AndroidNotificationChannel(
+      _channelId,
+      _channelName,
+      importance: Importance.high,
+    ));
+    await android?.createNotificationChannel(const AndroidNotificationChannel(
+      'parkingson_monitoring',
+      'Parkeringsovervågning',
+      description: 'Viser at appen overvåger din bil i baggrunden',
+      importance: Importance.low,
+    ));
   }
 
   Future<void> requestPermissions() async {
