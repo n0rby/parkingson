@@ -131,7 +131,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
     switch (_screen) {
       case _Screen.welcome:
         return WelcomeScreen(
-          onGetStarted: () => setState(() => _screen = _Screen.cars),
+          onGetStarted: () => setState(() => _screen = _Screen.permissions),
         );
 
       case _Screen.cars:
@@ -149,7 +149,11 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
             setState(() => _btOnlyMode = v);
             await _carRepo.saveBtOnlyMode(v);
           },
-          onNext: () => setState(() => _screen = _Screen.permissions),
+          onNext: () async {
+            await _carRepo.saveSetupCompleted(true);
+            _startMonitoring();
+            if (mounted) setState(() => _screen = _Screen.home);
+          },
           onOpenBluetoothSettings: () async {
             // TODO: open system BT settings via url_launcher (platform-specific URI)
           },
@@ -157,11 +161,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
 
       case _Screen.permissions:
         return PermissionsScreen(
-          onActivate: () async {
-            await _carRepo.saveSetupCompleted(true);
-            _startMonitoring();
-            if (mounted) setState(() => _screen = _Screen.home);
-          },
+          onActivate: () => setState(() => _screen = _Screen.cars),
         );
 
       case _Screen.home:
