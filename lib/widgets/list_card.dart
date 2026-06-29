@@ -13,7 +13,7 @@ class ListCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: hpCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: hpTeal.withOpacity(0.14)),
+        border: Border.all(color: hpTeal.withValues(alpha: 0.14)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(children: children),

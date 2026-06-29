@@ -62,8 +62,11 @@ class CarsScreen extends StatelessWidget {
                   value: selected,
                   onChanged: (checked) {
                     final updated = Set<String>.from(selectedAddresses);
-                    if (checked == true) updated.add(car.address);
-                    else updated.remove(car.address);
+                    if (checked == true) {
+                      updated.add(car.address);
+                    } else {
+                      updated.remove(car.address);
+                    }
                     onSelectionChange(updated);
                   },
                 ),

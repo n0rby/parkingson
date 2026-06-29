@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/car_device.dart';
 import '../models/monitoring_mode.dart';
 
 class CarRepository {
