@@ -14,6 +14,7 @@ import 'models/ignored_location.dart';
 import 'services/bluetooth_service.dart' as bt;
 import 'services/location_service.dart';
 import 'services/motion_service.dart';
+import 'services/notification_service.dart';
 import 'theme.dart';
 
 enum _Screen { welcome, cars, permissions, home, ignoredLocations, reminder }
@@ -183,10 +184,16 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
                   longitude: 0,
                   capturedAtMillis: DateTime.now().millisecondsSinceEpoch,
                 );
-            setState(() {
-              _reminderLocation = snapshot;
-              _screen = _Screen.reminder;
-            });
+            // Show notification with sound, then open reminder screen
+            await NotificationService().showParkingReminder(
+              payload: snapshot.encode(),
+            );
+            if (mounted) {
+              setState(() {
+                _reminderLocation = snapshot;
+                _screen = _Screen.reminder;
+              });
+            }
           },
           onManageCars: _goToCars,
           onManageIgnoredLocations: () =>
