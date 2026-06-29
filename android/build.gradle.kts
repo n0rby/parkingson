@@ -18,13 +18,6 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(":app")
 }
-allprojects {
-    plugins.withType<com.android.build.gradle.BasePlugin>().configureEach {
-        extensions.configure<com.android.build.gradle.BaseExtension> {
-            compileSdkVersion(36)
-        }
-    }
-}
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
