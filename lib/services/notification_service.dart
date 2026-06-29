@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 const _channelId = 'parking_reminder';
 const _channelName = 'Parkeringspåmindelser';
@@ -69,6 +70,12 @@ class NotificationService {
 
   Future<void> playAlarm() async {
     await FlutterRingtonePlayer().playAlarm(looping: false);
+    // Brief pause so alarm plays before speech starts
+    await Future.delayed(const Duration(milliseconds: 800));
+    final tts = FlutterTts();
+    await tts.setLanguage('da-DK');
+    await tts.setSpeechRate(0.5);
+    await tts.speak('Husk parkering');
   }
 
   String? Function(NotificationResponse)? get onNotificationTap => null;
