@@ -1,0 +1,1 @@
+enum MonitoringMode { bluetooth, motion }
