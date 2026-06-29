@@ -84,6 +84,11 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
     }
   }
 
+  Future<void> _goToCars() async {
+    final paired = await _btService.getPairedDevices();
+    if (mounted) setState(() { _pairedDevices = paired; _screen = _Screen.cars; });
+  }
+
   void _startMonitoring() {
     _btService.startMonitoring(
       _selectedAddresses,
@@ -161,7 +166,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
 
       case _Screen.permissions:
         return PermissionsScreen(
-          onActivate: () => setState(() => _screen = _Screen.cars),
+          onActivate: _goToCars,
         );
 
       case _Screen.home:
@@ -183,7 +188,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
               _screen = _Screen.reminder;
             });
           },
-          onManageCars: () => setState(() => _screen = _Screen.cars),
+          onManageCars: _goToCars,
           onManageIgnoredLocations: () =>
               setState(() => _screen = _Screen.ignoredLocations),
           onFindCar: () {
