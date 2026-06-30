@@ -29,6 +29,9 @@
     <!-- Keep CPU alive during background work -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- Restart service after phone reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <!-- Internet (AdMob + billing) -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -64,6 +67,16 @@
             android:foregroundServiceType="connectedDevice"
             android:exported="true"
             tools:replace="android:exported" />
+
+        <!-- Restart monitoring after phone reboot -->
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <!-- AdMob App ID — replace with real ID from AdMob console before release -->
         <meta-data

@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/location_snapshot.dart';
+import '../models/parking_timer.dart';
 import '../repositories/ignored_location_repository.dart';
 import 'notification_service.dart';
 
@@ -118,6 +121,11 @@ void _onStart(ServiceInstance service) async {
 
   startBtMonitoring();
 
+  // Parking timer check — every minute
+  Timer.periodic(const Duration(minutes: 1), (_) async {
+    await _checkParkingTimer();
+  });
+
   // UI can push updated selected addresses when user changes settings
   service.on(_evtUpdateAddresses).listen((data) {
     selectedAddresses = Set<String>.from(data?['addresses'] ?? []);
@@ -128,6 +136,71 @@ void _onStart(ServiceInstance service) async {
     btSub?.cancel();
     service.stopSelf();
   });
+}
+
+Future<void> _checkParkingTimer() async {
+  final prefs = await SharedPreferences.getInstance();
+  final encoded = prefs.getString('parking_timer');
+  if (encoded == null) return;
+
+  final timer = ParkingTimer.decode(encoded);
+  if (timer == null || timer.isExpired) {
+    prefs.remove('parking_timer');
+    return;
+  }
+
+  Position? position;
+  try {
+    position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.medium,
+        timeLimit: Duration(seconds: 8),
+      ),
+    );
+  } catch (_) {
+    return;
+  }
+
+  final walkingSeconds = await _osrmWalkingSeconds(
+    fromLat: position.latitude,
+    fromLon: position.longitude,
+    toLat: timer.carLatitude,
+    toLon: timer.carLongitude,
+  );
+  if (walkingSeconds == null) return;
+
+  final bufferSeconds = walkingSeconds + 5 * 60;
+  if (timer.remaining.inSeconds <= bufferSeconds) {
+    prefs.remove('parking_timer');
+    final walkMinutes = (walkingSeconds / 60).ceil();
+    await showTimerAlarmFromBackground(walkMinutes: walkMinutes);
+  }
+}
+
+Future<int?> _osrmWalkingSeconds({
+  required double fromLat,
+  required double fromLon,
+  required double toLat,
+  required double toLon,
+}) async {
+  try {
+    final uri = Uri.parse(
+      'https://router.project-osrm.org/route/v1/foot/$fromLon,$fromLat;$toLon,$toLat?overview=false',
+    );
+    final client = HttpClient();
+    client.connectionTimeout = const Duration(seconds: 8);
+    final request = await client.getUrl(uri);
+    final response = await request.close().timeout(const Duration(seconds: 8));
+    if (response.statusCode != 200) return null;
+    final body = await response.transform(utf8.decoder).join();
+    client.close();
+    final json = jsonDecode(body) as Map<String, dynamic>;
+    final routes = json['routes'] as List?;
+    if (routes == null || routes.isEmpty) return null;
+    return ((routes[0]['duration'] as num?)?.toDouble() ?? 0).ceil();
+  } catch (_) {
+    return null;
+  }
 }
 
 Future<void> _handleCarParked(ServiceInstance service) async {

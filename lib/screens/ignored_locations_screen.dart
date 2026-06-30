@@ -3,7 +3,6 @@ import '../models/ignored_location.dart';
 import '../models/location_snapshot.dart';
 import '../theme.dart';
 import '../widgets/list_card.dart';
-import '../widgets/screen_scaffold.dart';
 
 enum IgnoredLocationSortMode { addedAt, name, distance }
 
@@ -54,64 +53,154 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-      title: 'Ignorerede placeringer',
-      children: [
-        Text('Alarmer vises ikke inden for ${ignoredLocationRadiusMeters.toInt()} meter fra disse steder.',
-            style: const TextStyle(color: hpMuted)),
-        const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: () => widget.onAddCurrentLocation((msg) => setState(() => _statusMessage = msg)),
-            child: const Text('Tilføj nuværende placering'),
-          ),
-        ),
-        if (_statusMessage != null) ...[
-          const SizedBox(height: 8),
-          Text(_statusMessage!, style: const TextStyle(color: hpTeal)),
-        ],
-        const SizedBox(height: 12),
-        const Text('Sortér efter', style: TextStyle(fontWeight: FontWeight.bold, color: hpText)),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FilterChip(label: const Text('Tidspunkt'), selected: _sortMode == IgnoredLocationSortMode.addedAt, onSelected: (_) => setState(() => _sortMode = IgnoredLocationSortMode.addedAt)),
-            FilterChip(label: const Text('Navn'), selected: _sortMode == IgnoredLocationSortMode.name, onSelected: (_) => setState(() => _sortMode = IgnoredLocationSortMode.name)),
-            FilterChip(label: const Text('Afstand'), selected: _sortMode == IgnoredLocationSortMode.distance, onSelected: (_) => setState(() => _sortMode = IgnoredLocationSortMode.distance)),
+            // ── Fixed header ────────────────────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ignorerede placeringer',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(color: hpText, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Alarmer vises ikke inden for ${ignoredLocationRadiusMeters.toInt()} meter fra disse steder.',
+                    style: const TextStyle(color: hpMuted),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () => widget.onAddCurrentLocation(
+                          (msg) => setState(() => _statusMessage = msg)),
+                      child: const Text('Tilføj nuværende placering'),
+                    ),
+                  ),
+                  if (_statusMessage != null) ...[
+                    const SizedBox(height: 8),
+                    Text(_statusMessage!, style: const TextStyle(color: hpTeal)),
+                  ],
+                  const SizedBox(height: 12),
+                  const Text('Sortér efter',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: hpText)),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      FilterChip(
+                        label: const Text('Tidspunkt'),
+                        selected: _sortMode == IgnoredLocationSortMode.addedAt,
+                        onSelected: (_) => setState(
+                            () => _sortMode = IgnoredLocationSortMode.addedAt),
+                      ),
+                      FilterChip(
+                        label: const Text('Navn'),
+                        selected: _sortMode == IgnoredLocationSortMode.name,
+                        onSelected: (_) => setState(
+                            () => _sortMode = IgnoredLocationSortMode.name),
+                      ),
+                      FilterChip(
+                        label: const Text('Afstand'),
+                        selected: _sortMode == IgnoredLocationSortMode.distance,
+                        onSelected: (_) => setState(
+                            () => _sortMode = IgnoredLocationSortMode.distance),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+
+            // ── Scrollable list ─────────────────────────────────────────────
+            Expanded(
+              child: widget.ignoredLocations.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ListCard(children: const [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Ingen ignorerede placeringer',
+                                  style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text('Du kan tilføje en placering fra en påmindelse.',
+                                  style: TextStyle(color: hpMuted, fontSize: 13)),
+                            ],
+                          ),
+                        ),
+                      ]),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+                      itemCount: _sorted.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index < _sorted.length) {
+                          final loc = _sorted[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: ListCard(
+                              onTap: () => widget.onOpenMap(loc),
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(loc.name ?? 'Ignoreret placering',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: hpText)),
+                                      Text(loc.displayCoordinates,
+                                          style: const TextStyle(
+                                              color: hpMuted, fontSize: 12)),
+                                      Text('Tilføjet ${loc.displayCreatedAt}',
+                                          style: const TextStyle(
+                                              color: hpMuted, fontSize: 12)),
+                                      const Text('Tryk for at åbne i kort',
+                                          style: TextStyle(
+                                              color: hpTeal, fontSize: 12)),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline,
+                                      color: hpMuted),
+                                  onPressed: () => widget.onDelete(loc),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        // "Slet alle" at the bottom of the list
+                        return TextButton(
+                          onPressed: widget.onClearAll,
+                          child: const Text('Slet alle',
+                              style: TextStyle(color: Colors.red)),
+                        );
+                      },
+                    ),
+            ),
+
+            // ── Fixed footer ────────────────────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: TextButton(
+                onPressed: widget.onBack,
+                child: const Text('Tilbage til oversigt'),
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 12),
-        if (widget.ignoredLocations.isEmpty)
-          ListCard(children: const [
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Ingen ignorerede placeringer', style: TextStyle(fontWeight: FontWeight.bold)),
-              Text('Du kan tilføje en placering fra en påmindelse.', style: TextStyle(color: hpMuted, fontSize: 13)),
-            ])),
-          ])
-        else
-          ..._sorted.map((loc) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: ListCard(
-              onTap: () => widget.onOpenMap(loc),
-              children: [
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(loc.name ?? 'Ignoreret placering', style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),
-                  Text(loc.displayCoordinates, style: const TextStyle(color: hpMuted, fontSize: 12)),
-                  Text('Tilføjet ${loc.displayCreatedAt}', style: const TextStyle(color: hpMuted, fontSize: 12)),
-                  const Text('Tryk for at åbne i kort', style: TextStyle(color: hpTeal, fontSize: 12)),
-                ])),
-                IconButton(icon: const Icon(Icons.delete_outline, color: hpMuted), onPressed: () => widget.onDelete(loc)),
-              ],
-            ),
-          )),
-        if (widget.ignoredLocations.isNotEmpty) ...[
-          const SizedBox(height: 8),
-          TextButton(onPressed: widget.onClearAll, child: const Text('Slet alle', style: TextStyle(color: Colors.red))),
-        ],
-        TextButton(onPressed: widget.onBack, child: const Text('Tilbage til oversigt')),
-      ],
+      ),
     );
   }
 }

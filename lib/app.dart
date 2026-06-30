@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'repositories/car_repository.dart';
 import 'repositories/billing_repository.dart';
 import 'repositories/ignored_location_repository.dart';
@@ -165,7 +166,8 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
             if (mounted) setState(() => _screen = _Screen.home);
           },
           onOpenBluetoothSettings: () async {
-            // TODO: open system BT settings via url_launcher (platform-specific URI)
+            const channel = MethodChannel('dk.parkingson/alarm');
+            await channel.invokeMethod('openBluetoothSettings');
           },
         );
 
@@ -227,7 +229,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
               setStatus('Kunne ikke hente placering.');
               return;
             }
-            await _ignoredRepo.addIgnoredLocation(snapshot);
+            final name = await _locationService.reverseGeocode(
+                snapshot.latitude, snapshot.longitude);
+            await _ignoredRepo.addIgnoredLocation(snapshot, name: name);
             final updated = await _ignoredRepo.getIgnoredLocations();
             setState(() => _ignoredLocations = updated);
             setStatus('Placering tilføjet.');
@@ -248,7 +252,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
         return ReminderScreen(
           parkingLocation: _reminderLocation!,
           onAddIgnoredLocation: () async {
-            await _ignoredRepo.addIgnoredLocation(_reminderLocation!);
+            final name = await _locationService.reverseGeocode(
+                _reminderLocation!.latitude, _reminderLocation!.longitude);
+            await _ignoredRepo.addIgnoredLocation(_reminderLocation!, name: name);
             final updated = await _ignoredRepo.getIgnoredLocations();
             setState(() {
               _ignoredLocations = updated;

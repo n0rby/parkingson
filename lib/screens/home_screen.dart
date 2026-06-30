@@ -101,8 +101,8 @@ class HomeScreen extends StatelessWidget {
                 onTap: onFindCar,
               ),
               ActionRow(
-                title: 'Placeringer',
-                subtitle: 'Se eller slet gemte steder',
+                title: 'Ignorerede lokationer',
+                subtitle: 'Steder der ikke udløser alarm',
                 onTap: onManageIgnoredLocations,
               ),
             ],
