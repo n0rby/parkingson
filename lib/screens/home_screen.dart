@@ -108,7 +108,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-const _kBannerAdUnitId = 'ca-app-pub-7290233540756156/7007792865';
+const _kBannerAdUnitId = 'ca-app-pub-7290233540756156/5914841071';
 
 class _BannerAdWidget extends StatefulWidget {
   const _BannerAdWidget();
