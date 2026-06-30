@@ -59,6 +59,15 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
       if (results.any((s) => s.isPermanentlyDenied)) return PermissionStatus.permanentlyDenied;
       return PermissionStatus.denied;
     }
+    if (item == _PermItem.locationAlways) {
+      // "Mens appen bruges" er tilstrækkeligt fordi baggrundstjenesten kører som foreground service
+      final always = await Permission.locationAlways.status;
+      if (always.isGranted) return PermissionStatus.granted;
+      final whenInUse = await Permission.locationWhenInUse.status;
+      if (whenInUse.isGranted) return PermissionStatus.granted;
+      if (always.isPermanentlyDenied || whenInUse.isPermanentlyDenied) return PermissionStatus.permanentlyDenied;
+      return PermissionStatus.denied;
+    }
     return item.permission.status;
   }
 
@@ -87,12 +96,13 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
         status = PermissionStatus.denied;
       }
     } else if (item == _PermItem.locationAlways) {
-      // Must request locationWhenInUse first, then locationAlways
-      final whenInUse = await Permission.locationWhenInUse.status;
-      if (!whenInUse.isGranted) {
-        await Permission.locationWhenInUse.request();
+      // Forsøg "mens appen bruges" først — det er tilstrækkeligt med foreground service
+      final whenInUse = await Permission.locationWhenInUse.request();
+      if (whenInUse.isGranted) {
+        status = PermissionStatus.granted;
+      } else {
+        status = await Permission.locationAlways.request();
       }
-      status = await Permission.locationAlways.request();
     } else {
       status = await item.permission.request();
     }
@@ -218,14 +228,14 @@ enum _PermItem {
 
   String get title => switch (this) {
         bluetooth => 'Bluetooth',
-        locationAlways => 'Placering (altid)',
+        locationAlways => 'Placering',
         activityRecognition => 'Fysisk aktivitet',
         notifications => 'Notifikationer',
       };
 
   String get description => switch (this) {
         bluetooth => 'Registrér hvornår du forlader din bil',
-        locationAlways => 'Gem parkeringsstedet i baggrunden',
+        locationAlways => 'Gem parkeringsstedet og overvåg i baggrunden',
         activityRecognition => 'Detektér kørsel og gang',
         notifications => 'Send påmindelser om parkering',
       };
