@@ -31,10 +31,12 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
     super.dispose();
   }
 
-  // Re-check after user returns from system settings
+  // Re-check after user returns from system settings — delayed to let Android propagate the change
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _checkAll();
+    if (state == AppLifecycleState.resumed) {
+      Future.delayed(const Duration(milliseconds: 600), _checkAll);
+    }
   }
 
   List<_PermItem> get _items => [
@@ -97,6 +99,8 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
 
     if (status.isPermanentlyDenied) {
       await openAppSettings();
+      // Don't update status here — didChangeAppLifecycleState re-checks after returning
+      return;
     }
 
     if (mounted) setState(() => _statuses[item] = status);
