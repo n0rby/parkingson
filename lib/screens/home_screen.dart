@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../models/car_device.dart';
 import '../models/location_snapshot.dart';
 import '../theme.dart';
@@ -57,13 +58,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       if (!isPremium) ...[
                         const SizedBox(height: 16),
-                        // TODO: Replace with real AdMob banner
-                        Container(
-                          height: 60,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(color: hpCard, borderRadius: BorderRadius.circular(12)),
-                          child: const Text('REKLAME', style: TextStyle(color: hpSubtle, fontWeight: FontWeight.bold)),
-                        ),
+                        const _BannerAdWidget(),
                         const SizedBox(height: 10),
                         SizedBox(
                           width: double.infinity,
@@ -109,6 +104,53 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+const _kBannerAdUnitId = 'ca-app-pub-7290233540756156/7007792865';
+
+class _BannerAdWidget extends StatefulWidget {
+  const _BannerAdWidget();
+
+  @override
+  State<_BannerAdWidget> createState() => _BannerAdWidgetState();
+}
+
+class _BannerAdWidgetState extends State<_BannerAdWidget> {
+  BannerAd? _bannerAd;
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = BannerAd(
+      adUnitId: _kBannerAdUnitId,
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) => setState(() => _isLoaded = true),
+        onAdFailedToLoad: (ad, _) {
+          ad.dispose();
+          setState(() => _bannerAd = null);
+        },
+      ),
+    )..load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_bannerAd == null || !_isLoaded) return const SizedBox(height: 50);
+    return SizedBox(
+      width: _bannerAd!.size.width.toDouble(),
+      height: _bannerAd!.size.height.toDouble(),
+      child: AdWidget(ad: _bannerAd!),
     );
   }
 }
