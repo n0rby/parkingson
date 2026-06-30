@@ -36,7 +36,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:label="parkingson"
+        android:label="Parkingson"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
