@@ -79,6 +79,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
+              const _BatteryOptimizationCard(),
               const Divider(),
               ActionRow(
                 title: 'Test påmindelse',
@@ -107,6 +108,104 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Optional, non-blocking prompt to exempt the app from battery optimization.
+/// Only shown when the app is NOT already exempt; hides itself once granted.
+/// This is recommended (improves background reliability on Samsung etc.) but
+/// never required — the app installs and runs without it.
+class _BatteryOptimizationCard extends StatefulWidget {
+  const _BatteryOptimizationCard();
+
+  @override
+  State<_BatteryOptimizationCard> createState() => _BatteryOptimizationCardState();
+}
+
+class _BatteryOptimizationCardState extends State<_BatteryOptimizationCard>
+    with WidgetsBindingObserver {
+  static const _channel = MethodChannel('dk.parkingson/alarm');
+  bool _ignoring = true; // assume exempt until checked → card hidden by default
+  bool _dismissed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _check();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _check();
+  }
+
+  Future<void> _check() async {
+    try {
+      final v = await _channel.invokeMethod('isIgnoringBatteryOptimizations');
+      if (mounted) setState(() => _ignoring = v == true);
+    } catch (_) {}
+  }
+
+  Future<void> _request() async {
+    try {
+      await _channel.invokeMethod('requestIgnoreBatteryOptimizations');
+    } catch (_) {}
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_ignoring || _dismissed) return const SizedBox.shrink();
+    return Container(
+      margin: const EdgeInsets.only(top: 8, bottom: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: hpCard,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: hpOrange.withValues(alpha: 0.4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.battery_saver_outlined, color: hpOrange, size: 20),
+              const SizedBox(width: 8),
+              const Expanded(
+                child: Text('Anbefalet: undtag fra batterioptimering',
+                    style: TextStyle(fontWeight: FontWeight.bold, color: hpText)),
+              ),
+              GestureDetector(
+                onTap: () => setState(() => _dismissed = true),
+                child: const Icon(Icons.close, size: 18, color: hpSubtle),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Valgfrit. Uden dette kan Android (især Samsung) stoppe '
+            'bevægelsesovervågningen i baggrunden, så parkering uden Bluetooth '
+            'ikke altid opdages.',
+            style: TextStyle(fontSize: 12, color: hpMuted, height: 1.4),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: _request,
+              style: FilledButton.styleFrom(backgroundColor: hpOrange),
+              child: const Text('Tillad ubegrænset baggrund'),
+            ),
+          ),
+        ],
       ),
     );
   }

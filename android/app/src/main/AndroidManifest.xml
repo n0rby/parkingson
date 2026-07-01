@@ -30,6 +30,10 @@
     <!-- Keep CPU alive during background work -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- Optional: ask to be exempt from battery optimization (improves background
+         reliability of motion detection on aggressive OEMs like Samsung) -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
     <!-- Restart service after phone reboot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 

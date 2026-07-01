@@ -8,8 +8,10 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -40,6 +42,23 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
                     "getMotionStatus" -> result.success(readMotionStatus(this))
+                    "isIgnoringBatteryOptimizations" -> {
+                        val pm = getSystemService(PowerManager::class.java)
+                        result.success(pm.isIgnoringBatteryOptimizations(packageName))
+                    }
+                    "requestIgnoreBatteryOptimizations" -> {
+                        try {
+                            startActivity(
+                                Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                                    .setData(Uri.parse("package:$packageName"))
+                            )
+                        } catch (_: Exception) {
+                            try {
+                                startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+                            } catch (_: Exception) {}
+                        }
+                        result.success(null)
+                    }
                     else -> result.notImplemented()
                 }
             }
