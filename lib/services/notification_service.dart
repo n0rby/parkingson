@@ -23,6 +23,20 @@ const _channelId = 'parking_reminder';
 const _channelName = 'Parkeringspåmindelser';
 const _reminderNotificationId = 1;
 
+// Dedicated loud channel that plays on the ALARM stream (uses alarm volume,
+// bypasses Do Not Disturb) so background alarms are actually audible.
+const _alarmChannelId = 'parking_alarm';
+const _alarmChannelName = 'Parkeringsalarm';
+
+const _alarmNotificationChannel = AndroidNotificationChannel(
+  _alarmChannelId,
+  _alarmChannelName,
+  description: 'Høj alarm når du skal tilbage til bilen',
+  importance: Importance.max,
+  audioAttributesUsage: AudioAttributesUsage.alarm,
+  enableVibration: true,
+);
+
 // How long the reminder notification stays before Android auto-dismisses it.
 const _reminderTimeoutMs = 60000;
 
@@ -55,6 +69,7 @@ class NotificationService {
       description: 'Viser at appen overvåger din bil i baggrunden',
       importance: Importance.low,
     ));
+    await android?.createNotificationChannel(_alarmNotificationChannel);
   }
 
   Future<void> requestPermissions() async {
@@ -112,21 +127,39 @@ Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
       iOS: DarwinInitializationSettings(),
     ),
   );
+  // Ensure the loud alarm channel exists even if this runs before any UI init.
+  final android = _plugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+  await android?.createNotificationChannel(_alarmNotificationChannel);
+
   await _plugin.show(
     2,
     l10n.notifWalkBackTitle,
     l10n.notifWalkBackBody(walkMinutes),
     const NotificationDetails(
       android: AndroidNotificationDetails(
-        _channelId, _channelName,
-        importance: Importance.high,
-        priority: Priority.high,
-        playSound: true,
+        _alarmChannelId, _alarmChannelName,
+        importance: Importance.max,
+        priority: Priority.max,
+        category: AndroidNotificationCategory.alarm,
+        audioAttributesUsage: AudioAttributesUsage.alarm,
         enableVibration: true,
       ),
-      iOS: DarwinNotificationDetails(presentAlert: true, presentSound: true),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentSound: true,
+        interruptionLevel: InterruptionLevel.timeSensitive,
+      ),
     ),
   );
+
+  // Also speak a short reminder (best effort; TTS may be unavailable headless).
+  try {
+    final tts = FlutterTts();
+    await tts.setLanguage(_ttsTag());
+    await tts.setSpeechRate(0.5);
+    await tts.speak(l10n.notifWalkBackTitle);
+  } catch (_) {}
 }
 
 Future<void> showParkingReminderFromBackground({String? payload}) async {
