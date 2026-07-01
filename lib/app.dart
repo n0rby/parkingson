@@ -59,7 +59,6 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
 
   @override
   void dispose() {
-    _btService.stopMonitoring();
     _motionService.stopMonitoring();
     _billingRepo.dispose();
     super.dispose();
@@ -92,10 +91,6 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
   }
 
   void _startMonitoring() {
-    _btService.startMonitoring(
-      _selectedAddresses,
-      onDisconnect: (_) => _onCarParked(),
-    );
     _motionService.startMonitoring(
       onParkingDetected: (snapshot) {
         // The background isolate already posted a notification; when the UI is
@@ -111,24 +106,6 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
       },
     );
     _motionService.updateAddresses(_selectedAddresses);
-  }
-
-  Future<void> _onCarParked() async {
-    final snapshot = await _locationService.getCurrentLocation();
-    if (snapshot == null) return;
-    if (await _ignoredRepo.isIgnored(snapshot)) return;
-    await _ignoredRepo.saveLastParkingLocation(snapshot);
-    await Future.wait([
-      NotificationService().showParkingReminder(payload: snapshot.encode()),
-      NotificationService().playAlarm(),
-    ]);
-    if (mounted) {
-      setState(() {
-        _reminderLocation = snapshot;
-        _lastParkingLocation = snapshot;
-        _screen = _Screen.reminder;
-      });
-    }
   }
 
   @override
@@ -156,7 +133,6 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
           onSelectionChange: (addresses) async {
             setState(() => _selectedAddresses = addresses);
             await _carRepo.saveSelectedCarAddresses(addresses);
-            _btService.updateSelectedAddresses(addresses);
             _motionService.updateAddresses(addresses);
           },
           onBtOnlyModeChange: (v) async {
