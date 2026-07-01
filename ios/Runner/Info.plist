@@ -66,5 +66,62 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<!-- ===================== Permission usage strings ===================== -->
+	<!-- Shown in the iOS system permission dialogs. Required, or the app
+	     crashes when it requests the permission. -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Parkingson uses your location to save where you parked and remind you about paying for parking.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Parkingson uses your location in the background to detect when you leave your car and save the parking spot.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Parkingson uses your location in the background to detect when you leave your car and save the parking spot.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Parkingson uses Bluetooth to detect when you connect to and disconnect from your car.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Parkingson uses Bluetooth to detect when you connect to and disconnect from your car.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Parkingson uses motion detection to recognise when you have driven and then started walking, so it can remind you about parking.</string>
+
+	<!-- ===================== Google AdMob (iOS) =========================== -->
+	<!-- TODO: Replace with your real iOS AdMob app ID from the AdMob console.
+	     AdMob app IDs are per-platform; the Android ID cannot be reused here.
+	     This is Google's official TEST app ID so the app launches without
+	     crashing until you create the real iOS app in AdMob. -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
+
+	<!-- ===================== Background execution ========================= -->
+	<!-- Note: iOS heavily restricts background execution; the parking-detection
+	     features are not yet implemented natively for iOS. These modes are
+	     declared for when they are. -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>bluetooth-central</string>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
+
+	<!-- ===================== Supported languages ========================= -->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>da</string>
+		<string>en</string>
+		<string>de</string>
+		<string>sv</string>
+		<string>nb</string>
+		<string>fi</string>
+		<string>is</string>
+		<string>fr</string>
+		<string>es</string>
+	</array>
 </dict>
 </plist>

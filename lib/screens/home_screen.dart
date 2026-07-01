@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -310,7 +311,11 @@ class _MotionStatusLineState extends State<_MotionStatusLine> {
   }
 }
 
-const _kBannerAdUnitId = 'ca-app-pub-7290233540756156/5914841071';
+// Android uses the real ad unit; iOS uses Google's test banner unit until a
+// real iOS ad unit is created in the AdMob console.
+final _kBannerAdUnitId = Platform.isIOS
+    ? 'ca-app-pub-3940256099942544/2934735716'
+    : 'ca-app-pub-7290233540756156/5914841071';
 
 class _BannerAdWidget extends StatefulWidget {
   const _BannerAdWidget();
