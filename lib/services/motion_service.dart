@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/location_snapshot.dart';
@@ -87,39 +86,46 @@ void _onStart(ServiceInstance service) async {
   // Load settings from SharedPreferences
   final prefs = await SharedPreferences.getInstance();
   Set<String> selectedAddresses =
-      prefs.getStringList('selected_car_addresses')?.toSet() ?? {};
+      (prefs.getStringList('selected_car_addresses') ?? [])
+          .map((e) => e.toUpperCase())
+          .toSet();
 
-  bool btWasConnected = false;
   int? lastReminderMs;
 
-  StreamSubscription? btSub;
+  // Classic-Bluetooth (car stereo) connect/disconnect events are captured
+  // natively by CarBluetoothReceiver and written to SharedPreferences. We poll
+  // for a new *disconnect* event, debounce it, and trigger parking detection.
+  // Baseline to "now" so we don't fire on a stale event from before startup.
+  await prefs.reload();
+  int lastSeenDisconnectTs = DateTime.now().millisecondsSinceEpoch;
 
-  void startBtMonitoring() {
-    btSub?.cancel();
-    btSub = FlutterBluePlus.events.onConnectionStateChanged.listen((event) async {
-      final address = event.device.remoteId.str;
-      if (!selectedAddresses.contains(address)) return;
+  Timer.periodic(const Duration(seconds: 3), (_) async {
+    await prefs.reload();
+    final event = _parseBtEvent(prefs.getString('bt_last_disconnect'));
+    if (event == null) return;
+    final (address, ts) = event;
+    if (ts <= lastSeenDisconnectTs) return;
+    lastSeenDisconnectTs = ts;
 
-      if (event.connectionState == BluetoothConnectionState.connected) {
-        btWasConnected = true;
-      } else if (event.connectionState == BluetoothConnectionState.disconnected &&
-          btWasConnected) {
-        btWasConnected = false;
+    if (!selectedAddresses.contains(address.toUpperCase())) return;
 
-        // Cooldown check
-        final now = DateTime.now().millisecondsSinceEpoch;
-        if (lastReminderMs != null &&
-            now - lastReminderMs! < MotionService.reminderCooldownMs) {
-          return;
-        }
-        lastReminderMs = now;
+    // Debounce: wait a few seconds and make sure the car didn't reconnect
+    // (transient drop while still driving).
+    await Future.delayed(const Duration(seconds: 5));
+    await prefs.reload();
+    final reconnect = _parseBtEvent(prefs.getString('bt_last_connect'));
+    if (reconnect != null && reconnect.$2 > ts) return;
 
-        await _handleCarParked(service);
-      }
-    });
-  }
+    // Cooldown
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (lastReminderMs != null &&
+        now - lastReminderMs! < MotionService.reminderCooldownMs) {
+      return;
+    }
+    lastReminderMs = now;
 
-  startBtMonitoring();
+    await _handleCarParked(service);
+  });
 
   // Parking timer check — every minute
   Timer.periodic(const Duration(minutes: 1), (_) async {
@@ -128,14 +134,24 @@ void _onStart(ServiceInstance service) async {
 
   // UI can push updated selected addresses when user changes settings
   service.on(_evtUpdateAddresses).listen((data) {
-    selectedAddresses = Set<String>.from(data?['addresses'] ?? []);
-    startBtMonitoring();
+    selectedAddresses = (List<String>.from(data?['addresses'] ?? []))
+        .map((e) => e.toUpperCase())
+        .toSet();
   });
 
   service.on(_evtStop).listen((_) {
-    btSub?.cancel();
     service.stopSelf();
   });
+}
+
+/// Parses a "ADDRESS|timestamp" event string written by CarBluetoothReceiver.
+(String, int)? _parseBtEvent(String? raw) {
+  if (raw == null) return null;
+  final i = raw.lastIndexOf('|');
+  if (i < 0) return null;
+  final ts = int.tryParse(raw.substring(i + 1));
+  if (ts == null) return null;
+  return (raw.substring(0, i), ts);
 }
 
 Future<void> _checkParkingTimer() async {

@@ -98,6 +98,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
     );
     _motionService.startMonitoring(
       onParkingDetected: (snapshot) {
+        // The background isolate already posted a notification; when the UI is
+        // alive, also play the full native alarm + voice and open the reminder.
+        NotificationService().playAlarm();
         if (mounted) {
           setState(() {
             _reminderLocation = snapshot;

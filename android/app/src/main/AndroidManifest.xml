@@ -22,6 +22,7 @@
     <!-- Foreground service (background monitoring) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <!-- Notifications (API 33+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -37,7 +38,7 @@
 
     <application
         android:label="Parkingson"
-        android:name="${applicationName}"
+        android:name=".ParkingsonApplication"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -64,9 +65,9 @@
         <!-- flutter_background_service foreground service -->
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
-            android:foregroundServiceType="connectedDevice"
+            android:foregroundServiceType="connectedDevice|location"
             android:exported="true"
-            tools:replace="android:exported" />
+            tools:replace="android:exported,android:foregroundServiceType" />
 
         <!-- Restart monitoring after phone reboot -->
         <receiver
