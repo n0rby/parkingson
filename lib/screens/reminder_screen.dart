@@ -137,11 +137,20 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     },
                   ),
                   const SizedBox(width: 4),
-                  const Text(
-                    'Påmind mig om at gå tilbage i tide',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: hpText),
+                  const Expanded(
+                    child: Text(
+                      'Påmind mig om at gå tilbage i tide',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: hpText),
+                    ),
                   ),
                 ],
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 4, top: 2),
+                child: Text(
+                  'Angiv hvor længe du må parkere her',
+                  style: TextStyle(color: hpMuted, fontSize: 13),
+                ),
               ),
               if (_timerEnabled) ...[
                 const SizedBox(height: 12),
@@ -227,7 +236,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
         Text(
           'Tryk "Ignorer altid" for steder som hjemme eller arbejde, '
           'hvor du sjældent skal betale for parkering. '
-          'Alarmen vises ikke igen inden for ${ignoredLocationRadiusMeters.toInt()} meter herfra.',
+          'Alarmen vises ikke igen inden for ${ignoredLocationRadiusMeters.toInt()} meter herfra. '
+          'Med tiden vil du opleve færre unødvendige alarmer.',
           style: const TextStyle(color: hpMuted, fontSize: 13, height: 1.5),
         ),
       ],
