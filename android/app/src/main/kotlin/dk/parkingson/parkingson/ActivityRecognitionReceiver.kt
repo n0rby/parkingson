@@ -24,6 +24,7 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
                 val result = ActivityTransitionResult.extractResult(intent) ?: return
                 result.transitionEvents.forEach {
                     recordActivity(appContext, it.activityType, -1)
+                    updateDormancy(appContext, it.activityType)
                     handleActivity(appContext, it.activityType)
                 }
             }
@@ -34,6 +35,7 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
                     .maxByOrNull { it.confidence }
                     ?.let {
                         recordActivity(appContext, it.type, it.confidence)
+                        updateDormancy(appContext, it.type)
                         handleActivity(appContext, it.type)
                     }
             }
@@ -75,5 +77,48 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
         return type == DetectedActivity.ON_FOOT ||
             type == DetectedActivity.WALKING ||
             type == DetectedActivity.RUNNING
+    }
+
+    /**
+     * Battery-saving dormancy. When the user has been still for a while, and a
+     * car is parked, and there's no walk-back timer, we pause the periodic
+     * activity sampling — cheap transition events remain and wake us on the
+     * next movement. Any non-still activity resets the timer and wakes us.
+     */
+    private fun updateDormancy(context: Context, activityType: Int) {
+        val prefs = context.getSharedPreferences(MOTION_PREFS, Context.MODE_PRIVATE)
+        val now = System.currentTimeMillis()
+        val dormant = prefs.getBoolean(KEY_DORMANT, false)
+
+        if (activityType == DetectedActivity.STILL) {
+            var stillSince = prefs.getLong(KEY_STILL_SINCE, 0L)
+            if (stillSince == 0L) {
+                stillSince = now
+                prefs.edit().putLong(KEY_STILL_SINCE, now).apply()
+            }
+            if (dormant) return
+            val stillLongEnough = now - stillSince >= STILL_DORMANT_THRESHOLD_MS
+            if (stillLongEnough && isParked(context) && !hasActiveWalkBackTimer(context)) {
+                pauseActivityUpdates(context)
+                prefs.edit().putBoolean(KEY_DORMANT, true).apply()
+            }
+        } else {
+            // Movement resumed → reset the still timer and wake if dormant.
+            prefs.edit().remove(KEY_STILL_SINCE).apply()
+            if (dormant) {
+                resumeActivityUpdates(context)
+                prefs.edit().putBoolean(KEY_DORMANT, false).apply()
+            }
+        }
+    }
+
+    private fun isParked(context: Context): Boolean {
+        val p = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        return !p.getString("flutter.last_parking_location", null).isNullOrEmpty()
+    }
+
+    private fun hasActiveWalkBackTimer(context: Context): Boolean {
+        val p = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        return !p.getString("flutter.parking_timer", null).isNullOrEmpty()
     }
 }

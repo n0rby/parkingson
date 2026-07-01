@@ -29,6 +29,13 @@ const val MOTION_COOLDOWN_MS = 10_000L
 const val ACTIVITY_UPDATE_INTERVAL_MS = 15_000L
 const val MIN_ACTIVITY_CONFIDENCE = 35
 
+// Battery-saving dormancy: after being still this long (while parked and with no
+// walk-back timer) we pause the periodic activity sampling. Cheap transition
+// events stay registered and wake us on the next movement.
+const val STILL_DORMANT_THRESHOLD_MS = 15 * 60 * 1000L
+const val KEY_STILL_SINCE = "still_since"
+const val KEY_DORMANT = "dormant"
+
 fun hasActivityRecognitionPermission(context: Context): Boolean {
     return Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
         context.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) ==
@@ -44,7 +51,12 @@ fun startMotionMonitoring(context: Context) {
             .apply()
         return
     }
-    prefs.edit().remove(KEY_LAST_ERROR).apply()
+    // Fresh start is never dormant.
+    prefs.edit()
+        .remove(KEY_LAST_ERROR)
+        .remove(KEY_STILL_SINCE)
+        .putBoolean(KEY_DORMANT, false)
+        .apply()
 
     val request = ActivityTransitionRequest(
         listOf(
@@ -77,6 +89,25 @@ fun startMotionMonitoring(context: Context) {
     }
 }
 
+/** Pauses only the periodic activity sampling; transition events stay registered. */
+fun pauseActivityUpdates(context: Context) {
+    try {
+        ActivityRecognition.getClient(context)
+            .removeActivityUpdates(updatePendingIntent(context))
+    } catch (_: RuntimeException) {
+    }
+}
+
+/** Re-enables the periodic activity sampling after dormancy. */
+fun resumeActivityUpdates(context: Context) {
+    if (!hasActivityRecognitionPermission(context)) return
+    try {
+        ActivityRecognition.getClient(context)
+            .requestActivityUpdates(ACTIVITY_UPDATE_INTERVAL_MS, updatePendingIntent(context))
+    } catch (_: SecurityException) {
+    }
+}
+
 /** Records the most recently detected activity for the debug status line. */
 fun recordActivity(context: Context, activityType: Int, confidence: Int) {
     context.getSharedPreferences(MOTION_PREFS, Context.MODE_PRIVATE)
@@ -98,7 +129,8 @@ fun readMotionStatus(context: Context): HashMap<String, Any?> {
         "lastActivityConfidence" to prefs.getInt(KEY_LAST_ACTIVITY_CONFIDENCE, -1),
         "lastActivityAt" to prefs.getLong(KEY_LAST_ACTIVITY_AT, 0L),
         "inVehicleSince" to prefs.getLong(KEY_IN_VEHICLE_STARTED_AT, 0L),
-        "lastReminderAt" to prefs.getLong(KEY_LAST_REMINDER_AT, 0L)
+        "lastReminderAt" to prefs.getLong(KEY_LAST_REMINDER_AT, 0L),
+        "dormant" to prefs.getBoolean(KEY_DORMANT, false)
     )
 }
 

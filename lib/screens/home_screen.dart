@@ -256,12 +256,13 @@ class _MotionStatusLineState extends State<_MotionStatusLine> {
     final conf = (s['lastActivityConfidence'] as num?)?.toInt() ?? -1;
     final at = (s['lastActivityAt'] as num?)?.toInt() ?? 0;
     final inVehicleSince = (s['inVehicleSince'] as num?)?.toInt() ?? 0;
+    final dormant = s['dormant'] == true;
 
     if (!hasPermission) return 'Motion: ingen tilladelse til fysisk aktivitet';
     if (lastError != null && lastError.isNotEmpty) return 'Motion-fejl: $lastError';
     if (!registered) return 'Motion: registrerer…';
 
-    final parts = <String>['Motion aktiv'];
+    final parts = <String>[dormant ? 'Motion i dvale' : 'Motion aktiv'];
     if (type >= 0) {
       final label = _activityLabel(type);
       parts.add(conf >= 0 ? '$label $conf%' : label);
@@ -270,6 +271,7 @@ class _MotionStatusLineState extends State<_MotionStatusLine> {
       parts.add('afventer data');
     }
     if (inVehicleSince > 0) parts.add('bil-timer kører');
+    if (dormant) parts.add('vågner ved bevægelse');
     return parts.join(' · ');
   }
 
