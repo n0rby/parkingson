@@ -18,6 +18,11 @@ const val ACTION_ACTIVITY_UPDATE = "dk.parkingson.parkingson.ACTIVITY_UPDATE"
 const val MOTION_PREFS = "motion_state"
 const val KEY_IN_VEHICLE_STARTED_AT = "in_vehicle_started_at"
 const val KEY_LAST_REMINDER_AT = "last_reminder_at"
+const val KEY_REGISTERED = "registered"
+const val KEY_LAST_ERROR = "last_error"
+const val KEY_LAST_ACTIVITY_TYPE = "last_activity_type"
+const val KEY_LAST_ACTIVITY_CONFIDENCE = "last_activity_confidence"
+const val KEY_LAST_ACTIVITY_AT = "last_activity_at"
 
 const val MIN_VEHICLE_DURATION_MS = 10_000L
 const val MOTION_COOLDOWN_MS = 10_000L
@@ -31,7 +36,16 @@ fun hasActivityRecognitionPermission(context: Context): Boolean {
 }
 
 fun startMotionMonitoring(context: Context) {
-    if (!hasActivityRecognitionPermission(context)) return
+    val prefs = context.getSharedPreferences(MOTION_PREFS, Context.MODE_PRIVATE)
+    if (!hasActivityRecognitionPermission(context)) {
+        prefs.edit()
+            .putBoolean(KEY_REGISTERED, false)
+            .putString(KEY_LAST_ERROR, "Mangler tilladelse til fysisk aktivitet")
+            .apply()
+        return
+    }
+    prefs.edit().remove(KEY_LAST_ERROR).apply()
+
     val request = ActivityTransitionRequest(
         listOf(
             enterTransition(DetectedActivity.IN_VEHICLE),
@@ -43,10 +57,48 @@ fun startMotionMonitoring(context: Context) {
     try {
         ActivityRecognition.getClient(context)
             .requestActivityTransitionUpdates(request, transitionPendingIntent(context))
+            .addOnSuccessListener {
+                prefs.edit().putBoolean(KEY_REGISTERED, true).apply()
+            }
+            .addOnFailureListener { e ->
+                prefs.edit()
+                    .putBoolean(KEY_REGISTERED, false)
+                    .putString(KEY_LAST_ERROR, e.message ?: e.javaClass.simpleName)
+                    .apply()
+            }
         ActivityRecognition.getClient(context)
             .requestActivityUpdates(ACTIVITY_UPDATE_INTERVAL_MS, updatePendingIntent(context))
     } catch (_: SecurityException) {
+        prefs.edit()
+            .putBoolean(KEY_REGISTERED, false)
+            .putString(KEY_LAST_ERROR, "SecurityException")
+            .apply()
     }
+}
+
+/** Records the most recently detected activity for the debug status line. */
+fun recordActivity(context: Context, activityType: Int, confidence: Int) {
+    context.getSharedPreferences(MOTION_PREFS, Context.MODE_PRIVATE)
+        .edit()
+        .putInt(KEY_LAST_ACTIVITY_TYPE, activityType)
+        .putInt(KEY_LAST_ACTIVITY_CONFIDENCE, confidence)
+        .putLong(KEY_LAST_ACTIVITY_AT, System.currentTimeMillis())
+        .apply()
+}
+
+/** Snapshot of the motion-detection state for the UI debug status line. */
+fun readMotionStatus(context: Context): HashMap<String, Any?> {
+    val prefs = context.getSharedPreferences(MOTION_PREFS, Context.MODE_PRIVATE)
+    return hashMapOf(
+        "hasPermission" to hasActivityRecognitionPermission(context),
+        "registered" to prefs.getBoolean(KEY_REGISTERED, false),
+        "lastError" to prefs.getString(KEY_LAST_ERROR, null),
+        "lastActivityType" to prefs.getInt(KEY_LAST_ACTIVITY_TYPE, -1),
+        "lastActivityConfidence" to prefs.getInt(KEY_LAST_ACTIVITY_CONFIDENCE, -1),
+        "lastActivityAt" to prefs.getLong(KEY_LAST_ACTIVITY_AT, 0L),
+        "inVehicleSince" to prefs.getLong(KEY_IN_VEHICLE_STARTED_AT, 0L),
+        "lastReminderAt" to prefs.getLong(KEY_LAST_REMINDER_AT, 0L)
+    )
 }
 
 fun stopMotionMonitoring(context: Context) {

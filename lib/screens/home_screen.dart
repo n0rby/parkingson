@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../models/car_device.dart';
 import '../models/location_snapshot.dart';
@@ -56,6 +58,8 @@ class HomeScreen extends StatelessWidget {
                             : 'Sidst parkeret ikke målt endnu',
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: hpText),
                       ),
+                      const SizedBox(height: 4),
+                      const _MotionStatusLine(),
                       if (!isPremium) ...[
                         const SizedBox(height: 16),
                         const _BannerAdWidget(),
@@ -104,6 +108,94 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Small live status line for the motion (Activity Recognition) subsystem,
+/// shown under "Sidst parkeret" to make debugging easier.
+class _MotionStatusLine extends StatefulWidget {
+  const _MotionStatusLine();
+
+  @override
+  State<_MotionStatusLine> createState() => _MotionStatusLineState();
+}
+
+class _MotionStatusLineState extends State<_MotionStatusLine> {
+  static const _channel = MethodChannel('dk.parkingson/alarm');
+  Timer? _timer;
+  String _text = 'Motion: henter status…';
+
+  @override
+  void initState() {
+    super.initState();
+    _refresh();
+    _timer = Timer.periodic(const Duration(seconds: 4), (_) => _refresh());
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refresh() async {
+    try {
+      final result = await _channel.invokeMethod('getMotionStatus');
+      if (!mounted || result is! Map) return;
+      setState(() => _text = _format(Map<String, dynamic>.from(result)));
+    } catch (_) {
+      if (mounted) setState(() => _text = 'Motion: status utilgængelig');
+    }
+  }
+
+  String _format(Map<String, dynamic> s) {
+    final hasPermission = s['hasPermission'] == true;
+    final registered = s['registered'] == true;
+    final lastError = s['lastError'] as String?;
+    final type = (s['lastActivityType'] as num?)?.toInt() ?? -1;
+    final conf = (s['lastActivityConfidence'] as num?)?.toInt() ?? -1;
+    final at = (s['lastActivityAt'] as num?)?.toInt() ?? 0;
+    final inVehicleSince = (s['inVehicleSince'] as num?)?.toInt() ?? 0;
+
+    if (!hasPermission) return 'Motion: ingen tilladelse til fysisk aktivitet';
+    if (lastError != null && lastError.isNotEmpty) return 'Motion-fejl: $lastError';
+    if (!registered) return 'Motion: registrerer…';
+
+    final parts = <String>['Motion aktiv'];
+    if (type >= 0) {
+      final label = _activityLabel(type);
+      parts.add(conf >= 0 ? '$label $conf%' : label);
+      if (at > 0) parts.add(_clock(at));
+    } else {
+      parts.add('afventer data');
+    }
+    if (inVehicleSince > 0) parts.add('bil-timer kører');
+    return parts.join(' · ');
+  }
+
+  String _activityLabel(int t) => switch (t) {
+        0 => 'I bil',
+        1 => 'På cykel',
+        2 => 'Til fods',
+        3 => 'Stille',
+        5 => 'Vipper',
+        7 => 'Går',
+        8 => 'Løber',
+        _ => 'Ukendt',
+      };
+
+  String _clock(int millis) {
+    final d = DateTime.fromMillisecondsSinceEpoch(millis);
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(d.hour)}:${two(d.minute)}:${two(d.second)}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _text,
+      style: const TextStyle(fontSize: 11, color: hpSubtle),
     );
   }
 }

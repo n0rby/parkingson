@@ -39,6 +39,7 @@ class MainActivity : FlutterActivity() {
                         stopMotionMonitoring(this)
                         result.success(null)
                     }
+                    "getMotionStatus" -> result.success(readMotionStatus(this))
                     else -> result.notImplemented()
                 }
             }

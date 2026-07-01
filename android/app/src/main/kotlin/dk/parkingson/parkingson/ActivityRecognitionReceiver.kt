@@ -22,14 +22,20 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
         when {
             intent.action == ACTION_ACTIVITY_TRANSITION && ActivityTransitionResult.hasResult(intent) -> {
                 val result = ActivityTransitionResult.extractResult(intent) ?: return
-                result.transitionEvents.forEach { handleActivity(appContext, it.activityType) }
+                result.transitionEvents.forEach {
+                    recordActivity(appContext, it.activityType, -1)
+                    handleActivity(appContext, it.activityType)
+                }
             }
             intent.action == ACTION_ACTIVITY_UPDATE && ActivityRecognitionResult.hasResult(intent) -> {
                 val result = ActivityRecognitionResult.extractResult(intent) ?: return
                 result.probableActivities
                     .filter { it.confidence >= MIN_ACTIVITY_CONFIDENCE }
                     .maxByOrNull { it.confidence }
-                    ?.let { handleActivity(appContext, it.type) }
+                    ?.let {
+                        recordActivity(appContext, it.type, it.confidence)
+                        handleActivity(appContext, it.type)
+                    }
             }
         }
     }
