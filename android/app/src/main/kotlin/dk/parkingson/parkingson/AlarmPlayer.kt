@@ -46,7 +46,7 @@ object AlarmPlayer {
 
     private fun startPulseVibration(context: Context) {
         val v = context.getSystemService(Vibrator::class.java) ?: return
-        stopVibration()
+        stopVibration(context)
         vibrator = v
 
         // ~30 seconds of pulses: 600 ms on, 400 ms off.
@@ -76,10 +76,17 @@ object AlarmPlayer {
         }
 
         // Safety stop after 30 seconds even if the app is never opened.
-        Handler(Looper.getMainLooper()).postDelayed({ stopVibration() }, 30_000)
+        val appContext = context.applicationContext
+        Handler(Looper.getMainLooper()).postDelayed({ stopVibration(appContext) }, 30_000)
     }
 
-    fun stopVibration() {
+    fun stopVibration(context: Context) {
+        // Cancel via a fresh system Vibrator so it works no matter which context
+        // started it (e.g. a background receiver vs. the activity).
+        try {
+            context.getSystemService(Vibrator::class.java)?.cancel()
+        } catch (_: Exception) {
+        }
         try {
             vibrator?.cancel()
         } catch (_: Exception) {

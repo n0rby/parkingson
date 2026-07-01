@@ -71,9 +71,10 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Opening the app plays the deferred alarm voice (e.g. after a Do Not
-    // Disturb vibration alert). Native code stops the vibration on resume.
+    // Opening the app (any way) stops the Do Not Disturb alarm vibration and
+    // plays the deferred voice reminder.
     if (state == AppLifecycleState.resumed) {
+      const MethodChannel('dk.parkingson/alarm').invokeMethod('stopAlarmVibration');
       speakPendingVoice();
     }
   }
@@ -108,8 +109,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
     _motionService.startMonitoring(
       onParkingDetected: (snapshot) {
         // The background isolate already fired the alarm; when the UI is alive,
-        // speak the deferred voice reminder and open the reminder screen.
-        speakPendingVoice();
+        // speak the deferred voice reminder (after the alarm) and open the
+        // reminder screen.
+        speakPendingVoice(delay: voiceAfterAlarmDelay);
         if (mounted) {
           setState(() {
             _reminderLocation = snapshot;
@@ -198,7 +200,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
             // the voice reminder (we're in the foreground here).
             await NotificationService().showParkingReminder(payload: snapshot.encode());
             await fireAlarm(l10n.ttsRemember);
-            await speakPendingVoice();
+            await speakPendingVoice(delay: voiceAfterAlarmDelay);
             if (mounted) {
               setState(() {
                 _reminderLocation = snapshot;

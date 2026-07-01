@@ -20,8 +20,9 @@ class MainActivity : FlutterActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Opening the app stops any ongoing DND alarm vibration.
-        AlarmPlayer.stopVibration()
+        // Opening the app (from icon, recents or the notification) stops any
+        // ongoing DND alarm vibration.
+        AlarmPlayer.stopVibration(this)
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -34,7 +35,7 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
                     "stopAlarmVibration" -> {
-                        AlarmPlayer.stopVibration()
+                        AlarmPlayer.stopVibration(this)
                         result.success(null)
                     }
                     "openBluetoothSettings" -> {

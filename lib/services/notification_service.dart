@@ -65,7 +65,7 @@ Future<void> fireAlarm(String voiceText) async {
 
 /// Speaks (and clears) a pending alarm voice reminder, if one was set recently.
 /// Called when the app is opened, and immediately for foreground alarms.
-Future<void> speakPendingVoice() async {
+Future<void> speakPendingVoice({Duration delay = Duration.zero}) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.reload();
   final raw = prefs.getString(_pendingVoiceKey);
@@ -77,13 +77,19 @@ Future<void> speakPendingVoice() async {
   final text = raw.substring(sep + 1);
   // Ignore stale reminders (older than 5 minutes).
   if (DateTime.now().millisecondsSinceEpoch - ts > 5 * 60 * 1000) return;
+  // Let the alarm sound finish first so the voice doesn't play over it.
+  if (delay > Duration.zero) await Future.delayed(delay);
   try {
     final tts = FlutterTts();
     await tts.setLanguage(_ttsTag());
+    await tts.setVolume(1.0);
     await tts.setSpeechRate(0.5);
     await tts.speak(text);
   } catch (_) {}
 }
+
+// Alarm sound lasts ~3s; wait a bit longer before speaking so they don't overlap.
+const voiceAfterAlarmDelay = Duration(milliseconds: 3300);
 
 class NotificationService {
   Future<void> initialize() async {
