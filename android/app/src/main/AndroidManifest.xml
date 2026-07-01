@@ -67,9 +67,14 @@
             </intent-filter>
         </activity>
         <!-- flutter_background_service foreground service -->
+        <!-- connectedDevice only: a "location"-typed FGS may only be *started*
+             while the app is visible on Android 14+, which crashes the service
+             when it restarts in the background. GPS still works because this
+             FGS keeps the app in a foreground state (while-in-use location) and
+             Geolocator manages one-shot location itself. -->
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
-            android:foregroundServiceType="connectedDevice|location"
+            android:foregroundServiceType="connectedDevice"
             android:exported="true"
             tools:replace="android:exported,android:foregroundServiceType" />
 
