@@ -28,7 +28,7 @@ class ParkingsonApp extends StatefulWidget {
   State<ParkingsonApp> createState() => _ParkingsonAppState();
 }
 
-class _ParkingsonAppState extends State<ParkingsonApp> {
+class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserver {
   final _carRepo = CarRepository();
   final _billingRepo = BillingRepository();
   final _ignoredRepo = IgnoredLocationRepository();
@@ -49,6 +49,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadState();
     _billingRepo.initialize().then((_) {
       _billingRepo.premiumStream.listen((v) {
@@ -56,13 +57,25 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
       });
     });
     _motionService.initialize();
+    // Speak any pending alarm voice reminder left while the app was closed.
+    speakPendingVoice();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _motionService.stopMonitoring();
     _billingRepo.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Opening the app plays the deferred alarm voice (e.g. after a Do Not
+    // Disturb vibration alert). Native code stops the vibration on resume.
+    if (state == AppLifecycleState.resumed) {
+      speakPendingVoice();
+    }
   }
 
   Future<void> _loadState() async {
@@ -94,9 +107,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
   void _startMonitoring() {
     _motionService.startMonitoring(
       onParkingDetected: (snapshot) {
-        // The background isolate already posted a notification; when the UI is
-        // alive, also play the full native alarm + voice and open the reminder.
-        NotificationService().playAlarm();
+        // The background isolate already fired the alarm; when the UI is alive,
+        // speak the deferred voice reminder and open the reminder screen.
+        speakPendingVoice();
         if (mounted) {
           setState(() {
             _reminderLocation = snapshot;
@@ -181,11 +194,11 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
                   longitude: 0,
                   capturedAtMillis: DateTime.now().millisecondsSinceEpoch,
                 );
-            // Show notification + play alarm sound in foreground
-            await Future.wait([
-              NotificationService().showParkingReminder(payload: snapshot.encode()),
-              NotificationService().playAlarm(),
-            ]);
+            // Show the visual notification, fire the DND-aware alarm, and speak
+            // the voice reminder (we're in the foreground here).
+            await NotificationService().showParkingReminder(payload: snapshot.encode());
+            await fireAlarm(l10n.ttsRemember);
+            await speakPendingVoice();
             if (mounted) {
               setState(() {
                 _reminderLocation = snapshot;

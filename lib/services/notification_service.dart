@@ -1,10 +1,10 @@
+import 'dart:io';
 import 'dart:ui';
-import 'package:flutter/services.dart';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/app_localizations.dart';
-
-const _alarmChannel = MethodChannel('dk.parkingson/alarm');
 
 /// Localizations for background/isolate use, based on the device locale.
 AppLocalizations _bgL10n() {
@@ -23,24 +23,67 @@ const _channelId = 'parking_reminder';
 const _channelName = 'Parkeringspåmindelser';
 const _reminderNotificationId = 1;
 
-// Dedicated loud channel that plays on the ALARM stream (uses alarm volume,
-// bypasses Do Not Disturb) so background alarms are actually audible.
-const _alarmChannelId = 'parking_alarm';
-const _alarmChannelName = 'Parkeringsalarm';
-
-const _alarmNotificationChannel = AndroidNotificationChannel(
-  _alarmChannelId,
-  _alarmChannelName,
-  description: 'Høj alarm når du skal tilbage til bilen',
-  importance: Importance.max,
-  audioAttributesUsage: AudioAttributesUsage.alarm,
-  enableVibration: true,
+// The reminder notifications are silent/visual only — audio and vibration are
+// handled natively by AlarmPlayer (which is Do-Not-Disturb aware), so nothing
+// doubles up.
+const _visualChannelId = 'parking_visual';
+const _visualChannelName = 'Parkeringspåmindelser';
+const _visualChannel = AndroidNotificationChannel(
+  _visualChannelId,
+  _visualChannelName,
+  description: 'Viser parkeringspåmindelser',
+  importance: Importance.high,
+  playSound: false,
+  enableVibration: false,
 );
 
 // How long the reminder notification stays before Android auto-dismisses it.
 const _reminderTimeoutMs = 60000;
 
+const _pendingVoiceKey = 'pending_alarm_voice';
+
 final _plugin = FlutterLocalNotificationsPlugin();
+
+/// Triggers the native, DND-aware alarm (loud sound, or pulse vibration in Do
+/// Not Disturb) and remembers the phrase to speak when the app is opened.
+/// Works from both the foreground and the background isolate.
+Future<void> fireAlarm(String voiceText) async {
+  if (!Platform.isAndroid) return;
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString(
+    _pendingVoiceKey,
+    '${DateTime.now().millisecondsSinceEpoch}|$voiceText',
+  );
+  final intent = AndroidIntent(
+    action: 'dk.parkingson.parkingson.PLAY_ALARM',
+    package: 'dk.parkingson.parkingson',
+  );
+  try {
+    await intent.sendBroadcast();
+  } catch (_) {}
+}
+
+/// Speaks (and clears) a pending alarm voice reminder, if one was set recently.
+/// Called when the app is opened, and immediately for foreground alarms.
+Future<void> speakPendingVoice() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.reload();
+  final raw = prefs.getString(_pendingVoiceKey);
+  if (raw == null) return;
+  await prefs.remove(_pendingVoiceKey);
+  final sep = raw.indexOf('|');
+  if (sep < 0) return;
+  final ts = int.tryParse(raw.substring(0, sep)) ?? 0;
+  final text = raw.substring(sep + 1);
+  // Ignore stale reminders (older than 5 minutes).
+  if (DateTime.now().millisecondsSinceEpoch - ts > 5 * 60 * 1000) return;
+  try {
+    final tts = FlutterTts();
+    await tts.setLanguage(_ttsTag());
+    await tts.setSpeechRate(0.5);
+    await tts.speak(text);
+  } catch (_) {}
+}
 
 class NotificationService {
   Future<void> initialize() async {
@@ -69,7 +112,7 @@ class NotificationService {
       description: 'Viser at appen overvåger din bil i baggrunden',
       importance: Importance.low,
     ));
-    await android?.createNotificationChannel(_alarmNotificationChannel);
+    await android?.createNotificationChannel(_visualChannel);
   }
 
   Future<void> requestPermissions() async {
@@ -84,12 +127,12 @@ class NotificationService {
   Future<void> showParkingReminder({String? payload}) async {
     final l10n = _bgL10n();
     const androidDetails = AndroidNotificationDetails(
-      _channelId,
-      _channelName,
+      _visualChannelId,
+      _visualChannelName,
       importance: Importance.high,
       priority: Priority.high,
-      playSound: true,
-      enableVibration: true,
+      playSound: false,
+      enableVibration: false,
       timeoutAfter: _reminderTimeoutMs,
     );
     const iosDetails = DarwinNotificationDetails(
@@ -105,15 +148,6 @@ class NotificationService {
     );
   }
 
-  Future<void> playAlarm() async {
-    await _alarmChannel.invokeMethod('playAlarm');
-    await Future.delayed(const Duration(milliseconds: 300));
-    final tts = FlutterTts();
-    await tts.setLanguage(_ttsTag());
-    await tts.setSpeechRate(0.5);
-    await tts.speak(_bgL10n().ttsRemember);
-  }
-
   String? Function(NotificationResponse)? get onNotificationTap => null;
 }
 
@@ -127,10 +161,9 @@ Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
       iOS: DarwinInitializationSettings(),
     ),
   );
-  // Ensure the loud alarm channel exists even if this runs before any UI init.
   final android = _plugin
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-  await android?.createNotificationChannel(_alarmNotificationChannel);
+  await android?.createNotificationChannel(_visualChannel);
 
   await _plugin.show(
     2,
@@ -138,12 +171,12 @@ Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
     l10n.notifWalkBackBody(walkMinutes),
     const NotificationDetails(
       android: AndroidNotificationDetails(
-        _alarmChannelId, _alarmChannelName,
-        importance: Importance.max,
-        priority: Priority.max,
+        _visualChannelId, _visualChannelName,
+        importance: Importance.high,
+        priority: Priority.high,
         category: AndroidNotificationCategory.alarm,
-        audioAttributesUsage: AudioAttributesUsage.alarm,
-        enableVibration: true,
+        playSound: false,
+        enableVibration: false,
       ),
       iOS: DarwinNotificationDetails(
         presentAlert: true,
@@ -153,13 +186,8 @@ Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
     ),
   );
 
-  // Also speak a short reminder (best effort; TTS may be unavailable headless).
-  try {
-    final tts = FlutterTts();
-    await tts.setLanguage(_ttsTag());
-    await tts.setSpeechRate(0.5);
-    await tts.speak(l10n.notifWalkBackTitle);
-  } catch (_) {}
+  // Native, DND-aware alarm (loud sound, or pulse vibration in Do Not Disturb).
+  await fireAlarm(l10n.notifWalkBackTitle);
 }
 
 Future<void> showParkingReminderFromBackground({String? payload}) async {
@@ -170,19 +198,28 @@ Future<void> showParkingReminderFromBackground({String? payload}) async {
       iOS: DarwinInitializationSettings(),
     ),
   );
+  final android = _plugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+  await android?.createNotificationChannel(_visualChannel);
+
   await _plugin.show(
     _reminderNotificationId,
     l10n.notifParkingTitle,
     l10n.notifParkingBody,
     const NotificationDetails(
       android: AndroidNotificationDetails(
-        _channelId, _channelName,
+        _visualChannelId, _visualChannelName,
         importance: Importance.high,
         priority: Priority.high,
+        playSound: false,
+        enableVibration: false,
         timeoutAfter: _reminderTimeoutMs,
       ),
       iOS: DarwinNotificationDetails(presentAlert: true, presentSound: true),
     ),
     payload: payload,
   );
+
+  // Native, DND-aware alarm (loud sound, or pulse vibration in Do Not Disturb).
+  await fireAlarm(l10n.ttsRemember);
 }

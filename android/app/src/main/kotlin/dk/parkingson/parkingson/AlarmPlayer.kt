@@ -1,0 +1,136 @@
+package dk.parkingson.parkingson
+
+import android.app.NotificationManager
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.RingtoneManager
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.VibrationAttributes
+import android.os.VibrationEffect
+import android.os.Vibrator
+
+/**
+ * Central alarm behaviour, callable from both the foreground (MethodChannel)
+ * and the background (AlarmReceiver broadcast).
+ *
+ * - Not in Do Not Disturb: play a short, loud alarm sound on the alarm stream.
+ * - In Do Not Disturb: pulse-vibrate for 30 seconds instead (until the user
+ *   opens the app, which cancels it). The spoken reminder is handled in Dart
+ *   when the app is opened.
+ */
+object AlarmPlayer {
+    private var vibrator: Vibrator? = null
+
+    fun isDndActive(context: Context): Boolean {
+        val nm = context.getSystemService(NotificationManager::class.java) ?: return false
+        return when (nm.currentInterruptionFilter) {
+            NotificationManager.INTERRUPTION_FILTER_PRIORITY,
+            NotificationManager.INTERRUPTION_FILTER_NONE,
+            NotificationManager.INTERRUPTION_FILTER_ALARMS -> true
+            else -> false
+        }
+    }
+
+    fun trigger(context: Context) {
+        if (isDndActive(context)) {
+            startPulseVibration(context)
+        } else {
+            playAlarmSound(context)
+        }
+    }
+
+    private fun startPulseVibration(context: Context) {
+        val v = context.getSystemService(Vibrator::class.java) ?: return
+        stopVibration()
+        vibrator = v
+
+        // ~30 seconds of pulses: 600 ms on, 400 ms off.
+        val cycles = 30
+        val timings = ArrayList<Long>().apply {
+            add(0L)
+            repeat(cycles) { add(600L); add(400L) }
+        }.toLongArray()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val amplitudes = ArrayList<Int>().apply {
+                add(0)
+                repeat(cycles) { add(255); add(0) }
+            }.toIntArray()
+            val effect = VibrationEffect.createWaveform(timings, amplitudes, -1)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val attrs = VibrationAttributes.Builder()
+                    .setUsage(VibrationAttributes.USAGE_ALARM)
+                    .build()
+                v.vibrate(effect, attrs)
+            } else {
+                v.vibrate(effect)
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            v.vibrate(timings, -1)
+        }
+
+        // Safety stop after 30 seconds even if the app is never opened.
+        Handler(Looper.getMainLooper()).postDelayed({ stopVibration() }, 30_000)
+    }
+
+    fun stopVibration() {
+        try {
+            vibrator?.cancel()
+        } catch (_: Exception) {
+        }
+        vibrator = null
+    }
+
+    private fun playAlarmSound(context: Context) {
+        val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+            ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val audioManager = context.getSystemService(AudioManager::class.java)
+        val handler = Handler(Looper.getMainLooper())
+
+        // Force alarm stream to full volume so it isn't faded in / muted.
+        val maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVol, 0)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioManager.requestAudioFocus(
+                AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+                    .setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .build()
+                    )
+                    .build()
+            )
+        }
+
+        try {
+            val mp = MediaPlayer()
+            mp.setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+            )
+            mp.setVolume(1.0f, 1.0f)
+            mp.setDataSource(context.applicationContext, uri)
+            mp.setOnPreparedListener { player ->
+                player.setVolume(1.0f, 1.0f)
+                player.start()
+                handler.postDelayed({
+                    try { if (player.isPlaying) player.stop() } catch (_: Exception) {}
+                    player.release()
+                }, 3000)
+            }
+            mp.setOnErrorListener { p, _, _ -> p.release(); true }
+            mp.prepareAsync()
+        } catch (_: Exception) {
+        }
+    }
+}

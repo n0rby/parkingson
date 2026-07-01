@@ -92,6 +92,15 @@
             android:name=".ActivityRecognitionReceiver"
             android:exported="false" />
 
+        <!-- Lets the background isolate trigger the DND-aware alarm/vibration -->
+        <receiver
+            android:name=".AlarmReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="dk.parkingson.parkingson.PLAY_ALARM" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7290233540756156~5787612901"/>
