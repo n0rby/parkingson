@@ -31,6 +31,14 @@ class MainActivity : FlutterActivity() {
                         startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS))
                         result.success(null)
                     }
+                    "startMotionDetection" -> {
+                        startMotionMonitoring(this)
+                        result.success(null)
+                    }
+                    "stopMotionDetection" -> {
+                        stopMotionMonitoring(this)
+                        result.success(null)
+                    }
                     else -> result.notImplemented()
                 }
             }

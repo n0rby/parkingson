@@ -18,7 +18,9 @@ const _evtPayloadKey = 'location';
 
 class MotionService {
   static const minVehicleDurationMs = 20000;
-  static const reminderCooldownMs = 10000;
+  // Shared across BT and motion sources so a single parking never fires twice
+  // (e.g. BT disconnect + on-foot both detected for the same park).
+  static const reminderCooldownMs = 120000;
 
   final _service = FlutterBackgroundService();
 
@@ -92,15 +94,36 @@ void _onStart(ServiceInstance service) async {
 
   int? lastReminderMs;
 
-  // Classic-Bluetooth (car stereo) connect/disconnect events are captured
-  // natively by CarBluetoothReceiver and written to SharedPreferences. We poll
-  // for a new *disconnect* event, debounce it, and trigger parking detection.
-  // Baseline to "now" so we don't fire on a stale event from before startup.
+  // Fires the parking flow unless we're still within the shared cooldown.
+  Future<void> tryFireReminder() async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (lastReminderMs != null &&
+        now - lastReminderMs! < MotionService.reminderCooldownMs) {
+      return;
+    }
+    lastReminderMs = now;
+    await _handleCarParked(service);
+  }
+
+  // Parking is detected from two native sources, both bridged via
+  // SharedPreferences: classic-Bluetooth ACL disconnect (CarBluetoothReceiver)
+  // and drive-then-walk motion (ActivityRecognitionReceiver). Baseline the
+  // "last seen" markers to now so we don't fire on stale pre-startup events.
   await prefs.reload();
   int lastSeenDisconnectTs = DateTime.now().millisecondsSinceEpoch;
+  int lastSeenMotionTs = DateTime.now().millisecondsSinceEpoch;
 
   Timer.periodic(const Duration(seconds: 3), (_) async {
     await prefs.reload();
+
+    // ── Motion: car without Bluetooth (drove, then started walking) ──────────
+    final motionTs = int.tryParse(prefs.getString('motion_parking_event') ?? '');
+    if (motionTs != null && motionTs > lastSeenMotionTs) {
+      lastSeenMotionTs = motionTs;
+      await tryFireReminder();
+    }
+
+    // ── Bluetooth: monitored car stereo disconnected ─────────────────────────
     final event = _parseBtEvent(prefs.getString('bt_last_disconnect'));
     if (event == null) return;
     final (address, ts) = event;
@@ -116,15 +139,7 @@ void _onStart(ServiceInstance service) async {
     final reconnect = _parseBtEvent(prefs.getString('bt_last_connect'));
     if (reconnect != null && reconnect.$2 > ts) return;
 
-    // Cooldown
-    final now = DateTime.now().millisecondsSinceEpoch;
-    if (lastReminderMs != null &&
-        now - lastReminderMs! < MotionService.reminderCooldownMs) {
-      return;
-    }
-    lastReminderMs = now;
-
-    await _handleCarParked(service);
+    await tryFireReminder();
   });
 
   // Parking timer check — every minute

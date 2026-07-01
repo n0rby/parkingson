@@ -106,6 +106,11 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
       },
     );
     _motionService.updateAddresses(_selectedAddresses);
+    // Motion detection (cars without Bluetooth) runs natively via Activity
+    // Recognition. Enable it unless the user chose Bluetooth-only mode.
+    const channel = MethodChannel('dk.parkingson/alarm');
+    channel.invokeMethod(
+        _btOnlyMode ? 'stopMotionDetection' : 'startMotionDetection');
   }
 
   @override
@@ -138,6 +143,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
           onBtOnlyModeChange: (v) async {
             setState(() => _btOnlyMode = v);
             await _carRepo.saveBtOnlyMode(v);
+            const channel = MethodChannel('dk.parkingson/alarm');
+            channel.invokeMethod(
+                v ? 'stopMotionDetection' : 'startMotionDetection');
           },
           onNext: () async {
             await _carRepo.saveSetupCompleted(true);

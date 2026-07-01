@@ -29,5 +29,14 @@ class ParkingsonApplication : Application() {
             @Suppress("UnspecifiedRegisterReceiverFlag")
             registerReceiver(receiver, filter)
         }
+
+        // (Re)register motion detection on every process start — this covers a
+        // reboot, where only the background service starts and no UI runs.
+        val flutterPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        val setupDone = flutterPrefs.getBoolean("flutter.setup_completed", false)
+        val btOnly = flutterPrefs.getBoolean("flutter.bt_only_mode", false)
+        if (setupDone && !btOnly) {
+            startMotionMonitoring(this)
+        }
     }
 }

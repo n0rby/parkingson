@@ -79,6 +79,11 @@
             </intent-filter>
         </receiver>
 
+        <!-- Receives Activity Recognition (drive/walk) events via PendingIntent -->
+        <receiver
+            android:name=".ActivityRecognitionReceiver"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7290233540756156~5787612901"/>
