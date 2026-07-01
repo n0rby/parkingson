@@ -1,0 +1,343 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for French (`fr`).
+class AppLocalizationsFr extends AppLocalizations {
+  AppLocalizationsFr([String locale = 'fr']) : super(locale);
+
+  @override
+  String get welcomeTagline => 'Évitez les amendes de stationnement';
+
+  @override
+  String get welcomeBody =>
+      'Recevez un rappel lorsque vous quittez l\'une de vos voitures, et enregistrez automatiquement l\'endroit pour la retrouver.';
+
+  @override
+  String get getStarted => 'Commencer';
+
+  @override
+  String get carsTitle => 'Choisissez vos voitures';
+
+  @override
+  String get btOnlyMode =>
+      'Utiliser uniquement le Bluetooth pour réduire les fausses alertes';
+
+  @override
+  String get carsBody =>
+      'L\'application fonctionne mieux si vous sélectionnez les connexions Bluetooth de vos voitures.';
+
+  @override
+  String get carsWithBluetooth => 'Voitures avec Bluetooth';
+
+  @override
+  String get noPairedDevices => 'Aucun appareil Bluetooth appairé trouvé.';
+
+  @override
+  String get activateParkingMonitoring =>
+      'Activer la surveillance du stationnement';
+
+  @override
+  String get systemBluetoothSettings => 'Paramètres Bluetooth du système';
+
+  @override
+  String get permissionsTitle => 'Autorisations';
+
+  @override
+  String get permissionsBody =>
+      'L\'application a besoin des autorisations suivantes pour surveiller votre voiture en arrière-plan.';
+
+  @override
+  String get activateMonitoring => 'Activer la surveillance';
+
+  @override
+  String get grantAllToContinue =>
+      'Accordez toutes les autorisations ci-dessus pour continuer.';
+
+  @override
+  String get openSettings => 'Paramètres';
+
+  @override
+  String get grant => 'Accorder';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get permBluetooth => 'Bluetooth';
+
+  @override
+  String get permBluetoothDesc => 'Détecter quand vous quittez votre voiture';
+
+  @override
+  String get permLocation => 'Localisation';
+
+  @override
+  String get permLocationDesc =>
+      'Enregistrer le lieu de stationnement et surveiller en arrière-plan';
+
+  @override
+  String get permActivity => 'Activité physique';
+
+  @override
+  String get permActivityDesc => 'Détecter la conduite et la marche';
+
+  @override
+  String get permNotifications => 'Notifications';
+
+  @override
+  String get permNotificationsDesc => 'Envoyer des rappels de stationnement';
+
+  @override
+  String get monitoringActive => 'Surveillance active';
+
+  @override
+  String lastParkedAt(String time) {
+    return 'Dernier stationnement $time';
+  }
+
+  @override
+  String get lastParkedNever => 'Dernier stationnement pas encore mesuré';
+
+  @override
+  String get removeAdsButton =>
+      'Supprimez les publicités et soutenez un développeur sympa. Presque gratuit !';
+
+  @override
+  String get testReminder => 'Rappel de test';
+
+  @override
+  String get testReminderDesc => 'Voir la notification, la sirène et la voix';
+
+  @override
+  String get manageCars => 'Gérer les voitures';
+
+  @override
+  String get manageCarsDesc => 'Ajouter, supprimer ou changer de voitures';
+
+  @override
+  String get findCar => 'Trouver ma voiture';
+
+  @override
+  String findCarRoute(String time) {
+    return 'Itinéraire vers le dernier stationnement $time';
+  }
+
+  @override
+  String get findCarNone => 'Aucun lieu de stationnement enregistré';
+
+  @override
+  String get ignoredLocationsAction => 'Lieux ignorés';
+
+  @override
+  String get ignoredLocationsActionDesc =>
+      'Endroits qui ne déclenchent pas d\'alarme';
+
+  @override
+  String get batteryCardTitle =>
+      'Recommandé : exclure de l\'optimisation de la batterie';
+
+  @override
+  String get batteryCardBody =>
+      'Facultatif. Sans cela, Android (surtout Samsung) peut arrêter la surveillance du mouvement en arrière-plan, de sorte que le stationnement sans Bluetooth n\'est pas toujours détecté.';
+
+  @override
+  String get batteryCardButton => 'Autoriser l\'arrière-plan sans restriction';
+
+  @override
+  String get motionFetching => 'Mouvement : récupération du statut…';
+
+  @override
+  String get motionUnavailable => 'Mouvement : statut indisponible';
+
+  @override
+  String get motionNoPermission =>
+      'Mouvement : aucune autorisation d\'activité physique';
+
+  @override
+  String motionError(String error) {
+    return 'Erreur de mouvement : $error';
+  }
+
+  @override
+  String get motionRegistering => 'Mouvement : enregistrement…';
+
+  @override
+  String get motionActive => 'Mouvement actif';
+
+  @override
+  String get motionDormant => 'Mouvement en veille';
+
+  @override
+  String get motionWaitingData => 'en attente de données';
+
+  @override
+  String get motionVehicleTimer => 'minuteur véhicule en cours';
+
+  @override
+  String get motionWakesOnMovement => 'se réveille au mouvement';
+
+  @override
+  String get activityInVehicle => 'En véhicule';
+
+  @override
+  String get activityOnBicycle => 'À vélo';
+
+  @override
+  String get activityOnFoot => 'À pied';
+
+  @override
+  String get activityStill => 'Immobile';
+
+  @override
+  String get activityTilting => 'Inclinaison';
+
+  @override
+  String get activityWalking => 'Marche';
+
+  @override
+  String get activityRunning => 'Course';
+
+  @override
+  String get activityUnknown => 'Inconnu';
+
+  @override
+  String get ignoredLocationsTitle => 'Lieux ignorés';
+
+  @override
+  String ignoredLocationsRadiusInfo(int meters) {
+    return 'Les alarmes ne s\'affichent pas à moins de $meters mètres de ces lieux.';
+  }
+
+  @override
+  String get addCurrentLocation => 'Ajouter le lieu actuel';
+
+  @override
+  String get sortBy => 'Trier par';
+
+  @override
+  String get sortTime => 'Heure';
+
+  @override
+  String get sortName => 'Nom';
+
+  @override
+  String get sortDistance => 'Distance';
+
+  @override
+  String get noIgnoredLocations => 'Aucun lieu ignoré';
+
+  @override
+  String get noIgnoredLocationsBody =>
+      'Vous pouvez ajouter un lieu depuis un rappel.';
+
+  @override
+  String get ignoredLocationDefault => 'Lieu ignoré';
+
+  @override
+  String addedAt(String time) {
+    return 'Ajouté $time';
+  }
+
+  @override
+  String get tapToOpenMap => 'Appuyez pour ouvrir dans la carte';
+
+  @override
+  String get deleteAll => 'Tout supprimer';
+
+  @override
+  String get backToOverview => 'Retour à l\'aperçu';
+
+  @override
+  String get locationFetchError => 'Impossible d\'obtenir la localisation.';
+
+  @override
+  String get locationAdded => 'Lieu ajouté.';
+
+  @override
+  String get reminderTitle => 'N\'oubliez pas de payer le stationnement !';
+
+  @override
+  String get reminderBody =>
+      'Nous avons détecté que vous avez quitté votre voiture. N\'oubliez pas de payer le stationnement !';
+
+  @override
+  String get coordinates => 'Coordonnées';
+
+  @override
+  String get registeredLabel => 'Enregistré';
+
+  @override
+  String get ignoreThisLocation => 'Toujours ignorer ce lieu';
+
+  @override
+  String get timerCheckbox => 'Me rappeler de revenir à temps';
+
+  @override
+  String get timerHelp =>
+      'Indiquez combien de temps vous pouvez stationner ici';
+
+  @override
+  String get pickTime => 'Choisir l\'heure';
+
+  @override
+  String expiresAt(String time) {
+    return 'Expire à $time';
+  }
+
+  @override
+  String get pickExpiryTime => 'Choisir l\'heure d\'expiration';
+
+  @override
+  String get timerConfirmBody =>
+      'Vous serez averti à temps pour retourner à la voiture.';
+
+  @override
+  String get close => 'Fermer';
+
+  @override
+  String ignoreHint(int meters) {
+    return 'Appuyez sur « Toujours ignorer » pour des lieux comme la maison ou le travail, où vous payez rarement le stationnement. L\'alarme ne réapparaîtra pas dans un rayon de $meters mètres. Avec le temps, vous aurez moins d\'alarmes inutiles.';
+  }
+
+  @override
+  String durationMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String durationHours(int hours) {
+    return '$hours h';
+  }
+
+  @override
+  String durationHoursMinutes(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String get notifParkingTitle => 'N\'oubliez pas de payer le stationnement !';
+
+  @override
+  String get notifParkingBody =>
+      'Nous avons détecté que vous avez quitté votre voiture.';
+
+  @override
+  String get notifWalkBackTitle => 'Dépêchez-vous de retourner à la voiture !';
+
+  @override
+  String notifWalkBackBody(int minutes) {
+    return 'Vous devez partir maintenant — temps de marche env. $minutes min et le stationnement expire bientôt.';
+  }
+
+  @override
+  String get ttsRemember => 'Pensez au stationnement';
+
+  @override
+  String get monitoringTitle => 'Parkingson';
+
+  @override
+  String get monitoringBody => 'Surveillance de votre voiture...';
+}

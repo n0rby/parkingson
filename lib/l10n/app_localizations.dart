@@ -8,6 +8,12 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_da.dart';
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fi.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_is.dart';
+import 'app_localizations_nb.dart';
+import 'app_localizations_sv.dart';
 
 // ignore_for_file: type=lint
 
@@ -98,6 +104,12 @@ abstract class AppLocalizations {
     Locale('da'),
     Locale('de'),
     Locale('en'),
+    Locale('es'),
+    Locale('fi'),
+    Locale('fr'),
+    Locale('is'),
+    Locale('nb'),
+    Locale('sv'),
   ];
 
   /// No description provided for @welcomeTagline.
@@ -699,8 +711,17 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['da', 'de', 'en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'da',
+    'de',
+    'en',
+    'es',
+    'fi',
+    'fr',
+    'is',
+    'nb',
+    'sv',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -715,6 +736,18 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fi':
+      return AppLocalizationsFi();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'is':
+      return AppLocalizationsIs();
+    case 'nb':
+      return AppLocalizationsNb();
+    case 'sv':
+      return AppLocalizationsSv();
   }
 
   throw FlutterError(
