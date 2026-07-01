@@ -19,7 +19,7 @@ const val MOTION_PREFS = "motion_state"
 const val KEY_IN_VEHICLE_STARTED_AT = "in_vehicle_started_at"
 const val KEY_LAST_REMINDER_AT = "last_reminder_at"
 
-const val MIN_VEHICLE_DURATION_MS = 20_000L
+const val MIN_VEHICLE_DURATION_MS = 10_000L
 const val MOTION_COOLDOWN_MS = 10_000L
 const val ACTIVITY_UPDATE_INTERVAL_MS = 15_000L
 const val MIN_ACTIVITY_CONFIDENCE = 35

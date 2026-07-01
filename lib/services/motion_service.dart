@@ -17,7 +17,7 @@ const _evtParkingDetected = 'parking_detected';
 const _evtPayloadKey = 'location';
 
 class MotionService {
-  static const minVehicleDurationMs = 20000;
+  static const minVehicleDurationMs = 10000;
   // Shared across BT and motion sources so a single parking never fires twice
   // (e.g. BT disconnect + on-foot both detected for the same park).
   static const reminderCooldownMs = 120000;
