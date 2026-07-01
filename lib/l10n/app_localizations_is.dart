@@ -100,6 +100,11 @@ class AppLocalizationsIs extends AppLocalizations {
   String get lastParkedNever => 'Síðasta bílastæði ekki mælt enn';
 
   @override
+  String parkingExpires(String time) {
+    return 'Bílastæði rennur út $time';
+  }
+
+  @override
   String get removeAdsButton =>
       'Fjarlægðu auglýsingar og styrktu almennilegan forritara. Næstum ókeypis!';
 

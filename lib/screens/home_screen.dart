@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../l10n/app_localizations.dart';
 import '../models/car_device.dart';
+import '../models/parking_timer.dart';
+import '../repositories/parking_timer_repository.dart';
 import '../models/location_snapshot.dart';
 import '../theme.dart';
 import '../widgets/action_row.dart';
@@ -61,6 +63,7 @@ class HomeScreen extends StatelessWidget {
                             : l10n.lastParkedNever,
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: hpText),
                       ),
+                      const _ParkingExpiresLine(),
                       const SizedBox(height: 4),
                       const _MotionStatusLine(),
                       if (!isPremium) ...[
@@ -209,6 +212,57 @@ class _BatteryOptimizationCardState extends State<_BatteryOptimizationCard>
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Shows the active parking timer's expiry time under "Sidst parkeret", or a
+/// dash when there is no timed parking. Same large font as the line above.
+class _ParkingExpiresLine extends StatefulWidget {
+  const _ParkingExpiresLine();
+
+  @override
+  State<_ParkingExpiresLine> createState() => _ParkingExpiresLineState();
+}
+
+class _ParkingExpiresLineState extends State<_ParkingExpiresLine>
+    with WidgetsBindingObserver {
+  final _repo = ParkingTimerRepository();
+  Timer? _poll;
+  ParkingTimer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _load();
+    _poll = Timer.periodic(const Duration(seconds: 20), (_) => _load());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _poll?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _load();
+  }
+
+  Future<void> _load() async {
+    final t = await _repo.getActiveTimer();
+    if (mounted) setState(() => _timer = t);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final time = _timer != null ? _timer!.displayExpiry : '–';
+    return Text(
+      l10n.parkingExpires(time),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: hpText),
     );
   }
 }

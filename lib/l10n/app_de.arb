@@ -33,6 +33,7 @@
   "lastParkedAt": "Zuletzt geparkt {time}",
   "@lastParkedAt": { "placeholders": { "time": { "type": "String" } } },
   "lastParkedNever": "Zuletzt geparkt noch nicht erfasst",
+  "parkingExpires": "Parkzeit endet {time}",
   "removeAdsButton": "Werbung entfernen und einen netten Entwickler unterstützen. Fast kostenlos!",
   "testReminder": "Erinnerung testen",
   "testReminderDesc": "Benachrichtigung, Sirene und Stimme ansehen",

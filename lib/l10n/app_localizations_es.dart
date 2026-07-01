@@ -103,6 +103,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get lastParkedNever => 'Último estacionamiento aún no medido';
 
   @override
+  String parkingExpires(String time) {
+    return 'El estacionamiento vence $time';
+  }
+
+  @override
   String get removeAdsButton =>
       'Quita los anuncios y apoya a un desarrollador simpático. ¡Casi gratis!';
 

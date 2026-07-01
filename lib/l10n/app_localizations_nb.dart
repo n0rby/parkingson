@@ -101,6 +101,11 @@ class AppLocalizationsNb extends AppLocalizations {
   String get lastParkedNever => 'Sist parkert ikke målt ennå';
 
   @override
+  String parkingExpires(String time) {
+    return 'Parkering utløper $time';
+  }
+
+  @override
   String get removeAdsButton =>
       'Fjern annonser og støtt en hyggelig utvikler. Nesten gratis!';
 

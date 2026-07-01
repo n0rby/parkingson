@@ -33,6 +33,8 @@
   "lastParkedAt": "Sidst parkeret {time}",
   "@lastParkedAt": { "placeholders": { "time": { "type": "String" } } },
   "lastParkedNever": "Sidst parkeret ikke målt endnu",
+  "parkingExpires": "Parkering udløber {time}",
+  "@parkingExpires": { "placeholders": { "time": { "type": "String" } } },
   "removeAdsButton": "Slip for reklamer og støt en rar programmør. Næsten gratis!",
   "testReminder": "Test påmindelse",
   "testReminderDesc": "Se notifikation, sirene og stemme",

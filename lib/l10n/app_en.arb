@@ -33,6 +33,7 @@
   "lastParkedAt": "Last parked {time}",
   "@lastParkedAt": { "placeholders": { "time": { "type": "String" } } },
   "lastParkedNever": "Last parked not measured yet",
+  "parkingExpires": "Parking expires {time}",
   "removeAdsButton": "Remove ads and support a nice developer. Almost free!",
   "testReminder": "Test reminder",
   "testReminderDesc": "See notification, siren and voice",

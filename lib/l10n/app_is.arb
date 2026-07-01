@@ -28,6 +28,7 @@
   "monitoringActive": "Vöktun virk",
   "lastParkedAt": "Síðast lagt {time}",
   "lastParkedNever": "Síðasta bílastæði ekki mælt enn",
+  "parkingExpires": "Bílastæði rennur út {time}",
   "removeAdsButton": "Fjarlægðu auglýsingar og styrktu almennilegan forritara. Næstum ókeypis!",
   "testReminder": "Prófunaráminning",
   "testReminderDesc": "Sjá tilkynningu, sírenu og rödd",

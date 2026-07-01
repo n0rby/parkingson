@@ -280,6 +280,12 @@ abstract class AppLocalizations {
   /// **'Sidst parkeret ikke målt endnu'**
   String get lastParkedNever;
 
+  /// No description provided for @parkingExpires.
+  ///
+  /// In da, this message translates to:
+  /// **'Parkering udløber {time}'**
+  String parkingExpires(String time);
+
   /// No description provided for @removeAdsButton.
   ///
   /// In da, this message translates to:

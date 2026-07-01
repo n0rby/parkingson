@@ -101,6 +101,11 @@ class AppLocalizationsFi extends AppLocalizations {
   String get lastParkedNever => 'Viimeksi pysäköityä ei ole vielä mitattu';
 
   @override
+  String parkingExpires(String time) {
+    return 'Pysäköinti päättyy $time';
+  }
+
+  @override
   String get removeAdsButton =>
       'Poista mainokset ja tue mukavaa kehittäjää. Lähes ilmaista!';
 

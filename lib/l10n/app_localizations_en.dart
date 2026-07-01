@@ -99,6 +99,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastParkedNever => 'Last parked not measured yet';
 
   @override
+  String parkingExpires(String time) {
+    return 'Parking expires $time';
+  }
+
+  @override
   String get removeAdsButton =>
       'Remove ads and support a nice developer. Almost free!';
 

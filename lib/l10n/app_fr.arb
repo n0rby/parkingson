@@ -28,6 +28,7 @@
   "monitoringActive": "Surveillance active",
   "lastParkedAt": "Dernier stationnement {time}",
   "lastParkedNever": "Dernier stationnement pas encore mesuré",
+  "parkingExpires": "Le stationnement expire {time}",
   "removeAdsButton": "Supprimez les publicités et soutenez un développeur sympa. Presque gratuit !",
   "testReminder": "Rappel de test",
   "testReminderDesc": "Voir la notification, la sirène et la voix",

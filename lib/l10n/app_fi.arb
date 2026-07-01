@@ -28,6 +28,7 @@
   "monitoringActive": "Valvonta käytössä",
   "lastParkedAt": "Viimeksi pysäköity {time}",
   "lastParkedNever": "Viimeksi pysäköityä ei ole vielä mitattu",
+  "parkingExpires": "Pysäköinti päättyy {time}",
   "removeAdsButton": "Poista mainokset ja tue mukavaa kehittäjää. Lähes ilmaista!",
   "testReminder": "Testimuistutus",
   "testReminderDesc": "Katso ilmoitus, sireeni ja ääni",

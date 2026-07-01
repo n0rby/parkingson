@@ -28,6 +28,7 @@
   "monitoringActive": "Overvåking aktiv",
   "lastParkedAt": "Sist parkert {time}",
   "lastParkedNever": "Sist parkert ikke målt ennå",
+  "parkingExpires": "Parkering utløper {time}",
   "removeAdsButton": "Fjern annonser og støtt en hyggelig utvikler. Nesten gratis!",
   "testReminder": "Testpåminnelse",
   "testReminderDesc": "Se varsel, sirene og stemme",
