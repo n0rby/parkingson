@@ -1,8 +1,23 @@
+import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import '../l10n/app_localizations.dart';
 
 const _alarmChannel = MethodChannel('dk.parkingson/alarm');
+
+/// Localizations for background/isolate use, based on the device locale.
+AppLocalizations _bgL10n() {
+  final device = PlatformDispatcher.instance.locale;
+  final match = AppLocalizations.supportedLocales.firstWhere(
+    (l) => l.languageCode == device.languageCode,
+    orElse: () => const Locale('en'),
+  );
+  return lookupAppLocalizations(match);
+}
+
+/// BCP-47 language tag for TTS, matching the device locale.
+String _ttsTag() => PlatformDispatcher.instance.locale.toLanguageTag();
 
 const _channelId = 'parking_reminder';
 const _channelName = 'Parkeringspåmindelser';
@@ -49,6 +64,7 @@ class NotificationService {
   }
 
   Future<void> showParkingReminder({String? payload}) async {
+    final l10n = _bgL10n();
     const androidDetails = AndroidNotificationDetails(
       _channelId,
       _channelName,
@@ -63,8 +79,8 @@ class NotificationService {
     );
     await _plugin.show(
       _reminderNotificationId,
-      'Husk at betale for parkering!',
-      'Vi registrerede at du har forladt din bil.',
+      l10n.notifParkingTitle,
+      l10n.notifParkingBody,
       const NotificationDetails(android: androidDetails, iOS: iosDetails),
       payload: payload,
     );
@@ -74,9 +90,9 @@ class NotificationService {
     await _alarmChannel.invokeMethod('playAlarm');
     await Future.delayed(const Duration(milliseconds: 300));
     final tts = FlutterTts();
-    await tts.setLanguage('da-DK');
+    await tts.setLanguage(_ttsTag());
     await tts.setSpeechRate(0.5);
-    await tts.speak('Husk parkering');
+    await tts.speak(_bgL10n().ttsRemember);
   }
 
   String? Function(NotificationResponse)? get onNotificationTap => null;
@@ -85,6 +101,7 @@ class NotificationService {
 // Top-level helpers used by background service isolate — no class instance needed.
 
 Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
+  final l10n = _bgL10n();
   await _plugin.initialize(
     const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -93,8 +110,8 @@ Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
   );
   await _plugin.show(
     2,
-    'Skynd dig tilbage til bilen!',
-    'Du skal gå nu — gangtid ca. $walkMinutes min og parkering udløber snart.',
+    l10n.notifWalkBackTitle,
+    l10n.notifWalkBackBody(walkMinutes),
     const NotificationDetails(
       android: AndroidNotificationDetails(
         _channelId, _channelName,
@@ -109,6 +126,7 @@ Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
 }
 
 Future<void> showParkingReminderFromBackground({String? payload}) async {
+  final l10n = _bgL10n();
   await _plugin.initialize(
     const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -117,8 +135,8 @@ Future<void> showParkingReminderFromBackground({String? payload}) async {
   );
   await _plugin.show(
     _reminderNotificationId,
-    'Husk at betale for parkering!',
-    'Vi registrerede at du har forladt din bil.',
+    l10n.notifParkingTitle,
+    l10n.notifParkingBody,
     const NotificationDetails(
       android: AndroidNotificationDetails(
         _channelId, _channelName,

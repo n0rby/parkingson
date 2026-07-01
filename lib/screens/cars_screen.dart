@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/car_device.dart';
 import '../theme.dart';
 import '../widgets/list_card.dart';
@@ -27,23 +28,24 @@ class CarsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ScreenScaffold(
-      title: 'Vælg dine biler',
+      title: l10n.carsTitle,
       children: [
         ListCard(children: [
-          const Expanded(
-            child: Text('Brug kun BT, for at reducere antallet af falske alarmer'),
+          Expanded(
+            child: Text(l10n.btOnlyMode),
           ),
           Checkbox(value: btOnlyMode, onChanged: (v) => onBtOnlyModeChange(v ?? false)),
         ]),
         const SizedBox(height: 16),
-        const Text('Appen virker bedst, hvis du vælger dine bilers Bluetooth-forbindelser.'),
+        Text(l10n.carsBody),
         const SizedBox(height: 16),
-        const Text('Biler med Bluetooth', style: TextStyle(fontWeight: FontWeight.bold, color: hpText)),
+        Text(l10n.carsWithBluetooth, style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),
         const SizedBox(height: 8),
         if (pairedDevices.isEmpty)
-          ListCard(children: const [
-            Expanded(child: Text('Ingen parrede Bluetooth-enheder fundet.')),
+          ListCard(children: [
+            Expanded(child: Text(l10n.noPairedDevices)),
           ])
         else
           ...pairedDevices.map((car) {
@@ -74,10 +76,10 @@ class CarsScreen extends StatelessWidget {
             );
           }),
         const SizedBox(height: 16),
-        PrimaryButton(label: 'Aktiver parkeringsovervågning', onPressed: onNext),
+        PrimaryButton(label: l10n.activateParkingMonitoring, onPressed: onNext),
         TextButton(
           onPressed: onOpenBluetoothSettings,
-          child: const Text('System Bluetooth-indstillinger'),
+          child: Text(l10n.systemBluetoothSettings),
         ),
       ],
     );

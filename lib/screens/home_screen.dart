@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../l10n/app_localizations.dart';
 import '../models/car_device.dart';
 import '../models/location_snapshot.dart';
 import '../theme.dart';
@@ -32,6 +33,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: hpBackground,
       body: SafeArea(
@@ -43,7 +45,7 @@ class HomeScreen extends StatelessWidget {
               const Text('Parkingson',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: hpText)),
               const SizedBox(height: 12),
-              const StatusPill(label: 'Overvågning aktiv'),
+              StatusPill(label: l10n.monitoringActive),
               const SizedBox(height: 16),
               // Monitor card
               Card(
@@ -54,8 +56,8 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         lastParkingLocation != null
-                            ? 'Sidst parkeret ${lastParkingLocation!.displayCapturedAt}'
-                            : 'Sidst parkeret ikke målt endnu',
+                            ? l10n.lastParkedAt(lastParkingLocation!.displayCapturedAt)
+                            : l10n.lastParkedNever,
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: hpText),
                       ),
                       const SizedBox(height: 4),
@@ -69,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                           child: FilledButton(
                             onPressed: onBuyApp,
                             style: FilledButton.styleFrom(backgroundColor: hpOrange),
-                            child: const Text('Slip for reklamer og støt en rar programmør. Næsten gratis!',
+                            child: Text(l10n.removeAdsButton,
                                 textAlign: TextAlign.center),
                           ),
                         ),
@@ -82,27 +84,27 @@ class HomeScreen extends StatelessWidget {
               const _BatteryOptimizationCard(),
               const Divider(),
               ActionRow(
-                title: 'Test påmindelse',
-                subtitle: 'Se notifikation, sirene og stemme',
+                title: l10n.testReminder,
+                subtitle: l10n.testReminderDesc,
                 onTap: onTestAlarm,
                 accent: hpOrange,
               ),
               ActionRow(
-                title: 'Administrer biler',
-                subtitle: 'Tilføj, fjern eller skift biler',
+                title: l10n.manageCars,
+                subtitle: l10n.manageCarsDesc,
                 onTap: onManageCars,
                 accent: hpTeal,
               ),
               ActionRow(
-                title: 'Find min bil',
+                title: l10n.findCar,
                 subtitle: lastParkingLocation != null
-                    ? 'Rute til sidst parkeret ${lastParkingLocation!.displayCapturedAt}'
-                    : 'Ingen parkeringsplacering gemt endnu',
+                    ? l10n.findCarRoute(lastParkingLocation!.displayCapturedAt)
+                    : l10n.findCarNone,
                 onTap: onFindCar,
               ),
               ActionRow(
-                title: 'Ignorerede lokationer',
-                subtitle: 'Steder der ikke udløser alarm',
+                title: l10n.ignoredLocationsAction,
+                subtitle: l10n.ignoredLocationsActionDesc,
                 onTap: onManageIgnoredLocations,
               ),
             ],
@@ -164,6 +166,7 @@ class _BatteryOptimizationCardState extends State<_BatteryOptimizationCard>
   @override
   Widget build(BuildContext context) {
     if (_ignoring || _dismissed) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.only(top: 8, bottom: 8),
       padding: const EdgeInsets.all(14),
@@ -179,9 +182,9 @@ class _BatteryOptimizationCardState extends State<_BatteryOptimizationCard>
             children: [
               const Icon(Icons.battery_saver_outlined, color: hpOrange, size: 20),
               const SizedBox(width: 8),
-              const Expanded(
-                child: Text('Anbefalet: undtag fra batterioptimering',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: hpText)),
+              Expanded(
+                child: Text(l10n.batteryCardTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),
               ),
               GestureDetector(
                 onTap: () => setState(() => _dismissed = true),
@@ -190,11 +193,9 @@ class _BatteryOptimizationCardState extends State<_BatteryOptimizationCard>
             ],
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Valgfrit. Uden dette kan Android (især Samsung) stoppe '
-            'bevægelsesovervågningen i baggrunden, så parkering uden Bluetooth '
-            'ikke altid opdages.',
-            style: TextStyle(fontSize: 12, color: hpMuted, height: 1.4),
+          Text(
+            l10n.batteryCardBody,
+            style: const TextStyle(fontSize: 12, color: hpMuted, height: 1.4),
           ),
           const SizedBox(height: 10),
           SizedBox(
@@ -202,7 +203,7 @@ class _BatteryOptimizationCardState extends State<_BatteryOptimizationCard>
             child: FilledButton(
               onPressed: _request,
               style: FilledButton.styleFrom(backgroundColor: hpOrange),
-              child: const Text('Tillad ubegrænset baggrund'),
+              child: Text(l10n.batteryCardButton),
             ),
           ),
         ],
@@ -223,7 +224,8 @@ class _MotionStatusLine extends StatefulWidget {
 class _MotionStatusLineState extends State<_MotionStatusLine> {
   static const _channel = MethodChannel('dk.parkingson/alarm');
   Timer? _timer;
-  String _text = 'Motion: henter status…';
+  Map<String, dynamic>? _status;
+  bool _error = false;
 
   @override
   void initState() {
@@ -242,13 +244,20 @@ class _MotionStatusLineState extends State<_MotionStatusLine> {
     try {
       final result = await _channel.invokeMethod('getMotionStatus');
       if (!mounted || result is! Map) return;
-      setState(() => _text = _format(Map<String, dynamic>.from(result)));
+      setState(() {
+        _status = Map<String, dynamic>.from(result);
+        _error = false;
+      });
     } catch (_) {
-      if (mounted) setState(() => _text = 'Motion: status utilgængelig');
+      if (mounted) setState(() => _error = true);
     }
   }
 
-  String _format(Map<String, dynamic> s) {
+  String _format(AppLocalizations l10n) {
+    if (_error) return l10n.motionUnavailable;
+    final s = _status;
+    if (s == null) return l10n.motionFetching;
+
     final hasPermission = s['hasPermission'] == true;
     final registered = s['registered'] == true;
     final lastError = s['lastError'] as String?;
@@ -258,32 +267,32 @@ class _MotionStatusLineState extends State<_MotionStatusLine> {
     final inVehicleSince = (s['inVehicleSince'] as num?)?.toInt() ?? 0;
     final dormant = s['dormant'] == true;
 
-    if (!hasPermission) return 'Motion: ingen tilladelse til fysisk aktivitet';
-    if (lastError != null && lastError.isNotEmpty) return 'Motion-fejl: $lastError';
-    if (!registered) return 'Motion: registrerer…';
+    if (!hasPermission) return l10n.motionNoPermission;
+    if (lastError != null && lastError.isNotEmpty) return l10n.motionError(lastError);
+    if (!registered) return l10n.motionRegistering;
 
-    final parts = <String>[dormant ? 'Motion i dvale' : 'Motion aktiv'];
+    final parts = <String>[dormant ? l10n.motionDormant : l10n.motionActive];
     if (type >= 0) {
-      final label = _activityLabel(type);
+      final label = _activityLabel(l10n, type);
       parts.add(conf >= 0 ? '$label $conf%' : label);
       if (at > 0) parts.add(_clock(at));
     } else {
-      parts.add('afventer data');
+      parts.add(l10n.motionWaitingData);
     }
-    if (inVehicleSince > 0) parts.add('bil-timer kører');
-    if (dormant) parts.add('vågner ved bevægelse');
+    if (inVehicleSince > 0) parts.add(l10n.motionVehicleTimer);
+    if (dormant) parts.add(l10n.motionWakesOnMovement);
     return parts.join(' · ');
   }
 
-  String _activityLabel(int t) => switch (t) {
-        0 => 'I bil',
-        1 => 'På cykel',
-        2 => 'Til fods',
-        3 => 'Stille',
-        5 => 'Vipper',
-        7 => 'Går',
-        8 => 'Løber',
-        _ => 'Ukendt',
+  String _activityLabel(AppLocalizations l10n, int t) => switch (t) {
+        0 => l10n.activityInVehicle,
+        1 => l10n.activityOnBicycle,
+        2 => l10n.activityOnFoot,
+        3 => l10n.activityStill,
+        5 => l10n.activityTilting,
+        7 => l10n.activityWalking,
+        8 => l10n.activityRunning,
+        _ => l10n.activityUnknown,
       };
 
   String _clock(int millis) {
@@ -295,7 +304,7 @@ class _MotionStatusLineState extends State<_MotionStatusLine> {
   @override
   Widget build(BuildContext context) {
     return Text(
-      _text,
+      _format(AppLocalizations.of(context)),
       style: const TextStyle(fontSize: 11, color: hpSubtle),
     );
   }

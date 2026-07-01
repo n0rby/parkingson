@@ -1,14 +1,26 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../l10n/app_localizations.dart';
 import '../models/location_snapshot.dart';
 import '../models/parking_timer.dart';
 import '../repositories/ignored_location_repository.dart';
 import 'notification_service.dart';
+
+/// Localizations based on the device locale, for use without a BuildContext.
+AppLocalizations _deviceL10n() {
+  final device = PlatformDispatcher.instance.locale;
+  final match = AppLocalizations.supportedLocales.firstWhere(
+    (l) => l.languageCode == device.languageCode,
+    orElse: () => const Locale('en'),
+  );
+  return lookupAppLocalizations(match);
+}
 
 // Keys for background ↔ UI messaging
 const _evtStop = 'stop';
@@ -25,14 +37,15 @@ class MotionService {
   final _service = FlutterBackgroundService();
 
   Future<void> initialize() async {
+    final l10n = _deviceL10n();
     await _service.configure(
       androidConfiguration: AndroidConfiguration(
         onStart: _onStart,
         autoStart: false,
         isForegroundMode: true,
         notificationChannelId: 'parkingson_monitoring',
-        initialNotificationTitle: 'Parkingson',
-        initialNotificationContent: 'Overvåger din bil...',
+        initialNotificationTitle: l10n.monitoringTitle,
+        initialNotificationContent: l10n.monitoringBody,
         foregroundServiceNotificationId: 888,
       ),
       iosConfiguration: IosConfiguration(

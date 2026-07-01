@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/ignored_location.dart';
 import '../models/location_snapshot.dart';
 import '../models/parking_timer.dart';
@@ -39,19 +40,19 @@ class _ReminderScreenState extends State<ReminderScreen> {
     Duration(hours: 4),
   ];
 
-  String _formatDuration(Duration d) {
-    if (d.inMinutes < 60) return '${d.inMinutes} min';
+  String _formatDuration(Duration d, AppLocalizations l10n) {
+    if (d.inMinutes < 60) return l10n.durationMinutes(d.inMinutes);
     final h = d.inHours;
     final m = d.inMinutes.remainder(60);
-    return m == 0 ? '$h t' : '$h t $m min';
+    return m == 0 ? l10n.durationHours(h) : l10n.durationHoursMinutes(h, m);
   }
 
-  String get _expiryDisplay {
-    if (_selectedDuration == null) return 'Vælg tid';
+  String _expiryDisplay(AppLocalizations l10n) {
+    if (_selectedDuration == null) return l10n.pickTime;
     final expiry = DateTime.now().add(_selectedDuration!);
     final h = expiry.hour.toString().padLeft(2, '0');
     final m = expiry.minute.toString().padLeft(2, '0');
-    return 'Udløber kl. $h:$m';
+    return l10n.expiresAt('$h:$m');
   }
 
   Future<void> _pickCustomTime() async {
@@ -61,7 +62,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       initialTime: _selectedDuration != null
           ? TimeOfDay.fromDateTime(DateTime.now().add(_selectedDuration!))
           : TimeOfDay(hour: (now.hour + 1) % 24, minute: now.minute),
-      helpText: 'Vælg udløbstidspunkt',
+      helpText: AppLocalizations.of(context).pickExpiryTime,
     );
     if (picked == null) return;
     final today = DateTime.now();
@@ -85,32 +86,33 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ScreenScaffold(
-      title: 'Husk at betale for parkering!',
+      title: l10n.reminderTitle,
       children: [
-        const Text(
-          'Vi har registreret at du har forladt din bil. Husk at betale for parkering!',
-          style: TextStyle(fontSize: 16, color: hpText, height: 1.5),
+        Text(
+          l10n.reminderBody,
+          style: const TextStyle(fontSize: 16, color: hpText, height: 1.5),
         ),
         const SizedBox(height: 20),
         _InfoRow(
           icon: Icons.location_on_outlined,
-          label: 'Koordinater',
+          label: l10n.coordinates,
           value: widget.parkingLocation.displayCoordinates,
         ),
         _InfoRow(
           icon: Icons.access_time,
-          label: 'Registreret',
+          label: l10n.registeredLabel,
           value: widget.parkingLocation.displayCapturedAt,
         ),
         const SizedBox(height: 24),
-        PrimaryButton(label: 'Find min bil', onPressed: widget.onNavigateToCar),
+        PrimaryButton(label: l10n.findCar, onPressed: widget.onNavigateToCar),
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(
             onPressed: widget.onAddIgnoredLocation,
-            child: const Text('Ignorer altid denne placering'),
+            child: Text(l10n.ignoreThisLocation),
           ),
         ),
 
@@ -137,19 +139,19 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     },
                   ),
                   const SizedBox(width: 4),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Påmind mig om at gå tilbage i tide',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: hpText),
+                      l10n.timerCheckbox,
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: hpText),
                     ),
                   ),
                 ],
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 4, top: 2),
+              Padding(
+                padding: const EdgeInsets.only(left: 4, top: 2),
                 child: Text(
-                  'Angiv hvor længe du må parkere her',
-                  style: TextStyle(color: hpMuted, fontSize: 13),
+                  l10n.timerHelp,
+                  style: const TextStyle(color: hpMuted, fontSize: 13),
                 ),
               ),
               if (_timerEnabled) ...[
@@ -161,7 +163,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   children: _quickDurations.map((d) {
                     final selected = _selectedDuration == d;
                     return ChoiceChip(
-                      label: Text(_formatDuration(d)),
+                      label: Text(_formatDuration(d, l10n)),
                       selected: selected,
                       selectedColor: hpTeal,
                       labelStyle: TextStyle(
@@ -201,7 +203,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          _expiryDisplay,
+                          _expiryDisplay(l10n),
                           style: TextStyle(
                             color: _selectedDuration != null ? hpTeal : hpMuted,
                             fontWeight: FontWeight.bold,
@@ -216,9 +218,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
                 ),
                 if (_selectedDuration != null) ...[
                   const SizedBox(height: 8),
-                  const Text(
-                    'Du får besked i god tid til at gå tilbage til bilen.',
-                    style: TextStyle(color: hpMuted, fontSize: 12),
+                  Text(
+                    l10n.timerConfirmBody,
+                    style: const TextStyle(color: hpMuted, fontSize: 12),
                   ),
                 ],
               ],
@@ -230,14 +232,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
         const SizedBox(height: 8),
         TextButton(
           onPressed: widget.onDismiss,
-          child: const Text('Luk'),
+          child: Text(l10n.close),
         ),
         const SizedBox(height: 12),
         Text(
-          'Tryk "Ignorer altid" for steder som hjemme eller arbejde, '
-          'hvor du sjældent skal betale for parkering. '
-          'Alarmen vises ikke igen inden for ${ignoredLocationRadiusMeters.toInt()} meter herfra. '
-          'Med tiden vil du opleve færre unødvendige alarmer.',
+          l10n.ignoreHint(ignoredLocationRadiusMeters.toInt()),
           style: const TextStyle(color: hpMuted, fontSize: 13, height: 1.5),
         ),
       ],

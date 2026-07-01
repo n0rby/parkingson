@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../theme.dart';
 import '../widgets/primary_button.dart';
 
@@ -9,6 +10,7 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: hpBackground,
       body: SafeArea(
@@ -22,15 +24,15 @@ class WelcomeScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                       color: hpTeal, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
-              const Text('Undgå parkeringsbøder',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: hpText)),
+              Text(l10n.welcomeTagline,
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: hpText)),
               const SizedBox(height: 8),
-              const Text(
-                'Få en påmindelse, når du forlader en af dine biler, og gem automatisk stedet, så du kan finde bilen igen.',
-                style: TextStyle(color: hpMuted, fontSize: 15, height: 1.5),
+              Text(
+                l10n.welcomeBody,
+                style: const TextStyle(color: hpMuted, fontSize: 15, height: 1.5),
               ),
               const Spacer(),
-              PrimaryButton(label: 'Kom i gang', onPressed: onGetStarted),
+              PrimaryButton(label: l10n.getStarted, onPressed: onGetStarted),
               const SizedBox(height: 16),
             ],
           ),

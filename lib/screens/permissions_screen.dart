@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../l10n/app_localizations.dart';
 import '../theme.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/screen_scaffold.dart';
@@ -118,12 +119,13 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ScreenScaffold(
-      title: 'Tilladelser',
+      title: l10n.permissionsTitle,
       children: [
-        const Text(
-          'Appen har brug for følgende tilladelser for at overvåge din bil i baggrunden.',
-          style: TextStyle(color: hpMuted, height: 1.5),
+        Text(
+          l10n.permissionsBody,
+          style: const TextStyle(color: hpMuted, height: 1.5),
         ),
         const SizedBox(height: 24),
         if (_checking)
@@ -136,15 +138,15 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
               )),
         const SizedBox(height: 24),
         PrimaryButton(
-          label: 'Aktiver overvågning',
+          label: l10n.activateMonitoring,
           onPressed: _canActivate ? widget.onActivate : null,
         ),
         if (!_canActivate) ...[
           const SizedBox(height: 8),
-          const Text(
-            'Giv alle tilladelser ovenfor for at fortsætte.',
+          Text(
+            l10n.grantAllToContinue,
             textAlign: TextAlign.center,
-            style: TextStyle(color: hpMuted, fontSize: 13),
+            style: const TextStyle(color: hpMuted, fontSize: 13),
           ),
         ],
       ],
@@ -165,6 +167,7 @@ class _PermissionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final granted = status?.isGranted == true;
     final denied = status?.isPermanentlyDenied == true;
 
@@ -192,9 +195,9 @@ class _PermissionRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title,
+                Text(item.title(l10n),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: hpText)),
-                Text(item.description,
+                Text(item.description(l10n),
                     style: const TextStyle(fontSize: 12, color: hpMuted)),
               ],
             ),
@@ -203,10 +206,10 @@ class _PermissionRow extends StatelessWidget {
           if (!granted)
             TextButton(
               onPressed: onRequest,
-              child: Text(denied ? 'Indstillinger' : 'Giv'),
+              child: Text(denied ? l10n.openSettings : l10n.grant),
             )
           else
-            const Text('OK', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+            Text(l10n.ok, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -226,18 +229,18 @@ enum _PermItem {
         notifications => Permission.notification,
       };
 
-  String get title => switch (this) {
-        bluetooth => 'Bluetooth',
-        locationAlways => 'Placering',
-        activityRecognition => 'Fysisk aktivitet',
-        notifications => 'Notifikationer',
+  String title(AppLocalizations l10n) => switch (this) {
+        bluetooth => l10n.permBluetooth,
+        locationAlways => l10n.permLocation,
+        activityRecognition => l10n.permActivity,
+        notifications => l10n.permNotifications,
       };
 
-  String get description => switch (this) {
-        bluetooth => 'Registrér hvornår du forlader din bil',
-        locationAlways => 'Gem parkeringsstedet og overvåg i baggrunden',
-        activityRecognition => 'Detektér kørsel og gang',
-        notifications => 'Send påmindelser om parkering',
+  String description(AppLocalizations l10n) => switch (this) {
+        bluetooth => l10n.permBluetoothDesc,
+        locationAlways => l10n.permLocationDesc,
+        activityRecognition => l10n.permActivityDesc,
+        notifications => l10n.permNotificationsDesc,
       };
 
   IconData get icon => switch (this) {

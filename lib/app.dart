@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'l10n/app_localizations.dart';
 import 'repositories/car_repository.dart';
 import 'repositories/billing_repository.dart';
 import 'repositories/ignored_location_repository.dart';
@@ -119,11 +120,14 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
       title: 'Parkingson',
       theme: buildTheme(),
       debugShowCheckedModeBanner: false,
-      home: _buildScreen(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Builder(builder: (context) => _buildScreen(context)),
     );
   }
 
-  Widget _buildScreen() {
+  Widget _buildScreen(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     switch (_screen) {
       case _Screen.welcome:
         return WelcomeScreen(
@@ -213,7 +217,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
           onAddCurrentLocation: (setStatus) async {
             final snapshot = await _locationService.getCurrentLocation();
             if (snapshot == null) {
-              setStatus('Kunne ikke hente placering.');
+              setStatus(l10n.locationFetchError);
               return;
             }
             final name = await _locationService.reverseGeocode(
@@ -221,7 +225,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
             await _ignoredRepo.addIgnoredLocation(snapshot, name: name);
             final updated = await _ignoredRepo.getIgnoredLocations();
             setState(() => _ignoredLocations = updated);
-            setStatus('Placering tilføjet.');
+            setStatus(l10n.locationAdded);
           },
           onClearAll: () async {
             await _ignoredRepo.clearIgnoredLocations();

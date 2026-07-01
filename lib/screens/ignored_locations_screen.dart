@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/ignored_location.dart';
 import '../models/location_snapshot.dart';
 import '../theme.dart';
@@ -53,6 +54,7 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -65,7 +67,7 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Ignorerede placeringer',
+                    l10n.ignoredLocationsTitle,
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall
@@ -73,7 +75,7 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Alarmer vises ikke inden for ${ignoredLocationRadiusMeters.toInt()} meter fra disse steder.',
+                    l10n.ignoredLocationsRadiusInfo(ignoredLocationRadiusMeters.toInt()),
                     style: const TextStyle(color: hpMuted),
                   ),
                   const SizedBox(height: 12),
@@ -82,7 +84,7 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
                     child: FilledButton(
                       onPressed: () => widget.onAddCurrentLocation(
                           (msg) => setState(() => _statusMessage = msg)),
-                      child: const Text('Tilføj nuværende placering'),
+                      child: Text(l10n.addCurrentLocation),
                     ),
                   ),
                   if (_statusMessage != null) ...[
@@ -90,26 +92,26 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
                     Text(_statusMessage!, style: const TextStyle(color: hpTeal)),
                   ],
                   const SizedBox(height: 12),
-                  const Text('Sortér efter',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: hpText)),
+                  Text(l10n.sortBy,
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     children: [
                       FilterChip(
-                        label: const Text('Tidspunkt'),
+                        label: Text(l10n.sortTime),
                         selected: _sortMode == IgnoredLocationSortMode.addedAt,
                         onSelected: (_) => setState(
                             () => _sortMode = IgnoredLocationSortMode.addedAt),
                       ),
                       FilterChip(
-                        label: const Text('Navn'),
+                        label: Text(l10n.sortName),
                         selected: _sortMode == IgnoredLocationSortMode.name,
                         onSelected: (_) => setState(
                             () => _sortMode = IgnoredLocationSortMode.name),
                       ),
                       FilterChip(
-                        label: const Text('Afstand'),
+                        label: Text(l10n.sortDistance),
                         selected: _sortMode == IgnoredLocationSortMode.distance,
                         onSelected: (_) => setState(
                             () => _sortMode = IgnoredLocationSortMode.distance),
@@ -126,15 +128,15 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
               child: widget.ignoredLocations.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ListCard(children: const [
+                      child: ListCard(children: [
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Ingen ignorerede placeringer',
-                                  style: TextStyle(fontWeight: FontWeight.bold)),
-                              Text('Du kan tilføje en placering fra en påmindelse.',
-                                  style: TextStyle(color: hpMuted, fontSize: 13)),
+                              Text(l10n.noIgnoredLocations,
+                                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Text(l10n.noIgnoredLocationsBody,
+                                  style: const TextStyle(color: hpMuted, fontSize: 13)),
                             ],
                           ),
                         ),
@@ -155,18 +157,18 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(loc.name ?? 'Ignoreret placering',
+                                      Text(loc.name ?? l10n.ignoredLocationDefault,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: hpText)),
                                       Text(loc.displayCoordinates,
                                           style: const TextStyle(
                                               color: hpMuted, fontSize: 12)),
-                                      Text('Tilføjet ${loc.displayCreatedAt}',
+                                      Text(l10n.addedAt(loc.displayCreatedAt),
                                           style: const TextStyle(
                                               color: hpMuted, fontSize: 12)),
-                                      const Text('Tryk for at åbne i kort',
-                                          style: TextStyle(
+                                      Text(l10n.tapToOpenMap,
+                                          style: const TextStyle(
                                               color: hpTeal, fontSize: 12)),
                                     ],
                                   ),
@@ -183,8 +185,8 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
                         // "Slet alle" at the bottom of the list
                         return TextButton(
                           onPressed: widget.onClearAll,
-                          child: const Text('Slet alle',
-                              style: TextStyle(color: Colors.red)),
+                          child: Text(l10n.deleteAll,
+                              style: const TextStyle(color: Colors.red)),
                         );
                       },
                     ),
@@ -195,7 +197,7 @@ class _IgnoredLocationsScreenState extends State<IgnoredLocationsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               child: TextButton(
                 onPressed: widget.onBack,
-                child: const Text('Tilbage til oversigt'),
+                child: Text(l10n.backToOverview),
               ),
             ),
           ],
