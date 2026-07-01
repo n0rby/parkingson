@@ -23,6 +23,9 @@ const _channelId = 'parking_reminder';
 const _channelName = 'Parkeringspåmindelser';
 const _reminderNotificationId = 1;
 
+// How long the reminder notification stays before Android auto-dismisses it.
+const _reminderTimeoutMs = 60000;
+
 final _plugin = FlutterLocalNotificationsPlugin();
 
 class NotificationService {
@@ -72,6 +75,7 @@ class NotificationService {
       priority: Priority.high,
       playSound: true,
       enableVibration: true,
+      timeoutAfter: _reminderTimeoutMs,
     );
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
@@ -142,6 +146,7 @@ Future<void> showParkingReminderFromBackground({String? payload}) async {
         _channelId, _channelName,
         importance: Importance.high,
         priority: Priority.high,
+        timeoutAfter: _reminderTimeoutMs,
       ),
       iOS: DarwinNotificationDetails(presentAlert: true, presentSound: true),
     ),
