@@ -51,7 +51,8 @@ fun startMotionMonitoring(context: Context) {
             enterTransition(DetectedActivity.IN_VEHICLE),
             enterTransition(DetectedActivity.ON_FOOT),   // generic on-foot; many devices send this
             enterTransition(DetectedActivity.WALKING),
-            enterTransition(DetectedActivity.RUNNING)
+            enterTransition(DetectedActivity.RUNNING),
+            enterTransition(DetectedActivity.STILL)      // so the status flips back to "still" promptly
         )
     )
     try {
