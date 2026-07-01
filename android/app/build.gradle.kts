@@ -56,6 +56,11 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+            // R8 minification strips androidx.work (WorkManager/Room) classes used by
+            // flutter_background_service, which crashes the release build at startup.
+            // Disable shrinking so the release behaves like debug.
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
