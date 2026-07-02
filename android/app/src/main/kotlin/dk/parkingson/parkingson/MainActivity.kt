@@ -38,6 +38,14 @@ class MainActivity : FlutterActivity() {
                         AlarmPlayer.stopVibration(this)
                         result.success(null)
                     }
+                    "speak" -> {
+                        Speaker.speak(
+                            this,
+                            call.argument<String>("text") ?: "",
+                            call.argument<String>("lang") ?: "en"
+                        )
+                        result.success(null)
+                    }
                     "openBluetoothSettings" -> {
                         startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS))
                         result.success(null)

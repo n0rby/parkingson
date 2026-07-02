@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,13 +80,22 @@ Future<void> speakPendingVoice({Duration delay = Duration.zero}) async {
   if (DateTime.now().millisecondsSinceEpoch - ts > 5 * 60 * 1000) return;
   // Let the alarm sound finish first so the voice doesn't play over it.
   if (delay > Duration.zero) await Future.delayed(delay);
-  try {
-    final tts = FlutterTts();
-    await tts.setLanguage(_ttsTag());
-    await tts.setVolume(1.0);
-    await tts.setSpeechRate(0.5);
-    await tts.speak(text);
-  } catch (_) {}
+  if (Platform.isAndroid) {
+    // Native TTS plays on the alarm stream (full alarm volume), matching the
+    // alarm sound — flutter_tts can only use the quieter media stream.
+    try {
+      await const MethodChannel('dk.parkingson/alarm')
+          .invokeMethod('speak', {'text': text, 'lang': _ttsTag()});
+    } catch (_) {}
+  } else {
+    try {
+      final tts = FlutterTts();
+      await tts.setLanguage(_ttsTag());
+      await tts.setVolume(1.0);
+      await tts.setSpeechRate(0.5);
+      await tts.speak(text);
+    } catch (_) {}
+  }
 }
 
 // Alarm sound lasts ~3s; wait a bit longer before speaking so they don't overlap.
