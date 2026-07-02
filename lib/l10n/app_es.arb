@@ -96,7 +96,7 @@
   "notifParkingBody": "Detectamos que dejaste tu coche.",
   "notifWalkBackTitle": "¡Date prisa en volver al coche!",
   "notifWalkBackBody": "Debes salir ahora: tiempo a pie aprox. {minutes} min y el estacionamiento vence pronto.",
-  "ttsRemember": "Recuerda el estacionamiento",
+  "ttsRemember": "Recuerda el estacionamiento, o desactiva la alarma para este lugar",
   "monitoringTitle": "Parkingson",
   "monitoringBody": "Supervisando tu coche..."
 }

@@ -333,7 +333,8 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String get ttsRemember => 'Muista pysäköinti';
+  String get ttsRemember =>
+      'Muista pysäköinti, tai poista hälytys tästä paikasta käytöstä';
 
   @override
   String get monitoringTitle => 'Parkingson';

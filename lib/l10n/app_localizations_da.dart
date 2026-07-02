@@ -332,7 +332,7 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
-  String get ttsRemember => 'Husk parkering';
+  String get ttsRemember => 'Husk parkering eller slå alarm for dette sted fra';
 
   @override
   String get monitoringTitle => 'Parkingson';

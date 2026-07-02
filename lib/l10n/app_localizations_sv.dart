@@ -334,7 +334,8 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
-  String get ttsRemember => 'Kom ihåg parkering';
+  String get ttsRemember =>
+      'Kom ihåg parkering, eller stäng av larmet för denna plats';
 
   @override
   String get monitoringTitle => 'Parkingson';

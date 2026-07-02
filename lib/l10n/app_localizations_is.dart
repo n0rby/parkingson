@@ -331,7 +331,8 @@ class AppLocalizationsIs extends AppLocalizations {
   }
 
   @override
-  String get ttsRemember => 'Mundu bílastæðið';
+  String get ttsRemember =>
+      'Mundu bílastæðið, eða slökktu á viðvöruninni fyrir þennan stað';
 
   @override
   String get monitoringTitle => 'Parkingson';

@@ -116,7 +116,7 @@
   "notifWalkBackTitle": "Beeil dich zurück zum Auto!",
   "notifWalkBackBody": "Du solltest jetzt losgehen — Gehzeit ca. {minutes} Min und das Parken läuft bald ab.",
   "@notifWalkBackBody": { "placeholders": { "minutes": { "type": "int" } } },
-  "ttsRemember": "Denk ans Parken",
+  "ttsRemember": "Denk ans Parken, oder deaktiviere den Alarm für diesen Ort",
   "monitoringTitle": "Parkingson",
   "monitoringBody": "Überwacht dein Auto..."
 }

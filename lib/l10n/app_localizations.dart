@@ -691,7 +691,7 @@ abstract class AppLocalizations {
   /// No description provided for @ttsRemember.
   ///
   /// In da, this message translates to:
-  /// **'Husk parkering'**
+  /// **'Husk parkering eller slå alarm for dette sted fra'**
   String get ttsRemember;
 
   /// No description provided for @monitoringTitle.

@@ -96,7 +96,7 @@
   "notifParkingBody": "Við greindum að þú yfirgafst bílinn.",
   "notifWalkBackTitle": "Flýttu þér til baka að bílnum!",
   "notifWalkBackBody": "Þú ættir að ganga núna — göngutími u.þ.b. {minutes} mín og bílastæðið rennur brátt út.",
-  "ttsRemember": "Mundu bílastæðið",
+  "ttsRemember": "Mundu bílastæðið, eða slökktu á viðvöruninni fyrir þennan stað",
   "monitoringTitle": "Parkingson",
   "monitoringBody": "Fylgist með bílnum þínum..."
 }

@@ -337,7 +337,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ttsRemember => 'Recuerda el estacionamiento';
+  String get ttsRemember =>
+      'Recuerda el estacionamiento, o desactiva la alarma para este lugar';
 
   @override
   String get monitoringTitle => 'Parkingson';

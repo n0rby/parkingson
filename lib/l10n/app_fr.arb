@@ -96,7 +96,7 @@
   "notifParkingBody": "Nous avons détecté que vous avez quitté votre voiture.",
   "notifWalkBackTitle": "Dépêchez-vous de retourner à la voiture !",
   "notifWalkBackBody": "Vous devez partir maintenant — temps de marche env. {minutes} min et le stationnement expire bientôt.",
-  "ttsRemember": "Pensez au stationnement",
+  "ttsRemember": "Pensez au stationnement, ou désactivez l'alarme pour ce lieu",
   "monitoringTitle": "Parkingson",
   "monitoringBody": "Surveillance de votre voiture..."
 }

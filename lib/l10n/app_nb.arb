@@ -96,7 +96,7 @@
   "notifParkingBody": "Vi oppdaget at du forlot bilen.",
   "notifWalkBackTitle": "Skynd deg tilbake til bilen!",
   "notifWalkBackBody": "Du bør gå nå — gangtid ca. {minutes} min og parkeringen utløper snart.",
-  "ttsRemember": "Husk parkering",
+  "ttsRemember": "Husk parkering, eller slå av alarmen for dette stedet",
   "monitoringTitle": "Parkingson",
   "monitoringBody": "Overvåker bilen din..."
 }

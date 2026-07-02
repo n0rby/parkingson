@@ -117,7 +117,7 @@
   "notifWalkBackTitle": "Skynd dig tilbage til bilen!",
   "notifWalkBackBody": "Du skal gå nu — gangtid ca. {minutes} min og parkering udløber snart.",
   "@notifWalkBackBody": { "placeholders": { "minutes": { "type": "int" } } },
-  "ttsRemember": "Husk parkering",
+  "ttsRemember": "Husk parkering eller slå alarm for dette sted fra",
   "monitoringTitle": "Parkingson",
   "monitoringBody": "Overvåger din bil..."
 }

@@ -116,7 +116,7 @@
   "notifWalkBackTitle": "Hurry back to the car!",
   "notifWalkBackBody": "You should walk now — walking time approx. {minutes} min and parking expires soon.",
   "@notifWalkBackBody": { "placeholders": { "minutes": { "type": "int" } } },
-  "ttsRemember": "Remember parking",
+  "ttsRemember": "Remember parking, or turn off the alarm for this place",
   "monitoringTitle": "Parkingson",
   "monitoringBody": "Monitoring your car..."
 }

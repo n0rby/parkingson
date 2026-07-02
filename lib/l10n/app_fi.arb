@@ -96,7 +96,7 @@
   "notifParkingBody": "Havaitsimme, että poistuit autostasi.",
   "notifWalkBackTitle": "Kiiruhda takaisin autolle!",
   "notifWalkBackBody": "Sinun pitäisi lähteä nyt — kävelyaika noin {minutes} min ja pysäköinti päättyy pian.",
-  "ttsRemember": "Muista pysäköinti",
+  "ttsRemember": "Muista pysäköinti, tai poista hälytys tästä paikasta käytöstä",
   "monitoringTitle": "Parkingson",
   "monitoringBody": "Valvotaan autoasi..."
 }
