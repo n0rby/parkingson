@@ -39,7 +39,9 @@ object AlarmPlayer {
 
     fun trigger(context: Context) {
         if (isDndActive(context)) {
-            // Silent alert; the voice is spoken when the app is opened.
+            // Do Not Disturb: vibration only — no voice at all. Discard the
+            // pending voice text so it is never spoken (not even on app open).
+            takePendingVoice(context)
             startPulseVibration(context)
         } else {
             // Take the pending voice now (and clear it) so opening the app
