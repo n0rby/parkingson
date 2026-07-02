@@ -13,6 +13,7 @@ import android.os.Looper
 import android.os.VibrationAttributes
 import android.os.VibrationEffect
 import android.os.Vibrator
+import java.util.Locale
 
 /**
  * Central alarm behaviour, callable from both the foreground (MethodChannel)
@@ -38,10 +39,33 @@ object AlarmPlayer {
 
     fun trigger(context: Context) {
         if (isDndActive(context)) {
+            // Silent alert; the voice is spoken when the app is opened.
             startPulseVibration(context)
         } else {
+            // Take the pending voice now (and clear it) so opening the app
+            // later won't speak it a second time.
+            val voice = takePendingVoice(context)
             playAlarmSound(context)
+            if (voice != null) {
+                val appContext = context.applicationContext
+                Handler(Looper.getMainLooper()).postDelayed({
+                    Speaker.speak(appContext, voice, Locale.getDefault().toLanguageTag())
+                }, 3300)
+            }
         }
+    }
+
+    /** Reads and clears the pending alarm voice text (if set within 5 minutes). */
+    private fun takePendingVoice(context: Context): String? {
+        val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        val raw = prefs.getString("flutter.pending_alarm_voice", null) ?: return null
+        prefs.edit().remove("flutter.pending_alarm_voice").apply()
+        val sep = raw.indexOf('|')
+        if (sep < 0) return null
+        val ts = raw.substring(0, sep).toLongOrNull() ?: return null
+        if (System.currentTimeMillis() - ts > 5 * 60 * 1000) return null
+        val text = raw.substring(sep + 1)
+        return text.ifBlank { null }
     }
 
     private fun startPulseVibration(context: Context) {
