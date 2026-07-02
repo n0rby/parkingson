@@ -15,6 +15,10 @@ import android.os.Build
  */
 class CarBluetoothReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        // A Bluetooth event is an FGS-start exemption window — revive monitoring
+        // if it was killed.
+        ServiceStarter.ensureRunning(context.applicationContext)
+
         val device: BluetoothDevice? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
         } else {

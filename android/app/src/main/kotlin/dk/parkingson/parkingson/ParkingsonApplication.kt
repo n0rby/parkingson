@@ -30,13 +30,18 @@ class ParkingsonApplication : Application() {
             registerReceiver(receiver, filter)
         }
 
-        // (Re)register motion detection on every process start — this covers a
-        // reboot, where only the background service starts and no UI runs.
+        // Every process start (app launch, boot, a background broadcast that
+        // spawned us) is a chance to revive monitoring after a reboot or after
+        // the user swiped the app away / used "Clear all".
         val flutterPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         val setupDone = flutterPrefs.getBoolean("flutter.setup_completed", false)
         val btOnly = flutterPrefs.getBoolean("flutter.bt_only_mode", false)
         if (setupDone && !btOnly) {
             startMotionMonitoring(this)
+        }
+        if (setupDone) {
+            ServiceStarter.ensureRunning(this)
+            ServiceStarter.scheduleWatchdog(this)
         }
     }
 }

@@ -19,6 +19,9 @@ import com.google.android.gms.location.DetectedActivity
 class ActivityRecognitionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val appContext = context.applicationContext
+        // A motion event is an FGS-start exemption window — revive monitoring if
+        // it was killed (reboot / "Clear all").
+        ServiceStarter.ensureRunning(appContext)
         when {
             intent.action == ACTION_ACTIVITY_TRANSITION && ActivityTransitionResult.hasResult(intent) -> {
                 val result = ActivityTransitionResult.extractResult(intent) ?: return
