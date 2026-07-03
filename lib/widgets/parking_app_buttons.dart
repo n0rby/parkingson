@@ -1,11 +1,12 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../repositories/parking_apps_repository.dart';
 import '../theme.dart';
 
 /// Shows a launch button for each parking app the user selected under
-/// Opsætning → Parkeringsapps. Tapping a button opens that app so the user can
-/// pay for parking straight from the reminder. Renders nothing while loading or
-/// when no apps are selected.
+/// Opsætning → Parkeringsapps. Each button shows the app's own icon; tapping it
+/// opens that app so the user can pay for parking straight from the reminder.
+/// Renders nothing while loading or when no apps are selected.
 class ParkingAppButtons extends StatefulWidget {
   const ParkingAppButtons({super.key});
 
@@ -16,6 +17,7 @@ class ParkingAppButtons extends StatefulWidget {
 class _ParkingAppButtonsState extends State<ParkingAppButtons> {
   final _repo = ParkingAppsRepository();
   List<InstalledApp> _apps = [];
+  final Map<String, Uint8List> _icons = {};
   bool _loaded = false;
 
   @override
@@ -26,12 +28,16 @@ class _ParkingAppButtonsState extends State<ParkingAppButtons> {
 
   Future<void> _load() async {
     final apps = await _repo.getSelectedApps();
-    if (mounted) {
-      setState(() {
-        _apps = apps;
-        _loaded = true;
-      });
-    }
+    final icons = await Future.wait(apps.map((a) => _repo.getAppIcon(a.packageName)));
+    if (!mounted) return;
+    setState(() {
+      _apps = apps;
+      for (var i = 0; i < apps.length; i++) {
+        final icon = icons[i];
+        if (icon != null) _icons[apps[i].packageName] = icon;
+      }
+      _loaded = true;
+    });
   }
 
   @override
@@ -47,13 +53,24 @@ class _ParkingAppButtonsState extends State<ParkingAppButtons> {
               backgroundColor: hpCard,
               foregroundColor: hpText,
               minimumSize: const Size(0, 44),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
             ),
             onPressed: () => _repo.launchApp(app.packageName),
-            icon: const Icon(Icons.local_parking, size: 18, color: hpTeal),
+            icon: _icon(app.packageName),
             label: Text(app.label),
           ),
       ],
+    );
+  }
+
+  Widget _icon(String packageName) {
+    final bytes = _icons[packageName];
+    if (bytes == null) {
+      return const Icon(Icons.local_parking, size: 22, color: hpTeal);
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: Image.memory(bytes, width: 24, height: 24, filterQuality: FilterQuality.medium),
     );
   }
 }

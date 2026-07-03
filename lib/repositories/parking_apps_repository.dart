@@ -76,4 +76,14 @@ class ParkingAppsRepository {
       return false;
     }
   }
+
+  /// The app's launcher icon as PNG bytes, or null if unavailable.
+  Future<Uint8List?> getAppIcon(String packageName) async {
+    try {
+      final r = await _channel.invokeMethod('getAppIcon', {'package': packageName});
+      return r is Uint8List ? r : null;
+    } catch (_) {
+      return null;
+    }
+  }
 }

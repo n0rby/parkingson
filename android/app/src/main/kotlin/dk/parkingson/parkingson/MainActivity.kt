@@ -4,6 +4,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -13,6 +16,7 @@ import android.provider.Settings
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import java.io.ByteArrayOutputStream
 
 class MainActivity : FlutterActivity() {
     private var pendingSoundResult: MethodChannel.Result? = null
@@ -65,6 +69,7 @@ class MainActivity : FlutterActivity() {
                     "getMotionStatus" -> result.success(readMotionStatus(this))
                     "getInstalledApps" -> result.success(installedLaunchableApps())
                     "launchApp" -> result.success(launchApp(call.argument<String>("package")))
+                    "getAppIcon" -> result.success(appIconPng(call.argument<String>("package")))
                     "getAlarmSoundTitle" -> result.success(currentAlarmSoundTitle())
                     "pickAlarmSound" -> {
                         pendingSoundResult = result
@@ -121,6 +126,32 @@ class MainActivity : FlutterActivity() {
             true
         } catch (_: Exception) {
             false
+        }
+    }
+
+    /** Returns the app's launcher icon as PNG bytes, or null if unavailable. */
+    private fun appIconPng(pkg: String?): ByteArray? {
+        if (pkg.isNullOrEmpty()) return null
+        return try {
+            val drawable = packageManager.getApplicationIcon(pkg)
+            val bitmap = if (drawable is BitmapDrawable && drawable.bitmap != null) {
+                drawable.bitmap
+            } else {
+                val size = (48 * resources.displayMetrics.density).toInt().coerceAtLeast(48)
+                val w = drawable.intrinsicWidth.takeIf { it > 0 } ?: size
+                val h = drawable.intrinsicHeight.takeIf { it > 0 } ?: size
+                val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bmp)
+                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                drawable.draw(canvas)
+                bmp
+            }
+            ByteArrayOutputStream().use { stream ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                stream.toByteArray()
+            }
+        } catch (_: Exception) {
+            null
         }
     }
 
