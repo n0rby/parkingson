@@ -57,8 +57,8 @@
   "soundUsePhone": "Brug telefonens lydstyrke",
   "soundUseApp": "Brug appens lydstyrke",
   "soundVolume": "Appens lydstyrke",
-  "soundVibrateDnd": "Brug vibration ved \"Forstyr ikke\"",
-  "soundVibrateSilent": "Brug vibration ved lydstyrke 0",
+  "soundVibrateDnd": "Brug kun vibration ved \"Forstyr ikke\"",
+  "soundVibrateSilent": "Brug kun vibration ved lydstyrke 0",
 
   "batteryCardTitle": "Anbefalet: undtag fra batterioptimering",
   "batteryCardBody": "Valgfrit. Uden dette kan Android (især Samsung) stoppe bevægelsesovervågningen i baggrunden, så parkering uden Bluetooth ikke altid opdages.",

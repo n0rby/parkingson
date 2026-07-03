@@ -171,10 +171,10 @@ class AppLocalizationsDa extends AppLocalizations {
   String get soundVolume => 'Appens lydstyrke';
 
   @override
-  String get soundVibrateDnd => 'Brug vibration ved \"Forstyr ikke\"';
+  String get soundVibrateDnd => 'Brug kun vibration ved \"Forstyr ikke\"';
 
   @override
-  String get soundVibrateSilent => 'Brug vibration ved lydstyrke 0';
+  String get soundVibrateSilent => 'Brug kun vibration ved lydstyrke 0';
 
   @override
   String get batteryCardTitle => 'Anbefalet: undtag fra batterioptimering';

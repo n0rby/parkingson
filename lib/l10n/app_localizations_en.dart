@@ -171,10 +171,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soundVolume => 'App volume';
 
   @override
-  String get soundVibrateDnd => 'Vibrate in Do Not Disturb';
+  String get soundVibrateDnd => 'Only vibrate in Do Not Disturb';
 
   @override
-  String get soundVibrateSilent => 'Vibrate when volume is 0';
+  String get soundVibrateSilent => 'Only vibrate when volume is 0';
 
   @override
   String get batteryCardTitle =>

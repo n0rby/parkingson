@@ -174,10 +174,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get soundVolume => 'Volume de l\'application';
 
   @override
-  String get soundVibrateDnd => 'Vibrer en mode \"Ne pas déranger\"';
+  String get soundVibrateDnd => 'Vibrer uniquement en \"Ne pas déranger\"';
 
   @override
-  String get soundVibrateSilent => 'Vibrer quand le volume est à 0';
+  String get soundVibrateSilent => 'Vibrer uniquement quand le volume est à 0';
 
   @override
   String get batteryCardTitle =>

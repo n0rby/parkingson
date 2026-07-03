@@ -171,10 +171,10 @@ class AppLocalizationsIs extends AppLocalizations {
   String get soundVolume => 'Hljóðstyrkur appsins';
 
   @override
-  String get soundVibrateDnd => 'Titra í \"Ónáðið ekki\"';
+  String get soundVibrateDnd => 'Aðeins titra í \"Ónáðið ekki\"';
 
   @override
-  String get soundVibrateSilent => 'Titra þegar hljóðstyrkur er 0';
+  String get soundVibrateSilent => 'Aðeins titra þegar hljóðstyrkur er 0';
 
   @override
   String get batteryCardTitle => 'Mælt með: undanþiggja frá rafhlöðuhagræðingu';

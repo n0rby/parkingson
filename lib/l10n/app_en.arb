@@ -56,8 +56,8 @@
   "soundUsePhone": "Use the phone's volume",
   "soundUseApp": "Use the app's volume",
   "soundVolume": "App volume",
-  "soundVibrateDnd": "Vibrate in Do Not Disturb",
-  "soundVibrateSilent": "Vibrate when volume is 0",
+  "soundVibrateDnd": "Only vibrate in Do Not Disturb",
+  "soundVibrateSilent": "Only vibrate when volume is 0",
 
   "batteryCardTitle": "Recommended: exempt from battery optimization",
   "batteryCardBody": "Optional. Without this, Android (especially Samsung) may stop background motion monitoring, so parking without Bluetooth isn't always detected.",

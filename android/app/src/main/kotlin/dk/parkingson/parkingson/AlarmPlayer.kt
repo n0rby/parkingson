@@ -38,7 +38,7 @@ object AlarmPlayer {
     }
 
     fun trigger(context: Context) {
-        // Do Not Disturb: no sound; vibrate if the user enabled it. No voice.
+        // Do Not Disturb: vibrate only (if enabled), no sound, no voice.
         if (isDndActive(context)) {
             takePendingVoice(context)
             if (prefBool(context, "flutter.vibrate_in_dnd", true)) {
@@ -47,12 +47,10 @@ object AlarmPlayer {
             return
         }
 
-        // Apply the volume preference, then see if the alarm is effectively muted
-        // (app volume 0, or the phone's alarm volume is 0).
-        applyAlarmVolume(context)
+        // Effectively muted (app volume 0, or phone alarm volume 0): vibrate only
+        // (if enabled), no sound, no voice.
         val am = context.getSystemService(AudioManager::class.java)
-        val muted = am == null || am.getStreamVolume(AudioManager.STREAM_ALARM) == 0
-        if (muted) {
+        if (isAlarmMuted(context, am)) {
             takePendingVoice(context)
             if (prefBool(context, "flutter.vibrate_when_silent", true)) {
                 startPulseVibration(context)
@@ -60,7 +58,8 @@ object AlarmPlayer {
             return
         }
 
-        // Normal: loud alarm, then the spoken reminder.
+        // Normal: apply the chosen volume, play the loud alarm, then speak.
+        applyAlarmVolume(context)
         val voice = takePendingVoice(context)
         playAlarmSound(context)
         if (voice != null) {
@@ -69,6 +68,19 @@ object AlarmPlayer {
                 Speaker.speak(appContext, voice, Locale.getDefault().toLanguageTag())
             }, 3300)
         }
+    }
+
+    /**
+     * In app-volume mode, "muted" means the chosen app volume is 0 (checked
+     * directly, since some devices clamp the alarm stream above 0). In
+     * phone-volume mode, it means the phone's alarm volume is 0.
+     */
+    private fun isAlarmMuted(context: Context, am: AudioManager?): Boolean {
+        val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        if (prefs.getString("flutter.sound_mode", "app") == "app") {
+            return prefs.getLong("flutter.app_volume", 100L).toInt() <= 0
+        }
+        return am == null || am.getStreamVolume(AudioManager.STREAM_ALARM) == 0
     }
 
     private fun prefBool(context: Context, key: String, default: Boolean): Boolean {

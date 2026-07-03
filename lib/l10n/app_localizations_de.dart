@@ -173,10 +173,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get soundVolume => 'App-Lautstärke';
 
   @override
-  String get soundVibrateDnd => 'Bei \"Nicht stören\" vibrieren';
+  String get soundVibrateDnd => 'Nur vibrieren bei \"Nicht stören\"';
 
   @override
-  String get soundVibrateSilent => 'Vibrieren, wenn Lautstärke 0 ist';
+  String get soundVibrateSilent => 'Nur vibrieren, wenn Lautstärke 0 ist';
 
   @override
   String get batteryCardTitle =>

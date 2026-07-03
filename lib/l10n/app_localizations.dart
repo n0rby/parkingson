@@ -415,13 +415,13 @@ abstract class AppLocalizations {
   /// No description provided for @soundVibrateDnd.
   ///
   /// In da, this message translates to:
-  /// **'Brug vibration ved \"Forstyr ikke\"'**
+  /// **'Brug kun vibration ved \"Forstyr ikke\"'**
   String get soundVibrateDnd;
 
   /// No description provided for @soundVibrateSilent.
   ///
   /// In da, this message translates to:
-  /// **'Brug vibration ved lydstyrke 0'**
+  /// **'Brug kun vibration ved lydstyrke 0'**
   String get soundVibrateSilent;
 
   /// No description provided for @batteryCardTitle.

@@ -172,10 +172,10 @@ class AppLocalizationsNb extends AppLocalizations {
   String get soundVolume => 'Appens volum';
 
   @override
-  String get soundVibrateDnd => 'Vibrer ved \"Ikke forstyrr\"';
+  String get soundVibrateDnd => 'Bare vibrer ved \"Ikke forstyrr\"';
 
   @override
-  String get soundVibrateSilent => 'Vibrer ved volum 0';
+  String get soundVibrateSilent => 'Bare vibrer ved volum 0';
 
   @override
   String get batteryCardTitle => 'Anbefalt: unnta fra batterioptimalisering';
