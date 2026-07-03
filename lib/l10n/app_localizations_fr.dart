@@ -40,6 +40,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Activer la surveillance du stationnement';
 
   @override
+  String get save => 'Enregistrer';
+
+  @override
   String get systemBluetoothSettings => 'Paramètres Bluetooth du système';
 
   @override

@@ -11,6 +11,7 @@
   "carsWithBluetooth": "Biler med Bluetooth",
   "noPairedDevices": "Ingen parrede Bluetooth-enheder fundet.",
   "activateParkingMonitoring": "Aktiver parkeringsovervågning",
+  "save": "Gem",
   "systemBluetoothSettings": "System Bluetooth-indstillinger",
 
   "permissionsTitle": "Tilladelser",

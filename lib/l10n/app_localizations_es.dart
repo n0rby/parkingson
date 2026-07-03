@@ -41,6 +41,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'Activar la supervisión de estacionamiento';
 
   @override
+  String get save => 'Guardar';
+
+  @override
   String get systemBluetoothSettings => 'Ajustes de Bluetooth del sistema';
 
   @override

@@ -40,6 +40,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get activateParkingMonitoring => 'Ota pysäköinnin valvonta käyttöön';
 
   @override
+  String get save => 'Tallenna';
+
+  @override
   String get systemBluetoothSettings => 'Järjestelmän Bluetooth-asetukset';
 
   @override

@@ -11,6 +11,7 @@
   "carsWithBluetooth": "Autos mit Bluetooth",
   "noPairedDevices": "Keine gekoppelten Bluetooth-Geräte gefunden.",
   "activateParkingMonitoring": "Parküberwachung aktivieren",
+  "save": "Speichern",
   "systemBluetoothSettings": "System-Bluetooth-Einstellungen",
 
   "permissionsTitle": "Berechtigungen",

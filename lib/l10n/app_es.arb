@@ -9,6 +9,7 @@
   "carsWithBluetooth": "Coches con Bluetooth",
   "noPairedDevices": "No se encontraron dispositivos Bluetooth emparejados.",
   "activateParkingMonitoring": "Activar la supervisión de estacionamiento",
+  "save": "Guardar",
   "systemBluetoothSettings": "Ajustes de Bluetooth del sistema",
   "permissionsTitle": "Permisos",
   "permissionsBody": "La aplicación necesita los siguientes permisos para supervisar tu coche en segundo plano.",

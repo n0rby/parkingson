@@ -39,6 +39,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get activateParkingMonitoring => 'Parküberwachung aktivieren';
 
   @override
+  String get save => 'Speichern';
+
+  @override
   String get systemBluetoothSettings => 'System-Bluetooth-Einstellungen';
 
   @override

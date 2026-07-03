@@ -9,6 +9,7 @@
   "carsWithBluetooth": "Autot, joissa on Bluetooth",
   "noPairedDevices": "Pariliitettyjä Bluetooth-laitteita ei löytynyt.",
   "activateParkingMonitoring": "Ota pysäköinnin valvonta käyttöön",
+  "save": "Tallenna",
   "systemBluetoothSettings": "Järjestelmän Bluetooth-asetukset",
   "permissionsTitle": "Käyttöoikeudet",
   "permissionsBody": "Sovellus tarvitsee seuraavat käyttöoikeudet valvoakseen autoasi taustalla.",

@@ -39,6 +39,9 @@ class AppLocalizationsIs extends AppLocalizations {
   String get activateParkingMonitoring => 'Virkja bílastæðavöktun';
 
   @override
+  String get save => 'Vista';
+
+  @override
   String get systemBluetoothSettings => 'Bluetooth-stillingar kerfisins';
 
   @override

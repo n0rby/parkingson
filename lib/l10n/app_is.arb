@@ -9,6 +9,7 @@
   "carsWithBluetooth": "Bílar með Bluetooth",
   "noPairedDevices": "Engin pöruð Bluetooth-tæki fundust.",
   "activateParkingMonitoring": "Virkja bílastæðavöktun",
+  "save": "Vista",
   "systemBluetoothSettings": "Bluetooth-stillingar kerfisins",
   "permissionsTitle": "Heimildir",
   "permissionsBody": "Forritið þarf eftirfarandi heimildir til að fylgjast með bílnum þínum í bakgrunni.",

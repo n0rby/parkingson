@@ -9,6 +9,7 @@
   "carsWithBluetooth": "Voitures avec Bluetooth",
   "noPairedDevices": "Aucun appareil Bluetooth appairé trouvé.",
   "activateParkingMonitoring": "Activer la surveillance du stationnement",
+  "save": "Enregistrer",
   "systemBluetoothSettings": "Paramètres Bluetooth du système",
   "permissionsTitle": "Autorisations",
   "permissionsBody": "L'application a besoin des autorisations suivantes pour surveiller votre voiture en arrière-plan.",

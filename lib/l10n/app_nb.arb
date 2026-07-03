@@ -9,6 +9,7 @@
   "carsWithBluetooth": "Biler med Bluetooth",
   "noPairedDevices": "Ingen sammenkoblede Bluetooth-enheter funnet.",
   "activateParkingMonitoring": "Aktiver parkeringsovervåking",
+  "save": "Lagre",
   "systemBluetoothSettings": "System-Bluetooth-innstillinger",
   "permissionsTitle": "Tillatelser",
   "permissionsBody": "Appen trenger følgende tillatelser for å overvåke bilen din i bakgrunnen.",

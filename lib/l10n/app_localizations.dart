@@ -166,6 +166,12 @@ abstract class AppLocalizations {
   /// **'Aktiver parkeringsovervågning'**
   String get activateParkingMonitoring;
 
+  /// No description provided for @save.
+  ///
+  /// In da, this message translates to:
+  /// **'Gem'**
+  String get save;
+
   /// No description provided for @systemBluetoothSettings.
   ///
   /// In da, this message translates to:
