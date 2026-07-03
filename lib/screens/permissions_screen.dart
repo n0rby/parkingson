@@ -23,15 +23,15 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
     if (_requesting) return;
     setState(() => _requesting = true);
 
-    // Ask for all runtime permissions in one go (sequential system dialogs).
+    // Request each permission individually and in sequence. Android drops the
+    // later permissions if location is requested in the same batch as others,
+    // so location must be its own request — hence one-by-one here.
     try {
-      await [
-        Permission.bluetoothScan,
-        Permission.bluetoothConnect,
-        Permission.locationWhenInUse,
-        if (Platform.isAndroid) Permission.activityRecognition,
-        Permission.notification,
-      ].request();
+      await Permission.bluetoothScan.request();
+      await Permission.bluetoothConnect.request();
+      await Permission.locationWhenInUse.request();
+      if (Platform.isAndroid) await Permission.activityRecognition.request();
+      await Permission.notification.request();
     } catch (_) {}
 
     // Then the battery-optimization exemption (native system dialog).
