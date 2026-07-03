@@ -248,36 +248,48 @@ Future<int?> _osrmWalkingSeconds({
 }
 
 Future<void> _handleCarParked(ServiceInstance service) async {
-  // Get current GPS location
-  LocationSnapshot? snapshot;
+  // Get the best location we can: a fresh GPS fix, else a recent cached fix.
+  Position? position;
   try {
-    final position = await Geolocator.getCurrentPosition(
+    position = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         timeLimit: Duration(seconds: 10),
       ),
     );
-    snapshot = LocationSnapshot(
-      latitude: position.latitude,
-      longitude: position.longitude,
-      capturedAtMillis: DateTime.now().millisecondsSinceEpoch,
-    );
   } catch (_) {
-    // Location unavailable — show reminder without coordinates
+    // GPS unavailable (often indoors) — fall back to a recent cached fix so we
+    // can still check ignored locations.
+    try {
+      final last = await Geolocator.getLastKnownPosition();
+      if (last != null &&
+          DateTime.now().difference(last.timestamp).inMinutes <= 2) {
+        position = last;
+      }
+    } catch (_) {}
   }
 
-  // Check if location is ignored
-  if (snapshot != null) {
-    final ignoredRepo = IgnoredLocationRepository();
-    if (await ignoredRepo.isIgnored(snapshot)) return;
-    await ignoredRepo.saveLastParkingLocation(snapshot);
+  final ignoredRepo = IgnoredLocationRepository();
+
+  if (position == null) {
+    // We can't verify the location. Don't risk a false alarm inside an ignored
+    // area (home/work); only remind if the user has no ignored locations.
+    if ((await ignoredRepo.getIgnoredLocations()).isNotEmpty) return;
+    await showParkingReminderFromBackground();
+    service.invoke(_evtParkingDetected, {_evtPayloadKey: null});
+    return;
   }
 
-  // Show notification
-  await showParkingReminderFromBackground(payload: snapshot?.encode());
+  final snapshot = LocationSnapshot(
+    latitude: position.latitude,
+    longitude: position.longitude,
+    capturedAtMillis: DateTime.now().millisecondsSinceEpoch,
+  );
 
-  // Notify the UI if it's alive
-  service.invoke(_evtParkingDetected, {
-    _evtPayloadKey: snapshot?.encode(),
-  });
+  // Skip ignored locations (home, work, ...).
+  if (await ignoredRepo.isIgnored(snapshot)) return;
+  await ignoredRepo.saveLastParkingLocation(snapshot);
+
+  await showParkingReminderFromBackground(payload: snapshot.encode());
+  service.invoke(_evtParkingDetected, {_evtPayloadKey: snapshot.encode()});
 }
