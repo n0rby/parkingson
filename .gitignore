@@ -45,6 +45,9 @@ app.*.map.json
 /android/app/release
 /android/build/
 
+# Work-in-progress, not ready to commit yet
+/android/parkZoneMaps/
+
 # Release signing secrets — NEVER commit these
 /android/key.properties
 /android/app/upload-keystore.jks
