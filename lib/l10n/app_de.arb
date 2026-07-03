@@ -45,6 +45,9 @@
   "findCarNone": "Noch kein Parkplatz gespeichert",
   "ignoredLocationsAction": "Ignorierte Orte",
   "ignoredLocationsActionDesc": "Orte, die keinen Alarm auslösen",
+  "setReminderTitle": "Erinnerung",
+  "setReminderDesc": "Lege eine Zeit fest, um zum Auto zurückzugehen",
+  "retry": "Erneut versuchen",
 
   "batteryCardTitle": "Empfohlen: von der Akku-Optimierung ausnehmen",
   "batteryCardBody": "Optional. Ohne dies kann Android (besonders Samsung) die Bewegungsüberwachung im Hintergrund stoppen, sodass Parken ohne Bluetooth nicht immer erkannt wird.",

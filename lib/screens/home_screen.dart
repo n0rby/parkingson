@@ -21,6 +21,7 @@ class HomeScreen extends StatelessWidget {
   final VoidCallback onManageIgnoredLocations;
   final VoidCallback onFindCar;
   final VoidCallback onBuyApp;
+  final VoidCallback onSetReminder;
 
   const HomeScreen({
     super.key,
@@ -32,6 +33,7 @@ class HomeScreen extends StatelessWidget {
     required this.onManageIgnoredLocations,
     required this.onFindCar,
     required this.onBuyApp,
+    required this.onSetReminder,
   });
 
   @override
@@ -87,6 +89,12 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 8),
               const _BatteryOptimizationCard(),
               const Divider(),
+              ActionRow(
+                title: l10n.setReminderTitle,
+                subtitle: l10n.setReminderDesc,
+                onTap: onSetReminder,
+                accent: hpTeal,
+              ),
               ActionRow(
                 title: l10n.testReminder,
                 subtitle: l10n.testReminderDesc,
@@ -360,7 +368,7 @@ class _MotionStatusLineState extends State<_MotionStatusLine> {
   Widget build(BuildContext context) {
     return Text(
       _format(AppLocalizations.of(context)),
-      style: const TextStyle(fontSize: 11, color: hpSubtle),
+      style: const TextStyle(fontSize: 11, color: hpTeal),
     );
   }
 }

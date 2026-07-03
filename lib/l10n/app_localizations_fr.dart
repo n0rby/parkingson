@@ -141,6 +141,15 @@ class AppLocalizationsFr extends AppLocalizations {
       'Endroits qui ne déclenchent pas d\'alarme';
 
   @override
+  String get setReminderTitle => 'Rappel';
+
+  @override
+  String get setReminderDesc => 'Définir une heure pour retourner à la voiture';
+
+  @override
+  String get retry => 'Réessayer';
+
+  @override
   String get batteryCardTitle =>
       'Recommandé : exclure de l\'optimisation de la batterie';
 

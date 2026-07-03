@@ -138,6 +138,15 @@ class AppLocalizationsDa extends AppLocalizations {
   String get ignoredLocationsActionDesc => 'Steder der ikke udløser alarm';
 
   @override
+  String get setReminderTitle => 'Påmindelse';
+
+  @override
+  String get setReminderDesc => 'Sæt tid til at gå tilbage til bilen';
+
+  @override
+  String get retry => 'Prøv igen';
+
+  @override
   String get batteryCardTitle => 'Anbefalet: undtag fra batterioptimering';
 
   @override

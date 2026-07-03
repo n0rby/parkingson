@@ -139,6 +139,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ignoredLocationsActionDesc => 'Orte, die keinen Alarm auslösen';
 
   @override
+  String get setReminderTitle => 'Erinnerung';
+
+  @override
+  String get setReminderDesc =>
+      'Lege eine Zeit fest, um zum Auto zurückzugehen';
+
+  @override
+  String get retry => 'Erneut versuchen';
+
+  @override
   String get batteryCardTitle =>
       'Empfohlen: von der Akku-Optimierung ausnehmen';
 

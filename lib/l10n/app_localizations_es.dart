@@ -142,6 +142,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ignoredLocationsActionDesc => 'Lugares que no activan la alarma';
 
   @override
+  String get setReminderTitle => 'Recordatorio';
+
+  @override
+  String get setReminderDesc => 'Establece una hora para volver al coche';
+
+  @override
+  String get retry => 'Reintentar';
+
+  @override
   String get batteryCardTitle =>
       'Recomendado: excluir de la optimización de batería';
 

@@ -346,6 +346,24 @@ abstract class AppLocalizations {
   /// **'Steder der ikke udløser alarm'**
   String get ignoredLocationsActionDesc;
 
+  /// No description provided for @setReminderTitle.
+  ///
+  /// In da, this message translates to:
+  /// **'Påmindelse'**
+  String get setReminderTitle;
+
+  /// No description provided for @setReminderDesc.
+  ///
+  /// In da, this message translates to:
+  /// **'Sæt tid til at gå tilbage til bilen'**
+  String get setReminderDesc;
+
+  /// No description provided for @retry.
+  ///
+  /// In da, this message translates to:
+  /// **'Prøv igen'**
+  String get retry;
+
   /// No description provided for @batteryCardTitle.
   ///
   /// In da, this message translates to:

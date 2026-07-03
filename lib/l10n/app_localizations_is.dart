@@ -138,6 +138,15 @@ class AppLocalizationsIs extends AppLocalizations {
   String get ignoredLocationsActionDesc => 'Staðir sem kveikja ekki viðvörun';
 
   @override
+  String get setReminderTitle => 'Áminning';
+
+  @override
+  String get setReminderDesc => 'Stilltu tíma til að ganga til baka að bílnum';
+
+  @override
+  String get retry => 'Reyna aftur';
+
+  @override
   String get batteryCardTitle => 'Mælt með: undanþiggja frá rafhlöðuhagræðingu';
 
   @override

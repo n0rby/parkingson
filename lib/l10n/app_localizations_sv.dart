@@ -139,6 +139,15 @@ class AppLocalizationsSv extends AppLocalizations {
   String get ignoredLocationsActionDesc => 'Platser som inte utlöser larm';
 
   @override
+  String get setReminderTitle => 'Påminnelse';
+
+  @override
+  String get setReminderDesc => 'Ange en tid för att gå tillbaka till bilen';
+
+  @override
+  String get retry => 'Försök igen';
+
+  @override
   String get batteryCardTitle =>
       'Rekommenderas: undanta från batterioptimering';
 

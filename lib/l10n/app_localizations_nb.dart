@@ -139,6 +139,15 @@ class AppLocalizationsNb extends AppLocalizations {
   String get ignoredLocationsActionDesc => 'Steder som ikke utløser alarm';
 
   @override
+  String get setReminderTitle => 'Påminnelse';
+
+  @override
+  String get setReminderDesc => 'Angi tid for å gå tilbake til bilen';
+
+  @override
+  String get retry => 'Prøv igjen';
+
+  @override
   String get batteryCardTitle => 'Anbefalt: unnta fra batterioptimalisering';
 
   @override

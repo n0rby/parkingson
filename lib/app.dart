@@ -10,6 +10,7 @@ import 'screens/permissions_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/ignored_locations_screen.dart';
 import 'screens/reminder_screen.dart';
+import 'screens/set_reminder_screen.dart';
 import 'models/car_device.dart';
 import 'models/location_snapshot.dart';
 import 'models/ignored_location.dart';
@@ -19,7 +20,7 @@ import 'services/motion_service.dart';
 import 'services/notification_service.dart';
 import 'theme.dart';
 
-enum _Screen { welcome, cars, permissions, home, ignoredLocations, reminder }
+enum _Screen { welcome, cars, permissions, home, ignoredLocations, reminder, setReminder }
 
 class ParkingsonApp extends StatefulWidget {
   const ParkingsonApp({super.key});
@@ -219,6 +220,14 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
             );
           },
           onBuyApp: () => _billingRepo.launchPurchaseFlow(),
+          onSetReminder: () => setState(() => _screen = _Screen.setReminder),
+        );
+
+      case _Screen.setReminder:
+        return SetReminderScreen(
+          getLocation: _locationService.getCurrentLocation,
+          fallbackLocation: _lastParkingLocation,
+          onDone: () => setState(() => _screen = _Screen.home),
         );
 
       case _Screen.ignoredLocations:

@@ -46,6 +46,9 @@
   "findCarNone": "Ingen parkeringsplacering gemt endnu",
   "ignoredLocationsAction": "Ignorerede lokationer",
   "ignoredLocationsActionDesc": "Steder der ikke udløser alarm",
+  "setReminderTitle": "Påmindelse",
+  "setReminderDesc": "Sæt tid til at gå tilbage til bilen",
+  "retry": "Prøv igen",
 
   "batteryCardTitle": "Anbefalet: undtag fra batterioptimering",
   "batteryCardBody": "Valgfrit. Uden dette kan Android (især Samsung) stoppe bevægelsesovervågningen i baggrunden, så parkering uden Bluetooth ikke altid opdages.",

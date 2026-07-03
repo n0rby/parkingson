@@ -140,6 +140,15 @@ class AppLocalizationsFi extends AppLocalizations {
       'Paikat, jotka eivät laukaise hälytystä';
 
   @override
+  String get setReminderTitle => 'Muistutus';
+
+  @override
+  String get setReminderDesc => 'Aseta aika kävellä takaisin autolle';
+
+  @override
+  String get retry => 'Yritä uudelleen';
+
+  @override
   String get batteryCardTitle => 'Suositus: vapauta akun optimoinnista';
 
   @override

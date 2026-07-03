@@ -138,6 +138,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Places that don\'t trigger an alarm';
 
   @override
+  String get setReminderTitle => 'Reminder';
+
+  @override
+  String get setReminderDesc => 'Set a time to walk back to the car';
+
+  @override
+  String get retry => 'Try again';
+
+  @override
   String get batteryCardTitle =>
       'Recommended: exempt from battery optimization';
 

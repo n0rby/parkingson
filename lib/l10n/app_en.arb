@@ -45,6 +45,9 @@
   "findCarNone": "No parking location saved yet",
   "ignoredLocationsAction": "Ignored locations",
   "ignoredLocationsActionDesc": "Places that don't trigger an alarm",
+  "setReminderTitle": "Reminder",
+  "setReminderDesc": "Set a time to walk back to the car",
+  "retry": "Try again",
 
   "batteryCardTitle": "Recommended: exempt from battery optimization",
   "batteryCardBody": "Optional. Without this, Android (especially Samsung) may stop background motion monitoring, so parking without Bluetooth isn't always detected.",
