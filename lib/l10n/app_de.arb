@@ -113,6 +113,7 @@
   "tapToOpenMap": "Tippen, um in der Karte zu öffnen",
   "deleteAll": "Alle löschen",
   "backToOverview": "Zurück zur Übersicht",
+  "finishSetup": "Fertig",
   "locationFetchError": "Standort konnte nicht abgerufen werden.",
   "locationAdded": "Ort hinzugefügt.",
 

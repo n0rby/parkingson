@@ -335,6 +335,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get backToOverview => 'Tillbaka till översikt';
 
   @override
+  String get finishSetup => 'Klar';
+
+  @override
   String get locationFetchError => 'Kunde inte hämta plats.';
 
   @override

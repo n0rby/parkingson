@@ -101,6 +101,7 @@
   "tapToOpenMap": "Tryck för att öppna i karta",
   "deleteAll": "Radera alla",
   "backToOverview": "Tillbaka till översikt",
+  "finishSetup": "Klar",
   "locationFetchError": "Kunde inte hämta plats.",
   "locationAdded": "Plats tillagd.",
   "reminderTitle": "Kom ihåg att betala för parkering!",

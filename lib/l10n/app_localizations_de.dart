@@ -336,6 +336,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get backToOverview => 'Zurück zur Übersicht';
 
   @override
+  String get finishSetup => 'Fertig';
+
+  @override
   String get locationFetchError => 'Standort konnte nicht abgerufen werden.';
 
   @override

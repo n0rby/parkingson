@@ -3,13 +3,16 @@ import '../l10n/app_localizations.dart';
 import '../repositories/parking_apps_repository.dart';
 import '../theme.dart';
 import '../widgets/list_card.dart';
+import '../widgets/primary_button.dart';
 
 /// Lets the user mark which installed apps they use to pay for parking.
-/// Reusable both from Setup and (later) as a step in the setup flow.
+/// Used both as a Setup submenu ([onBack]) and as a step in the initial setup
+/// flow ([onContinue] shows a primary "finish" button).
 class ParkingAppsScreen extends StatefulWidget {
-  final VoidCallback onBack;
+  final VoidCallback? onBack;
+  final VoidCallback? onContinue;
 
-  const ParkingAppsScreen({super.key, required this.onBack});
+  const ParkingAppsScreen({super.key, this.onBack, this.onContinue});
 
   @override
   State<ParkingAppsScreen> createState() => _ParkingAppsScreenState();
@@ -171,10 +174,17 @@ class _ParkingAppsScreenState extends State<ParkingAppsScreen> {
 
             // ── Fixed footer ────────────────────────────────────────────────
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              child: TextButton(
-                onPressed: widget.onBack,
-                child: Text(l10n.backToOverview),
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+              child: Column(
+                children: [
+                  if (widget.onContinue != null)
+                    PrimaryButton(label: l10n.finishSetup, onPressed: widget.onContinue),
+                  if (widget.onBack != null)
+                    TextButton(
+                      onPressed: widget.onBack,
+                      child: Text(l10n.backToOverview),
+                    ),
+                ],
               ),
             ),
           ],

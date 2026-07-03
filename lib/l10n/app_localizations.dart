@@ -712,6 +712,12 @@ abstract class AppLocalizations {
   /// **'Tilbage til oversigt'**
   String get backToOverview;
 
+  /// No description provided for @finishSetup.
+  ///
+  /// In da, this message translates to:
+  /// **'Færdig'**
+  String get finishSetup;
+
   /// No description provided for @locationFetchError.
   ///
   /// In da, this message translates to:

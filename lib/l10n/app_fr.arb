@@ -101,6 +101,7 @@
   "tapToOpenMap": "Appuyez pour ouvrir dans la carte",
   "deleteAll": "Tout supprimer",
   "backToOverview": "Retour à l'aperçu",
+  "finishSetup": "Terminé",
   "locationFetchError": "Impossible d'obtenir la localisation.",
   "locationAdded": "Lieu ajouté.",
   "reminderTitle": "N'oubliez pas de payer le stationnement !",

@@ -101,6 +101,7 @@
   "tapToOpenMap": "Trykk for å åpne i kart",
   "deleteAll": "Slett alle",
   "backToOverview": "Tilbake til oversikt",
+  "finishSetup": "Ferdig",
   "locationFetchError": "Kunne ikke hente posisjon.",
   "locationAdded": "Sted lagt til.",
   "reminderTitle": "Husk å betale for parkering!",

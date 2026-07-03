@@ -338,6 +338,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get backToOverview => 'Retour à l\'aperçu';
 
   @override
+  String get finishSetup => 'Terminé';
+
+  @override
   String get locationFetchError => 'Impossible d\'obtenir la localisation.';
 
   @override

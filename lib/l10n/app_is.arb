@@ -101,6 +101,7 @@
   "tapToOpenMap": "Ýttu til að opna í korti",
   "deleteAll": "Eyða öllu",
   "backToOverview": "Til baka í yfirlit",
+  "finishSetup": "Lokið",
   "locationFetchError": "Ekki tókst að sækja staðsetningu.",
   "locationAdded": "Staðsetningu bætt við.",
   "reminderTitle": "Mundu að borga fyrir bílastæðið!",

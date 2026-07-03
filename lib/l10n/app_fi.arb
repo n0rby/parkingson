@@ -101,6 +101,7 @@
   "tapToOpenMap": "Avaa kartalla napauttamalla",
   "deleteAll": "Poista kaikki",
   "backToOverview": "Takaisin yleisnäkymään",
+  "finishSetup": "Valmis",
   "locationFetchError": "Sijaintia ei voitu hakea.",
   "locationAdded": "Sijainti lisätty.",
   "reminderTitle": "Muista maksaa pysäköinnistä!",

@@ -101,6 +101,7 @@
   "tapToOpenMap": "Toca para abrir en el mapa",
   "deleteAll": "Eliminar todo",
   "backToOverview": "Volver al resumen",
+  "finishSetup": "Listo",
   "locationFetchError": "No se pudo obtener la ubicación.",
   "locationAdded": "Ubicación añadida.",
   "reminderTitle": "¡Recuerda pagar el estacionamiento!",

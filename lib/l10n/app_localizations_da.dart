@@ -332,6 +332,9 @@ class AppLocalizationsDa extends AppLocalizations {
   String get backToOverview => 'Tilbage til oversigt';
 
   @override
+  String get finishSetup => 'Færdig';
+
+  @override
   String get locationFetchError => 'Kunne ikke hente placering.';
 
   @override

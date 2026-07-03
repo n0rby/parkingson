@@ -334,6 +334,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get backToOverview => 'Takaisin yleisnäkymään';
 
   @override
+  String get finishSetup => 'Valmis';
+
+  @override
   String get locationFetchError => 'Sijaintia ei voitu hakea.';
 
   @override

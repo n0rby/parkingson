@@ -51,6 +51,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
   LocationSnapshot? _lastParkingLocation;
   LocationSnapshot? _reminderLocation;
   bool _showSetupDone = false;
+  // True while the parking-apps screen is shown as a step of the initial setup
+  // flow (vs. opened from the Opsætning submenu).
+  bool _parkingAppsSetupStep = false;
 
   @override
   void initState() {
@@ -200,15 +203,12 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
             channel.invokeMethod(
                 v ? 'stopMotionDetection' : 'startMotionDetection');
           },
-          onNext: () async {
-            await _carRepo.saveSetupCompleted(true);
-            _startMonitoring();
-            if (mounted) {
-              setState(() {
-                _screen = _Screen.home;
-                _showSetupDone = true;
-              });
-            }
+          onNext: () {
+            // Not the final step anymore — continue to the parking-apps step.
+            setState(() {
+              _parkingAppsSetupStep = true;
+              _screen = _Screen.parkingApps;
+            });
           },
           onOpenBluetoothSettings: () async {
             const channel = MethodChannel('dk.parkingson/alarm');
@@ -272,7 +272,10 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
             }
           },
           onSound: () => setState(() => _screen = _Screen.soundSettings),
-          onParkingApps: () => setState(() => _screen = _Screen.parkingApps),
+          onParkingApps: () => setState(() {
+            _parkingAppsSetupStep = false;
+            _screen = _Screen.parkingApps;
+          }),
           onBack: () => setState(() => _screen = _Screen.home),
         );
 
@@ -282,6 +285,22 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
         );
 
       case _Screen.parkingApps:
+        if (_parkingAppsSetupStep) {
+          // Final step of the initial setup flow.
+          return ParkingAppsScreen(
+            onContinue: () async {
+              await _carRepo.saveSetupCompleted(true);
+              _startMonitoring();
+              if (mounted) {
+                setState(() {
+                  _parkingAppsSetupStep = false;
+                  _screen = _Screen.home;
+                  _showSetupDone = true;
+                });
+              }
+            },
+          );
+        }
         return ParkingAppsScreen(
           onBack: () => setState(() => _screen = _Screen.setup),
         );

@@ -113,6 +113,7 @@
   "tapToOpenMap": "Tap to open in map",
   "deleteAll": "Delete all",
   "backToOverview": "Back to overview",
+  "finishSetup": "Done",
   "locationFetchError": "Could not get location.",
   "locationAdded": "Location added.",
 

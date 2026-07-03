@@ -331,6 +331,9 @@ class AppLocalizationsIs extends AppLocalizations {
   String get backToOverview => 'Til baka í yfirlit';
 
   @override
+  String get finishSetup => 'Lokið';
+
+  @override
   String get locationFetchError => 'Ekki tókst að sækja staðsetningu.';
 
   @override

@@ -114,6 +114,7 @@
   "tapToOpenMap": "Tryk for at åbne i kort",
   "deleteAll": "Slet alle",
   "backToOverview": "Tilbage til oversigt",
+  "finishSetup": "Færdig",
   "locationFetchError": "Kunne ikke hente placering.",
   "locationAdded": "Placering tilføjet.",
 

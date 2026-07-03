@@ -333,6 +333,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get backToOverview => 'Tilbake til oversikt';
 
   @override
+  String get finishSetup => 'Ferdig';
+
+  @override
   String get locationFetchError => 'Kunne ikke hente posisjon.';
 
   @override
