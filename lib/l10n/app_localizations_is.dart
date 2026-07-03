@@ -156,6 +156,21 @@ class AppLocalizationsIs extends AppLocalizations {
   String get setupDesc => 'Sérsníða appið';
 
   @override
+  String get soundTitle => 'Hljóð';
+
+  @override
+  String get soundDesc => 'Hljóðstyrkur viðvörunar';
+
+  @override
+  String get soundUsePhone => 'Nota hljóðstyrk símans';
+
+  @override
+  String get soundUseApp => 'Nota hljóðstyrk appsins';
+
+  @override
+  String get soundVolume => 'Hljóðstyrkur appsins';
+
+  @override
   String get batteryCardTitle => 'Mælt með: undanþiggja frá rafhlöðuhagræðingu';
 
   @override

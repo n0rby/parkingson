@@ -157,6 +157,21 @@ class AppLocalizationsNb extends AppLocalizations {
   String get setupDesc => 'Tilpass appen';
 
   @override
+  String get soundTitle => 'Lyd';
+
+  @override
+  String get soundDesc => 'Alarmvolum';
+
+  @override
+  String get soundUsePhone => 'Bruk telefonens volum';
+
+  @override
+  String get soundUseApp => 'Bruk appens volum';
+
+  @override
+  String get soundVolume => 'Appens volum';
+
+  @override
   String get batteryCardTitle => 'Anbefalt: unnta fra batterioptimalisering';
 
   @override

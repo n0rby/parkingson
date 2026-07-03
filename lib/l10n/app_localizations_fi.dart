@@ -158,6 +158,21 @@ class AppLocalizationsFi extends AppLocalizations {
   String get setupDesc => 'Mukauta sovellusta';
 
   @override
+  String get soundTitle => 'Ääni';
+
+  @override
+  String get soundDesc => 'Hälytyksen äänenvoimakkuus';
+
+  @override
+  String get soundUsePhone => 'Käytä puhelimen äänenvoimakkuutta';
+
+  @override
+  String get soundUseApp => 'Käytä sovelluksen äänenvoimakkuutta';
+
+  @override
+  String get soundVolume => 'Sovelluksen äänenvoimakkuus';
+
+  @override
   String get batteryCardTitle => 'Suositus: vapauta akun optimoinnista';
 
   @override

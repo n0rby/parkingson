@@ -52,6 +52,11 @@
   "retry": "Prøv igen",
   "setupTitle": "Opsætning",
   "setupDesc": "Tilpas appen",
+  "soundTitle": "Lyd",
+  "soundDesc": "Lydstyrke for alarm",
+  "soundUsePhone": "Brug telefonens lydstyrke",
+  "soundUseApp": "Brug appens lydstyrke",
+  "soundVolume": "Appens lydstyrke",
 
   "batteryCardTitle": "Anbefalet: undtag fra batterioptimering",
   "batteryCardBody": "Valgfrit. Uden dette kan Android (især Samsung) stoppe bevægelsesovervågningen i baggrunden, så parkering uden Bluetooth ikke altid opdages.",

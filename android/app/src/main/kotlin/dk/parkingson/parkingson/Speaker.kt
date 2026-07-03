@@ -2,7 +2,6 @@ package dk.parkingson.parkingson
 
 import android.content.Context
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.speech.tts.TextToSpeech
 import java.util.Locale
 
@@ -19,13 +18,9 @@ object Speaker {
     fun speak(context: Context, text: String, langTag: String) {
         val appContext = context.applicationContext
 
-        // Make sure the alarm stream is at full volume for a loud voice.
-        val am = appContext.getSystemService(AudioManager::class.java)
-        am?.setStreamVolume(
-            AudioManager.STREAM_ALARM,
-            am.getStreamMaxVolume(AudioManager.STREAM_ALARM),
-            0
-        )
+        // Apply the user's sound preference (app volume vs. phone volume) so the
+        // voice matches the alarm.
+        AlarmPlayer.applyAlarmVolume(appContext)
 
         val engine = tts
         if (engine != null && ready) {

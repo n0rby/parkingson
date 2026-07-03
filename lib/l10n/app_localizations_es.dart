@@ -160,6 +160,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get setupDesc => 'Personalizar la aplicación';
 
   @override
+  String get soundTitle => 'Sonido';
+
+  @override
+  String get soundDesc => 'Volumen de la alarma';
+
+  @override
+  String get soundUsePhone => 'Usar el volumen del teléfono';
+
+  @override
+  String get soundUseApp => 'Usar el volumen de la aplicación';
+
+  @override
+  String get soundVolume => 'Volumen de la aplicación';
+
+  @override
   String get batteryCardTitle =>
       'Recomendado: excluir de la optimización de batería';
 

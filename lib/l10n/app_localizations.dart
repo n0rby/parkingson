@@ -382,6 +382,36 @@ abstract class AppLocalizations {
   /// **'Tilpas appen'**
   String get setupDesc;
 
+  /// No description provided for @soundTitle.
+  ///
+  /// In da, this message translates to:
+  /// **'Lyd'**
+  String get soundTitle;
+
+  /// No description provided for @soundDesc.
+  ///
+  /// In da, this message translates to:
+  /// **'Lydstyrke for alarm'**
+  String get soundDesc;
+
+  /// No description provided for @soundUsePhone.
+  ///
+  /// In da, this message translates to:
+  /// **'Brug telefonens lydstyrke'**
+  String get soundUsePhone;
+
+  /// No description provided for @soundUseApp.
+  ///
+  /// In da, this message translates to:
+  /// **'Brug appens lydstyrke'**
+  String get soundUseApp;
+
+  /// No description provided for @soundVolume.
+  ///
+  /// In da, this message translates to:
+  /// **'Appens lydstyrke'**
+  String get soundVolume;
+
   /// No description provided for @batteryCardTitle.
   ///
   /// In da, this message translates to:

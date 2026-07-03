@@ -156,6 +156,21 @@ class AppLocalizationsDa extends AppLocalizations {
   String get setupDesc => 'Tilpas appen';
 
   @override
+  String get soundTitle => 'Lyd';
+
+  @override
+  String get soundDesc => 'Lydstyrke for alarm';
+
+  @override
+  String get soundUsePhone => 'Brug telefonens lydstyrke';
+
+  @override
+  String get soundUseApp => 'Brug appens lydstyrke';
+
+  @override
+  String get soundVolume => 'Appens lydstyrke';
+
+  @override
   String get batteryCardTitle => 'Anbefalet: undtag fra batterioptimering';
 
   @override

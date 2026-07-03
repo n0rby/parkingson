@@ -106,6 +106,27 @@ object AlarmPlayer {
         Handler(Looper.getMainLooper()).postDelayed({ stopVibration(appContext) }, 30_000)
     }
 
+    /**
+     * Applies the user's sound preference to the alarm stream.
+     * - "app" (default): force the alarm stream to the app's chosen volume,
+     *   ignoring the phone's setting (previous always-max behaviour at 100%).
+     * - "phone": leave the phone's alarm volume untouched.
+     */
+    fun applyAlarmVolume(context: Context) {
+        val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        val mode = prefs.getString("flutter.sound_mode", "app")
+        if (mode != "app") return
+        // Flutter stores ints as Long in SharedPreferences.
+        val percent = prefs.getLong("flutter.app_volume", 100L).toInt().coerceIn(0, 100)
+        val am = context.getSystemService(AudioManager::class.java) ?: return
+        val max = am.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+        val target = Math.round(percent / 100.0 * max).toInt().coerceIn(0, max)
+        try {
+            am.setStreamVolume(AudioManager.STREAM_ALARM, target, 0)
+        } catch (_: Exception) {
+        }
+    }
+
     fun stopVibration(context: Context) {
         // Cancel via a fresh system Vibrator so it works no matter which context
         // started it (e.g. a background receiver vs. the activity).
@@ -126,9 +147,8 @@ object AlarmPlayer {
         val audioManager = context.getSystemService(AudioManager::class.java)
         val handler = Handler(Looper.getMainLooper())
 
-        // Force alarm stream to full volume so it isn't faded in / muted.
-        val maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
-        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVol, 0)
+        // Apply the user's sound preference (app volume vs. phone volume).
+        applyAlarmVolume(context)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioManager.requestAudioFocus(

@@ -9,12 +9,14 @@ import '../widgets/screen_scaffold.dart';
 class SetupScreen extends StatelessWidget {
   final VoidCallback onManageCars;
   final VoidCallback onTestAlarm;
+  final VoidCallback onSound;
   final VoidCallback onBack;
 
   const SetupScreen({
     super.key,
     required this.onManageCars,
     required this.onTestAlarm,
+    required this.onSound,
     required this.onBack,
   });
 
@@ -28,6 +30,12 @@ class SetupScreen extends StatelessWidget {
           title: l10n.manageCars,
           subtitle: l10n.manageCarsDesc,
           onTap: onManageCars,
+          accent: hpTeal,
+        ),
+        ActionRow(
+          title: l10n.soundTitle,
+          subtitle: l10n.soundDesc,
+          onTap: onSound,
           accent: hpTeal,
         ),
         ActionRow(

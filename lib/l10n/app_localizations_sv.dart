@@ -157,6 +157,21 @@ class AppLocalizationsSv extends AppLocalizations {
   String get setupDesc => 'Anpassa appen';
 
   @override
+  String get soundTitle => 'Ljud';
+
+  @override
+  String get soundDesc => 'Larmvolym';
+
+  @override
+  String get soundUsePhone => 'Använd telefonens volym';
+
+  @override
+  String get soundUseApp => 'Använd appens volym';
+
+  @override
+  String get soundVolume => 'Appens volym';
+
+  @override
   String get batteryCardTitle =>
       'Rekommenderas: undanta från batterioptimering';
 

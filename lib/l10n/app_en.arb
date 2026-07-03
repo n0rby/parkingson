@@ -51,6 +51,11 @@
   "retry": "Try again",
   "setupTitle": "Setup",
   "setupDesc": "Customize the app",
+  "soundTitle": "Sound",
+  "soundDesc": "Alarm volume",
+  "soundUsePhone": "Use the phone's volume",
+  "soundUseApp": "Use the app's volume",
+  "soundVolume": "App volume",
 
   "batteryCardTitle": "Recommended: exempt from battery optimization",
   "batteryCardBody": "Optional. Without this, Android (especially Samsung) may stop background motion monitoring, so parking without Bluetooth isn't always detected.",

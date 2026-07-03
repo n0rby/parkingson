@@ -51,6 +51,11 @@
   "retry": "Erneut versuchen",
   "setupTitle": "Einrichtung",
   "setupDesc": "App anpassen",
+  "soundTitle": "Ton",
+  "soundDesc": "Alarmlautstärke",
+  "soundUsePhone": "Telefonlautstärke verwenden",
+  "soundUseApp": "App-Lautstärke verwenden",
+  "soundVolume": "App-Lautstärke",
 
   "batteryCardTitle": "Empfohlen: von der Akku-Optimierung ausnehmen",
   "batteryCardBody": "Optional. Ohne dies kann Android (besonders Samsung) die Bewegungsüberwachung im Hintergrund stoppen, sodass Parken ohne Bluetooth nicht immer erkannt wird.",

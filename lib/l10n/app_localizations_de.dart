@@ -158,6 +158,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get setupDesc => 'App anpassen';
 
   @override
+  String get soundTitle => 'Ton';
+
+  @override
+  String get soundDesc => 'Alarmlautstärke';
+
+  @override
+  String get soundUsePhone => 'Telefonlautstärke verwenden';
+
+  @override
+  String get soundUseApp => 'App-Lautstärke verwenden';
+
+  @override
+  String get soundVolume => 'App-Lautstärke';
+
+  @override
   String get batteryCardTitle =>
       'Empfohlen: von der Akku-Optimierung ausnehmen';
 
