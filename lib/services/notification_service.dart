@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:android_intent_plus/android_intent.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/app_localizations.dart';
 
@@ -16,9 +14,6 @@ AppLocalizations _bgL10n() {
   );
   return lookupAppLocalizations(match);
 }
-
-/// BCP-47 language tag for TTS, matching the device locale.
-String _ttsTag() => PlatformDispatcher.instance.locale.toLanguageTag();
 
 const _channelId = 'parking_reminder';
 const _channelName = 'Parkeringspåmindelser';
@@ -63,43 +58,6 @@ Future<void> fireAlarm(String voiceText) async {
     await intent.sendBroadcast();
   } catch (_) {}
 }
-
-/// Speaks (and clears) a pending alarm voice reminder, if one was set recently.
-/// Called when the app is opened, and immediately for foreground alarms.
-Future<void> speakPendingVoice({Duration delay = Duration.zero}) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.reload();
-  final raw = prefs.getString(_pendingVoiceKey);
-  if (raw == null) return;
-  await prefs.remove(_pendingVoiceKey);
-  final sep = raw.indexOf('|');
-  if (sep < 0) return;
-  final ts = int.tryParse(raw.substring(0, sep)) ?? 0;
-  final text = raw.substring(sep + 1);
-  // Ignore stale reminders (older than 5 minutes).
-  if (DateTime.now().millisecondsSinceEpoch - ts > 5 * 60 * 1000) return;
-  // Let the alarm sound finish first so the voice doesn't play over it.
-  if (delay > Duration.zero) await Future.delayed(delay);
-  if (Platform.isAndroid) {
-    // Native TTS plays on the alarm stream (full alarm volume), matching the
-    // alarm sound — flutter_tts can only use the quieter media stream.
-    try {
-      await const MethodChannel('dk.parkingson/alarm')
-          .invokeMethod('speak', {'text': text, 'lang': _ttsTag()});
-    } catch (_) {}
-  } else {
-    try {
-      final tts = FlutterTts();
-      await tts.setLanguage(_ttsTag());
-      await tts.setVolume(1.0);
-      await tts.setSpeechRate(0.5);
-      await tts.speak(text);
-    } catch (_) {}
-  }
-}
-
-// Alarm sound lasts ~3s; wait a bit longer before speaking so they don't overlap.
-const voiceAfterAlarmDelay = Duration(milliseconds: 3300);
 
 class NotificationService {
   Future<void> initialize() async {

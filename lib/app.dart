@@ -60,8 +60,6 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
       });
     });
     _motionService.initialize();
-    // Speak any pending alarm voice reminder left while the app was closed.
-    speakPendingVoice();
   }
 
   @override
@@ -78,7 +76,6 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
     // plays the deferred voice reminder.
     if (state == AppLifecycleState.resumed) {
       const MethodChannel('dk.parkingson/alarm').invokeMethod('stopAlarmVibration');
-      speakPendingVoice();
     }
   }
 
@@ -111,10 +108,8 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
   void _startMonitoring() {
     _motionService.startMonitoring(
       onParkingDetected: (snapshot) {
-        // The background isolate already fired the alarm; when the UI is alive,
-        // speak the deferred voice reminder (after the alarm) and open the
-        // reminder screen.
-        speakPendingVoice(delay: voiceAfterAlarmDelay);
+        // The background isolate already fired the alarm (sound + voice are
+        // handled natively); just open the reminder screen.
         if (mounted) {
           setState(() {
             _reminderLocation = snapshot;
@@ -216,11 +211,10 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
                   longitude: 0,
                   capturedAtMillis: DateTime.now().millisecondsSinceEpoch,
                 );
-            // Show the visual notification, fire the DND-aware alarm, and speak
-            // the voice reminder (we're in the foreground here).
+            // Show the visual notification and fire the DND-aware alarm
+            // (sound + voice, or vibration, are handled natively).
             await NotificationService().showParkingReminder(payload: snapshot.encode());
             await fireAlarm(l10n.ttsRemember);
-            await speakPendingVoice(delay: voiceAfterAlarmDelay);
             if (mounted) {
               setState(() {
                 _reminderLocation = snapshot;

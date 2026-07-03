@@ -35,7 +35,8 @@ class SoundSettingsRepository {
 
   Future<SoundMode> getMode() async {
     final p = await _prefs;
-    return p.getString(_keyMode) == 'phone' ? SoundMode.phone : SoundMode.app;
+    // Default: follow the phone's volume (don't override the phone's setting).
+    return p.getString(_keyMode) == 'app' ? SoundMode.app : SoundMode.phone;
   }
 
   Future<void> setMode(SoundMode mode) async {

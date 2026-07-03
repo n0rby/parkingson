@@ -77,7 +77,7 @@ object AlarmPlayer {
      */
     private fun isAlarmMuted(context: Context, am: AudioManager?): Boolean {
         val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-        if (prefs.getString("flutter.sound_mode", "app") == "app") {
+        if (prefs.getString("flutter.sound_mode", "phone") == "app") {
             return prefs.getLong("flutter.app_volume", 100L).toInt() <= 0
         }
         return am == null || am.getStreamVolume(AudioManager.STREAM_ALARM) == 0
@@ -145,7 +145,7 @@ object AlarmPlayer {
      */
     fun applyAlarmVolume(context: Context) {
         val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-        val mode = prefs.getString("flutter.sound_mode", "app")
+        val mode = prefs.getString("flutter.sound_mode", "phone")
         if (mode != "app") return
         // Flutter stores ints as Long in SharedPreferences.
         val percent = prefs.getLong("flutter.app_volume", 100L).toInt().coerceIn(0, 100)
