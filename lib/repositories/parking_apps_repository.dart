@@ -52,4 +52,28 @@ class ParkingAppsRepository {
     final p = await SharedPreferences.getInstance();
     await p.setStringList(_key, packages.toList());
   }
+
+  /// The selected apps resolved to full [InstalledApp]s (with labels), so they
+  /// can be shown as launch buttons. Falls back to the package name as label if
+  /// the app is no longer installed.
+  Future<List<InstalledApp>> getSelectedApps() async {
+    final selected = await getSelected();
+    if (selected.isEmpty) return [];
+    final all = await getInstalledApps();
+    final byPackage = {for (final a in all) a.packageName: a};
+    return selected
+        .map((p) => byPackage[p] ?? InstalledApp(packageName: p, label: p))
+        .toList()
+      ..sort((a, b) => a.label.toLowerCase().compareTo(b.label.toLowerCase()));
+  }
+
+  /// Opens the given app. Returns false if it isn't installed / can't launch.
+  Future<bool> launchApp(String packageName) async {
+    try {
+      final r = await _channel.invokeMethod('launchApp', {'package': packageName});
+      return r == true;
+    } catch (_) {
+      return false;
+    }
+  }
 }

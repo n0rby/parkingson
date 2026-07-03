@@ -64,6 +64,7 @@ class MainActivity : FlutterActivity() {
                     }
                     "getMotionStatus" -> result.success(readMotionStatus(this))
                     "getInstalledApps" -> result.success(installedLaunchableApps())
+                    "launchApp" -> result.success(launchApp(call.argument<String>("package")))
                     "getAlarmSoundTitle" -> result.success(currentAlarmSoundTitle())
                     "pickAlarmSound" -> {
                         pendingSoundResult = result
@@ -109,6 +110,18 @@ class MainActivity : FlutterActivity() {
             }
             .distinctBy { it["package"] }
             .sortedBy { (it["label"] ?: "").lowercase() }
+    }
+
+    private fun launchApp(pkg: String?): Boolean {
+        if (pkg.isNullOrEmpty()) return false
+        val intent = packageManager.getLaunchIntentForPackage(pkg) ?: return false
+        return try {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
     // ── Alarm sound picker ──────────────────────────────────────────────────
