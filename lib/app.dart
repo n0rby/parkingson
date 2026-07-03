@@ -72,11 +72,14 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Opening the app (any way) stops the Do Not Disturb alarm vibration and
-    // plays the deferred voice reminder.
+    // Opening the app (any way) stops the Do Not Disturb alarm vibration.
     if (state == AppLifecycleState.resumed) {
-      const MethodChannel('dk.parkingson/alarm').invokeMethod('stopAlarmVibration');
+      _stopAlarmVibration();
     }
+  }
+
+  void _stopAlarmVibration() {
+    const MethodChannel('dk.parkingson/alarm').invokeMethod('stopAlarmVibration');
   }
 
   Future<void> _loadState() async {
@@ -275,6 +278,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
         return ReminderScreen(
           parkingLocation: _reminderLocation!,
           onAddIgnoredLocation: () async {
+            _stopAlarmVibration();
             final name = await _locationService.reverseGeocode(
                 _reminderLocation!.latitude, _reminderLocation!.longitude);
             await _ignoredRepo.addIgnoredLocation(_reminderLocation!, name: name);
@@ -285,13 +289,17 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
             });
           },
           onNavigateToCar: () {
+            _stopAlarmVibration();
             _locationService.navigateTo(
               _reminderLocation!.latitude,
               _reminderLocation!.longitude,
             );
             setState(() => _screen = _Screen.home);
           },
-          onDismiss: () => setState(() => _screen = _Screen.home),
+          onDismiss: () {
+            _stopAlarmVibration();
+            setState(() => _screen = _Screen.home);
+          },
         );
     }
   }
