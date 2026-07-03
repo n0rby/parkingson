@@ -145,7 +145,7 @@ abstract class AppLocalizations {
   /// No description provided for @carsBody.
   ///
   /// In da, this message translates to:
-  /// **'Appen virker bedst, hvis du vælger dine bilers Bluetooth-forbindelser.'**
+  /// **'Vælg din bils Bluetooth — den forbindelse telefonen laver til bilens stereo, når du sætter dig ind. Vælg ikke hovedtelefoner eller headset. Vi har forhåndsvalgt dem der ligner biler.'**
   String get carsBody;
 
   /// No description provided for @carsWithBluetooth.

@@ -7,7 +7,7 @@
 
   "carsTitle": "Vælg dine biler",
   "btOnlyMode": "Brug kun BT, for at reducere antallet af falske alarmer",
-  "carsBody": "Appen virker bedst, hvis du vælger dine bilers Bluetooth-forbindelser.",
+  "carsBody": "Vælg din bils Bluetooth — den forbindelse telefonen laver til bilens stereo, når du sætter dig ind. Vælg ikke hovedtelefoner eller headset. Vi har forhåndsvalgt dem der ligner biler.",
   "carsWithBluetooth": "Biler med Bluetooth",
   "noPairedDevices": "Ingen parrede Bluetooth-enheder fundet.",
   "activateParkingMonitoring": "Aktiver parkeringsovervågning",

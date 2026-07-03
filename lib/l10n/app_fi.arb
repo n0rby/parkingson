@@ -5,7 +5,7 @@
   "getStarted": "Aloita",
   "carsTitle": "Valitse autosi",
   "btOnlyMode": "Käytä vain Bluetoothia vähentääksesi vääriä hälytyksiä",
-  "carsBody": "Sovellus toimii parhaiten, kun valitset autojesi Bluetooth-yhteydet.",
+  "carsBody": "Valitse autosi Bluetooth — yhteys, jonka puhelin muodostaa auton stereoihin, kun nouset autoon. Älä valitse kuulokkeita tai kuulokemikrofonia. Olemme esivalinneet ne, jotka näyttävät autoilta.",
   "carsWithBluetooth": "Autot, joissa on Bluetooth",
   "noPairedDevices": "Pariliitettyjä Bluetooth-laitteita ei löytynyt.",
   "activateParkingMonitoring": "Ota pysäköinnin valvonta käyttöön",

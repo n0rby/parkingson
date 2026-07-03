@@ -5,7 +5,7 @@
   "getStarted": "Byrja",
   "carsTitle": "Veldu bílana þína",
   "btOnlyMode": "Nota aðeins Bluetooth til að fækka fölskum viðvörunum",
-  "carsBody": "Forritið virkar best ef þú velur Bluetooth-tengingar bílanna þinna.",
+  "carsBody": "Veldu Bluetooth bílsins — tenginguna sem síminn gerir við hljómtæki bílsins þegar þú sest inn. Ekki velja heyrnartól eða höfuðtól. Við höfum forvalið þau sem líta út eins og bílar.",
   "carsWithBluetooth": "Bílar með Bluetooth",
   "noPairedDevices": "Engin pöruð Bluetooth-tæki fundust.",
   "activateParkingMonitoring": "Virkja bílastæðavöktun",

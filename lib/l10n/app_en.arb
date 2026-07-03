@@ -7,7 +7,7 @@
 
   "carsTitle": "Choose your cars",
   "btOnlyMode": "Use Bluetooth only, to reduce false alarms",
-  "carsBody": "The app works best if you select your cars' Bluetooth connections.",
+  "carsBody": "Choose your car's Bluetooth — the connection your phone makes to the car stereo when you get in. Don't choose headphones or a headset. We've pre-selected the ones that look like cars.",
   "carsWithBluetooth": "Cars with Bluetooth",
   "noPairedDevices": "No paired Bluetooth devices found.",
   "activateParkingMonitoring": "Activate parking monitoring",

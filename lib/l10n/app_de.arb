@@ -7,7 +7,7 @@
 
   "carsTitle": "Wähle deine Autos",
   "btOnlyMode": "Nur Bluetooth verwenden, um Fehlalarme zu reduzieren",
-  "carsBody": "Die App funktioniert am besten, wenn du die Bluetooth-Verbindungen deiner Autos auswählst.",
+  "carsBody": "Wähle das Bluetooth deines Autos — die Verbindung, die dein Telefon beim Einsteigen zum Autoradio herstellt. Wähle keine Kopfhörer oder Headsets. Wir haben die ausgewählt, die nach Autos aussehen.",
   "carsWithBluetooth": "Autos mit Bluetooth",
   "noPairedDevices": "Keine gekoppelten Bluetooth-Geräte gefunden.",
   "activateParkingMonitoring": "Parküberwachung aktivieren",

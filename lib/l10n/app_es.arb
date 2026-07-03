@@ -5,7 +5,7 @@
   "getStarted": "Empezar",
   "carsTitle": "Elige tus coches",
   "btOnlyMode": "Usar solo Bluetooth para reducir las falsas alarmas",
-  "carsBody": "La aplicación funciona mejor si seleccionas las conexiones Bluetooth de tus coches.",
+  "carsBody": "Elige el Bluetooth de tu coche — la conexión que hace tu teléfono con la radio del coche cuando entras. No elijas auriculares ni manos libres. Hemos preseleccionado los que parecen coches.",
   "carsWithBluetooth": "Coches con Bluetooth",
   "noPairedDevices": "No se encontraron dispositivos Bluetooth emparejados.",
   "activateParkingMonitoring": "Activar la supervisión de estacionamiento",

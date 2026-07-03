@@ -5,7 +5,7 @@
   "getStarted": "Kom igång",
   "carsTitle": "Välj dina bilar",
   "btOnlyMode": "Använd endast Bluetooth för att minska antalet falsklarm",
-  "carsBody": "Appen fungerar bäst om du väljer dina bilars Bluetooth-anslutningar.",
+  "carsBody": "Välj din bils Bluetooth — anslutningen som telefonen gör till bilstereon när du sätter dig i bilen. Välj inte hörlurar eller headset. Vi har förvalt de som ser ut som bilar.",
   "carsWithBluetooth": "Bilar med Bluetooth",
   "noPairedDevices": "Inga parkopplade Bluetooth-enheter hittades.",
   "activateParkingMonitoring": "Aktivera parkeringsövervakning",

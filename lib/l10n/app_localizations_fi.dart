@@ -27,7 +27,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get carsBody =>
-      'Sovellus toimii parhaiten, kun valitset autojesi Bluetooth-yhteydet.';
+      'Valitse autosi Bluetooth — yhteys, jonka puhelin muodostaa auton stereoihin, kun nouset autoon. Älä valitse kuulokkeita tai kuulokemikrofonia. Olemme esivalinneet ne, jotka näyttävät autoilta.';
 
   @override
   String get carsWithBluetooth => 'Autot, joissa on Bluetooth';

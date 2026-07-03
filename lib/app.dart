@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'car_brands.dart';
 import 'l10n/app_localizations.dart';
 import 'repositories/car_repository.dart';
 import 'repositories/billing_repository.dart';
@@ -105,6 +106,19 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
 
   Future<void> _goToCars() async {
     final paired = await _btService.getPairedDevices();
+    // First time here: pre-select the devices that look like a car, so the user
+    // doesn't have to figure out which paired device is their car.
+    if (_selectedAddresses.isEmpty) {
+      final likely = paired
+          .where((d) => looksLikeCar(d.name))
+          .map((d) => d.address)
+          .toSet();
+      if (likely.isNotEmpty) {
+        _selectedAddresses = likely;
+        await _carRepo.saveSelectedCarAddresses(likely);
+        _motionService.updateAddresses(likely);
+      }
+    }
     if (mounted) setState(() { _pairedDevices = paired; _screen = _Screen.cars; });
   }
 

@@ -27,7 +27,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get carsBody =>
-      'Appen fungerar bäst om du väljer dina bilars Bluetooth-anslutningar.';
+      'Välj din bils Bluetooth — anslutningen som telefonen gör till bilstereon när du sätter dig i bilen. Välj inte hörlurar eller headset. Vi har förvalt de som ser ut som bilar.';
 
   @override
   String get carsWithBluetooth => 'Bilar med Bluetooth';

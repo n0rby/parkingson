@@ -27,7 +27,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get carsBody =>
-      'L\'application fonctionne mieux si vous sélectionnez les connexions Bluetooth de vos voitures.';
+      'Choisissez le Bluetooth de votre voiture — la connexion que votre téléphone établit avec l\'autoradio quand vous montez. Ne choisissez pas d\'écouteurs ni de casque. Nous avons présélectionné ceux qui ressemblent à des voitures.';
 
   @override
   String get carsWithBluetooth => 'Voitures avec Bluetooth';
