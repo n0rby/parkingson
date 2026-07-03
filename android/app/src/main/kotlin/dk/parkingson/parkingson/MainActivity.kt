@@ -3,6 +3,7 @@ package dk.parkingson.parkingson
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -62,6 +63,7 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
                     "getMotionStatus" -> result.success(readMotionStatus(this))
+                    "getInstalledApps" -> result.success(installedLaunchableApps())
                     "getAlarmSoundTitle" -> result.success(currentAlarmSoundTitle())
                     "pickAlarmSound" -> {
                         pendingSoundResult = result
@@ -87,6 +89,26 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+    }
+
+    // ── Installed apps (for the parking-app picker) ─────────────────────────
+    private fun installedLaunchableApps(): List<Map<String, String>> {
+        val pm = packageManager
+        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+        val resolveInfos = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            pm.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            pm.queryIntentActivities(intent, 0)
+        }
+        return resolveInfos
+            .mapNotNull { info ->
+                val pkg = info.activityInfo?.packageName ?: return@mapNotNull null
+                if (pkg == packageName) return@mapNotNull null
+                mapOf("package" to pkg, "label" to info.loadLabel(pm).toString())
+            }
+            .distinctBy { it["package"] }
+            .sortedBy { (it["label"] ?: "").lowercase() }
     }
 
     // ── Alarm sound picker ──────────────────────────────────────────────────

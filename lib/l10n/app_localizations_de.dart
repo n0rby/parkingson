@@ -199,6 +199,28 @@ class AppLocalizationsDe extends AppLocalizations {
   String get soundVibrateSilent => 'Nur vibrieren, wenn Lautstärke 0 ist';
 
   @override
+  String get parkingAppsTitle => 'Park-Apps';
+
+  @override
+  String get parkingAppsDesc => 'Wähle die Apps, die du fürs Parken nutzt';
+
+  @override
+  String get parkingAppsBody =>
+      'Markiere die Apps, mit denen du fürs Parken bezahlst, z. B. EasyPark oder Q-Park.';
+
+  @override
+  String get parkingAppsSearch => 'Apps suchen';
+
+  @override
+  String get parkingAppsKnown => 'Park-Apps';
+
+  @override
+  String get parkingAppsOther => 'Andere Apps';
+
+  @override
+  String get parkingAppsNone => 'Keine Apps gefunden.';
+
+  @override
   String get batteryCardTitle =>
       'Empfohlen: von der Akku-Optimierung ausnehmen';
 

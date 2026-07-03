@@ -460,6 +460,48 @@ abstract class AppLocalizations {
   /// **'Brug kun vibration ved lydstyrke 0'**
   String get soundVibrateSilent;
 
+  /// No description provided for @parkingAppsTitle.
+  ///
+  /// In da, this message translates to:
+  /// **'Parkeringsapps'**
+  String get parkingAppsTitle;
+
+  /// No description provided for @parkingAppsDesc.
+  ///
+  /// In da, this message translates to:
+  /// **'Vælg de apps du bruger til parkering'**
+  String get parkingAppsDesc;
+
+  /// No description provided for @parkingAppsBody.
+  ///
+  /// In da, this message translates to:
+  /// **'Markér de apps du bruger til at betale for parkering, fx EasyPark eller Q-Park.'**
+  String get parkingAppsBody;
+
+  /// No description provided for @parkingAppsSearch.
+  ///
+  /// In da, this message translates to:
+  /// **'Søg apps'**
+  String get parkingAppsSearch;
+
+  /// No description provided for @parkingAppsKnown.
+  ///
+  /// In da, this message translates to:
+  /// **'Parkeringsapps'**
+  String get parkingAppsKnown;
+
+  /// No description provided for @parkingAppsOther.
+  ///
+  /// In da, this message translates to:
+  /// **'Andre apps'**
+  String get parkingAppsOther;
+
+  /// No description provided for @parkingAppsNone.
+  ///
+  /// In da, this message translates to:
+  /// **'Ingen apps fundet.'**
+  String get parkingAppsNone;
+
   /// No description provided for @batteryCardTitle.
   ///
   /// In da, this message translates to:

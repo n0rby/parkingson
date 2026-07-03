@@ -196,6 +196,28 @@ class AppLocalizationsDa extends AppLocalizations {
   String get soundVibrateSilent => 'Brug kun vibration ved lydstyrke 0';
 
   @override
+  String get parkingAppsTitle => 'Parkeringsapps';
+
+  @override
+  String get parkingAppsDesc => 'Vælg de apps du bruger til parkering';
+
+  @override
+  String get parkingAppsBody =>
+      'Markér de apps du bruger til at betale for parkering, fx EasyPark eller Q-Park.';
+
+  @override
+  String get parkingAppsSearch => 'Søg apps';
+
+  @override
+  String get parkingAppsKnown => 'Parkeringsapps';
+
+  @override
+  String get parkingAppsOther => 'Andre apps';
+
+  @override
+  String get parkingAppsNone => 'Ingen apps fundet.';
+
+  @override
   String get batteryCardTitle => 'Anbefalet: undtag fra batterioptimering';
 
   @override

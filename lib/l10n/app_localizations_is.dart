@@ -196,6 +196,28 @@ class AppLocalizationsIs extends AppLocalizations {
   String get soundVibrateSilent => 'Aðeins titra þegar hljóðstyrkur er 0';
 
   @override
+  String get parkingAppsTitle => 'Bílastæðaöpp';
+
+  @override
+  String get parkingAppsDesc => 'Veldu öppin sem þú notar fyrir bílastæði';
+
+  @override
+  String get parkingAppsBody =>
+      'Merktu öppin sem þú notar til að greiða fyrir bílastæði, t.d. EasyPark eða Q-Park.';
+
+  @override
+  String get parkingAppsSearch => 'Leita í öppum';
+
+  @override
+  String get parkingAppsKnown => 'Bílastæðaöpp';
+
+  @override
+  String get parkingAppsOther => 'Önnur öpp';
+
+  @override
+  String get parkingAppsNone => 'Engin öpp fundust.';
+
+  @override
   String get batteryCardTitle => 'Mælt með: undanþiggja frá rafhlöðuhagræðingu';
 
   @override

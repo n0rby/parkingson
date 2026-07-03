@@ -14,6 +14,7 @@ import 'screens/reminder_screen.dart';
 import 'screens/set_reminder_screen.dart';
 import 'screens/setup_screen.dart';
 import 'screens/sound_settings_screen.dart';
+import 'screens/parking_apps_screen.dart';
 import 'models/car_device.dart';
 import 'models/location_snapshot.dart';
 import 'models/ignored_location.dart';
@@ -23,7 +24,7 @@ import 'services/motion_service.dart';
 import 'services/notification_service.dart';
 import 'theme.dart';
 
-enum _Screen { welcome, cars, permissions, home, ignoredLocations, reminder, setReminder, setup, soundSettings }
+enum _Screen { welcome, cars, permissions, home, ignoredLocations, reminder, setReminder, setup, soundSettings, parkingApps }
 
 class ParkingsonApp extends StatefulWidget {
   const ParkingsonApp({super.key});
@@ -271,11 +272,17 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
             }
           },
           onSound: () => setState(() => _screen = _Screen.soundSettings),
+          onParkingApps: () => setState(() => _screen = _Screen.parkingApps),
           onBack: () => setState(() => _screen = _Screen.home),
         );
 
       case _Screen.soundSettings:
         return SoundSettingsScreen(
+          onBack: () => setState(() => _screen = _Screen.setup),
+        );
+
+      case _Screen.parkingApps:
+        return ParkingAppsScreen(
           onBack: () => setState(() => _screen = _Screen.setup),
         );
 

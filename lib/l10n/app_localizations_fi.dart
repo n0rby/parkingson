@@ -198,6 +198,29 @@ class AppLocalizationsFi extends AppLocalizations {
   String get soundVibrateSilent => 'Vain värinä, kun äänenvoimakkuus on 0';
 
   @override
+  String get parkingAppsTitle => 'Pysäköintisovellukset';
+
+  @override
+  String get parkingAppsDesc =>
+      'Valitse sovellukset, joita käytät pysäköintiin';
+
+  @override
+  String get parkingAppsBody =>
+      'Merkitse sovellukset, joilla maksat pysäköinnistä, esim. EasyPark tai Q-Park.';
+
+  @override
+  String get parkingAppsSearch => 'Hae sovelluksia';
+
+  @override
+  String get parkingAppsKnown => 'Pysäköintisovellukset';
+
+  @override
+  String get parkingAppsOther => 'Muut sovellukset';
+
+  @override
+  String get parkingAppsNone => 'Sovelluksia ei löytynyt.';
+
+  @override
   String get batteryCardTitle => 'Suositus: vapauta akun optimoinnista';
 
   @override

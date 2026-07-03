@@ -65,6 +65,14 @@
   "soundVibrateDnd": "Nur vibrieren bei \"Nicht stören\"",
   "soundVibrateSilent": "Nur vibrieren, wenn Lautstärke 0 ist",
 
+  "parkingAppsTitle": "Park-Apps",
+  "parkingAppsDesc": "Wähle die Apps, die du fürs Parken nutzt",
+  "parkingAppsBody": "Markiere die Apps, mit denen du fürs Parken bezahlst, z. B. EasyPark oder Q-Park.",
+  "parkingAppsSearch": "Apps suchen",
+  "parkingAppsKnown": "Park-Apps",
+  "parkingAppsOther": "Andere Apps",
+  "parkingAppsNone": "Keine Apps gefunden.",
+
   "batteryCardTitle": "Empfohlen: von der Akku-Optimierung ausnehmen",
   "batteryCardBody": "Optional. Ohne dies kann Android (besonders Samsung) die Bewegungsüberwachung im Hintergrund stoppen, sodass Parken ohne Bluetooth nicht immer erkannt wird.",
   "batteryCardButton": "Uneingeschränkten Hintergrund erlauben",

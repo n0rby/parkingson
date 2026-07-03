@@ -197,6 +197,28 @@ class AppLocalizationsNb extends AppLocalizations {
   String get soundVibrateSilent => 'Bare vibrer ved volum 0';
 
   @override
+  String get parkingAppsTitle => 'Parkeringsapper';
+
+  @override
+  String get parkingAppsDesc => 'Velg appene du bruker til parkering';
+
+  @override
+  String get parkingAppsBody =>
+      'Merk appene du bruker til å betale for parkering, f.eks. EasyPark eller Q-Park.';
+
+  @override
+  String get parkingAppsSearch => 'Søk i apper';
+
+  @override
+  String get parkingAppsKnown => 'Parkeringsapper';
+
+  @override
+  String get parkingAppsOther => 'Andre apper';
+
+  @override
+  String get parkingAppsNone => 'Ingen apper funnet.';
+
+  @override
   String get batteryCardTitle => 'Anbefalt: unnta fra batterioptimalisering';
 
   @override

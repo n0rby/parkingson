@@ -65,6 +65,14 @@
   "soundVibrateDnd": "Only vibrate in Do Not Disturb",
   "soundVibrateSilent": "Only vibrate when volume is 0",
 
+  "parkingAppsTitle": "Parking apps",
+  "parkingAppsDesc": "Choose the apps you use for parking",
+  "parkingAppsBody": "Select the apps you use to pay for parking, e.g. EasyPark or Q-Park.",
+  "parkingAppsSearch": "Search apps",
+  "parkingAppsKnown": "Parking apps",
+  "parkingAppsOther": "Other apps",
+  "parkingAppsNone": "No apps found.",
+
   "batteryCardTitle": "Recommended: exempt from battery optimization",
   "batteryCardBody": "Optional. Without this, Android (especially Samsung) may stop background motion monitoring, so parking without Bluetooth isn't always detected.",
   "batteryCardButton": "Allow unrestricted background",

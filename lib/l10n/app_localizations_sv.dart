@@ -198,6 +198,28 @@ class AppLocalizationsSv extends AppLocalizations {
   String get soundVibrateSilent => 'Vibrera endast vid volym 0';
 
   @override
+  String get parkingAppsTitle => 'Parkeringsappar';
+
+  @override
+  String get parkingAppsDesc => 'Välj apparna du använder för parkering';
+
+  @override
+  String get parkingAppsBody =>
+      'Markera apparna du använder för att betala för parkering, t.ex. EasyPark eller Q-Park.';
+
+  @override
+  String get parkingAppsSearch => 'Sök appar';
+
+  @override
+  String get parkingAppsKnown => 'Parkeringsappar';
+
+  @override
+  String get parkingAppsOther => 'Andra appar';
+
+  @override
+  String get parkingAppsNone => 'Inga appar hittades.';
+
+  @override
   String get batteryCardTitle =>
       'Rekommenderas: undanta från batterioptimering';
 

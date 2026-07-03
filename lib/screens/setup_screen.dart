@@ -10,6 +10,7 @@ class SetupScreen extends StatelessWidget {
   final VoidCallback onManageCars;
   final VoidCallback onTestAlarm;
   final VoidCallback onSound;
+  final VoidCallback onParkingApps;
   final VoidCallback onBack;
 
   const SetupScreen({
@@ -17,6 +18,7 @@ class SetupScreen extends StatelessWidget {
     required this.onManageCars,
     required this.onTestAlarm,
     required this.onSound,
+    required this.onParkingApps,
     required this.onBack,
   });
 
@@ -36,6 +38,12 @@ class SetupScreen extends StatelessWidget {
           title: l10n.soundTitle,
           subtitle: l10n.soundDesc,
           onTap: onSound,
+          accent: hpTeal,
+        ),
+        ActionRow(
+          title: l10n.parkingAppsTitle,
+          subtitle: l10n.parkingAppsDesc,
+          onTap: onParkingApps,
           accent: hpTeal,
         ),
         ActionRow(

@@ -66,6 +66,14 @@
   "soundVibrateDnd": "Brug kun vibration ved \"Forstyr ikke\"",
   "soundVibrateSilent": "Brug kun vibration ved lydstyrke 0",
 
+  "parkingAppsTitle": "Parkeringsapps",
+  "parkingAppsDesc": "Vælg de apps du bruger til parkering",
+  "parkingAppsBody": "Markér de apps du bruger til at betale for parkering, fx EasyPark eller Q-Park.",
+  "parkingAppsSearch": "Søg apps",
+  "parkingAppsKnown": "Parkeringsapps",
+  "parkingAppsOther": "Andre apps",
+  "parkingAppsNone": "Ingen apps fundet.",
+
   "batteryCardTitle": "Anbefalet: undtag fra batterioptimering",
   "batteryCardBody": "Valgfrit. Uden dette kan Android (især Samsung) stoppe bevægelsesovervågningen i baggrunden, så parkering uden Bluetooth ikke altid opdages.",
   "batteryCardButton": "Tillad ubegrænset baggrund",
