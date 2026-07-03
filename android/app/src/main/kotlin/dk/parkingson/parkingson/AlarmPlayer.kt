@@ -26,6 +26,7 @@ import java.util.Locale
  */
 object AlarmPlayer {
     private var vibrator: Vibrator? = null
+    private var savedAlarmVolume: Int? = null
 
     fun isDndActive(context: Context): Boolean {
         val nm = context.getSystemService(NotificationManager::class.java) ?: return false
@@ -59,15 +60,17 @@ object AlarmPlayer {
         }
 
         // Normal: apply the chosen volume, play the loud alarm, then speak.
+        val appContext = context.applicationContext
         applyAlarmVolume(context)
         val voice = takePendingVoice(context)
         playAlarmSound(context)
         if (voice != null) {
-            val appContext = context.applicationContext
             Handler(Looper.getMainLooper()).postDelayed({
                 Speaker.speak(appContext, voice, Locale.getDefault().toLanguageTag())
             }, 3300)
         }
+        // Restore the original system alarm volume after the alarm + voice.
+        Handler(Looper.getMainLooper()).postDelayed({ restoreAlarmVolume(appContext) }, 12000)
     }
 
     /**
@@ -156,8 +159,24 @@ object AlarmPlayer {
         val am = context.getSystemService(AudioManager::class.java) ?: return
         val max = am.getStreamMaxVolume(AudioManager.STREAM_ALARM)
         val target = Math.round(percent / 100.0 * max).toInt().coerceIn(0, max)
+        // Remember the original so we can restore it — don't permanently change
+        // the system alarm volume (which also affects the user's alarm clock).
+        if (savedAlarmVolume == null) {
+            savedAlarmVolume = am.getStreamVolume(AudioManager.STREAM_ALARM)
+        }
         try {
             am.setStreamVolume(AudioManager.STREAM_ALARM, target, 0)
+        } catch (_: Exception) {
+        }
+    }
+
+    /** Restores the system alarm volume changed by [applyAlarmVolume]. */
+    fun restoreAlarmVolume(context: Context) {
+        val saved = savedAlarmVolume ?: return
+        savedAlarmVolume = null
+        val am = context.getSystemService(AudioManager::class.java) ?: return
+        try {
+            am.setStreamVolume(AudioManager.STREAM_ALARM, saved, 0)
         } catch (_: Exception) {
         }
     }

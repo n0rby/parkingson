@@ -18,10 +18,6 @@ object Speaker {
     fun speak(context: Context, text: String, langTag: String) {
         val appContext = context.applicationContext
 
-        // Apply the user's sound preference (app volume vs. phone volume) so the
-        // voice matches the alarm.
-        AlarmPlayer.applyAlarmVolume(appContext)
-
         val engine = tts
         if (engine != null && ready) {
             doSpeak(engine, text, langTag)
