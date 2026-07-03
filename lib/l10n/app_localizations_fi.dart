@@ -102,6 +102,13 @@ class AppLocalizationsFi extends AppLocalizations {
   String get grantAllPermissions => 'Myönnä kaikki käyttöoikeudet';
 
   @override
+  String get setupDoneTitle => 'Parkingson on käynnissä';
+
+  @override
+  String get setupDoneBody =>
+      'Parkingson odottaa nyt seuraavaa pysäköintiäsi. Saat muistutuksen, kun poistut autosta.';
+
+  @override
   String get monitoringActive => 'Valvonta käytössä';
 
   @override

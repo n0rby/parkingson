@@ -101,6 +101,13 @@ class AppLocalizationsIs extends AppLocalizations {
   String get grantAllPermissions => 'Veita allar heimildir';
 
   @override
+  String get setupDoneTitle => 'Parkingson er í gangi';
+
+  @override
+  String get setupDoneBody =>
+      'Parkingson bíður nú eftir næsta bílastæði þínu. Þú færð áminningu þegar þú yfirgefur bílinn.';
+
+  @override
   String get monitoringActive => 'Vöktun virk';
 
   @override

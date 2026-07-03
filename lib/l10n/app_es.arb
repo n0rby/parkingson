@@ -29,6 +29,8 @@
   "permBattery": "Segundo plano sin restricciones",
   "permBatteryDesc": "Para que el ahorro de batería no detenga la supervisión",
   "grantAllPermissions": "Conceder todos los permisos",
+  "setupDoneTitle": "Parkingson está activo",
+  "setupDoneBody": "Parkingson ahora espera tu próximo estacionamiento. Recibirás un recordatorio cuando dejes el coche.",
   "monitoringActive": "Supervisión activa",
   "lastParkedAt": "Último estacionamiento {time}",
   "lastParkedNever": "Último estacionamiento aún no medido",

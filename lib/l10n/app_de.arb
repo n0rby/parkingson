@@ -33,6 +33,8 @@
   "permBatteryDesc": "Damit Energiesparen die Überwachung nicht stoppt",
   "grantAllPermissions": "Alle Berechtigungen erteilen",
 
+  "setupDoneTitle": "Parkingson läuft",
+  "setupDoneBody": "Parkingson wartet jetzt auf dein nächstes Parken. Du erhältst eine Erinnerung, wenn du das Auto verlässt.",
   "monitoringActive": "Überwachung aktiv",
   "lastParkedAt": "Zuletzt geparkt {time}",
   "@lastParkedAt": { "placeholders": { "time": { "type": "String" } } },

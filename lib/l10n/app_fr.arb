@@ -29,6 +29,8 @@
   "permBattery": "Arrière-plan sans restriction",
   "permBatteryDesc": "Pour que l'économie de batterie n'arrête pas la surveillance",
   "grantAllPermissions": "Accorder toutes les autorisations",
+  "setupDoneTitle": "Parkingson est actif",
+  "setupDoneBody": "Parkingson attend maintenant votre prochain stationnement. Vous recevrez un rappel lorsque vous quitterez la voiture.",
   "monitoringActive": "Surveillance active",
   "lastParkedAt": "Dernier stationnement {time}",
   "lastParkedNever": "Dernier stationnement pas encore mesuré",

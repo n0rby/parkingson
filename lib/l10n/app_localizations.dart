@@ -286,6 +286,18 @@ abstract class AppLocalizations {
   /// **'Giv alle tilladelser'**
   String get grantAllPermissions;
 
+  /// No description provided for @setupDoneTitle.
+  ///
+  /// In da, this message translates to:
+  /// **'Parkingson kører'**
+  String get setupDoneTitle;
+
+  /// No description provided for @setupDoneBody.
+  ///
+  /// In da, this message translates to:
+  /// **'Parkingson afventer nu din næste parkering. Du får en påmindelse, når du forlader bilen.'**
+  String get setupDoneBody;
+
   /// No description provided for @monitoringActive.
   ///
   /// In da, this message translates to:

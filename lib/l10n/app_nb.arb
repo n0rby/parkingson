@@ -29,6 +29,8 @@
   "permBattery": "Ubegrenset bakgrunn",
   "permBatteryDesc": "Så batterisparing ikke stopper overvåkingen",
   "grantAllPermissions": "Gi alle tillatelser",
+  "setupDoneTitle": "Parkingson kjører",
+  "setupDoneBody": "Parkingson venter nå på din neste parkering. Du får en påminnelse når du forlater bilen.",
   "monitoringActive": "Overvåking aktiv",
   "lastParkedAt": "Sist parkert {time}",
   "lastParkedNever": "Sist parkert ikke målt ennå",

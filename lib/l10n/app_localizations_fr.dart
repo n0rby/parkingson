@@ -104,6 +104,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get grantAllPermissions => 'Accorder toutes les autorisations';
 
   @override
+  String get setupDoneTitle => 'Parkingson est actif';
+
+  @override
+  String get setupDoneBody =>
+      'Parkingson attend maintenant votre prochain stationnement. Vous recevrez un rappel lorsque vous quitterez la voiture.';
+
+  @override
   String get monitoringActive => 'Surveillance active';
 
   @override

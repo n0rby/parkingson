@@ -103,6 +103,13 @@ class AppLocalizationsSv extends AppLocalizations {
   String get grantAllPermissions => 'Ge alla behörigheter';
 
   @override
+  String get setupDoneTitle => 'Parkingson körs';
+
+  @override
+  String get setupDoneBody =>
+      'Parkingson väntar nu på din nästa parkering. Du får en påminnelse när du lämnar bilen.';
+
+  @override
   String get monitoringActive => 'Övervakning aktiv';
 
   @override

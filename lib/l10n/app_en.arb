@@ -33,6 +33,8 @@
   "permBatteryDesc": "So battery saving doesn't stop monitoring",
   "grantAllPermissions": "Grant all permissions",
 
+  "setupDoneTitle": "Parkingson is running",
+  "setupDoneBody": "Parkingson is now waiting for your next parking. You'll get a reminder when you leave the car.",
   "monitoringActive": "Monitoring active",
   "lastParkedAt": "Last parked {time}",
   "@lastParkedAt": { "placeholders": { "time": { "type": "String" } } },

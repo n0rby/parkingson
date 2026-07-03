@@ -101,6 +101,13 @@ class AppLocalizationsDa extends AppLocalizations {
   String get grantAllPermissions => 'Giv alle tilladelser';
 
   @override
+  String get setupDoneTitle => 'Parkingson kører';
+
+  @override
+  String get setupDoneBody =>
+      'Parkingson afventer nu din næste parkering. Du får en påmindelse, når du forlader bilen.';
+
+  @override
   String get monitoringActive => 'Overvågning aktiv';
 
   @override

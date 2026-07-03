@@ -29,6 +29,8 @@
   "permBattery": "Ótakmarkaður bakgrunnur",
   "permBatteryDesc": "Svo rafhlöðusparnaður stöðvi ekki vöktun",
   "grantAllPermissions": "Veita allar heimildir",
+  "setupDoneTitle": "Parkingson er í gangi",
+  "setupDoneBody": "Parkingson bíður nú eftir næsta bílastæði þínu. Þú færð áminningu þegar þú yfirgefur bílinn.",
   "monitoringActive": "Vöktun virk",
   "lastParkedAt": "Síðast lagt {time}",
   "lastParkedNever": "Síðasta bílastæði ekki mælt enn",

@@ -49,6 +49,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
   List<IgnoredLocation> _ignoredLocations = [];
   LocationSnapshot? _lastParkingLocation;
   LocationSnapshot? _reminderLocation;
+  bool _showSetupDone = false;
 
   @override
   void initState() {
@@ -81,6 +82,23 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
 
   void _stopAlarmVibration() {
     const MethodChannel('dk.parkingson/alarm').invokeMethod('stopAlarmVibration');
+  }
+
+  void _showSetupDoneDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.setupDoneTitle),
+        content: Text(l10n.setupDoneBody),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.ok),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _loadState() async {
@@ -184,7 +202,12 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
           onNext: () async {
             await _carRepo.saveSetupCompleted(true);
             _startMonitoring();
-            if (mounted) setState(() => _screen = _Screen.home);
+            if (mounted) {
+              setState(() {
+                _screen = _Screen.home;
+                _showSetupDone = true;
+              });
+            }
           },
           onOpenBluetoothSettings: () async {
             const channel = MethodChannel('dk.parkingson/alarm');
@@ -198,6 +221,14 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
         );
 
       case _Screen.home:
+        if (_showSetupDone) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _showSetupDone) {
+              _showSetupDone = false;
+              _showSetupDoneDialog(context);
+            }
+          });
+        }
         return HomeScreen(
           monitoredCars: _pairedDevices
               .where((d) => _selectedAddresses.contains(d.address))

@@ -33,6 +33,8 @@
   "permBatteryDesc": "Så batterisparing ikke stopper overvågningen",
   "grantAllPermissions": "Giv alle tilladelser",
 
+  "setupDoneTitle": "Parkingson kører",
+  "setupDoneBody": "Parkingson afventer nu din næste parkering. Du får en påmindelse, når du forlader bilen.",
   "monitoringActive": "Overvågning aktiv",
   "lastParkedAt": "Sidst parkeret {time}",
   "@lastParkedAt": { "placeholders": { "time": { "type": "String" } } },

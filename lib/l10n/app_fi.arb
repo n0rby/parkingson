@@ -29,6 +29,8 @@
   "permBattery": "Rajoittamaton taustakäyttö",
   "permBatteryDesc": "Jotta virransäästö ei pysäytä valvontaa",
   "grantAllPermissions": "Myönnä kaikki käyttöoikeudet",
+  "setupDoneTitle": "Parkingson on käynnissä",
+  "setupDoneBody": "Parkingson odottaa nyt seuraavaa pysäköintiäsi. Saat muistutuksen, kun poistut autosta.",
   "monitoringActive": "Valvonta käytössä",
   "lastParkedAt": "Viimeksi pysäköity {time}",
   "lastParkedNever": "Viimeksi pysäköityä ei ole vielä mitattu",

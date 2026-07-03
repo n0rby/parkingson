@@ -102,6 +102,13 @@ class AppLocalizationsNb extends AppLocalizations {
   String get grantAllPermissions => 'Gi alle tillatelser';
 
   @override
+  String get setupDoneTitle => 'Parkingson kjører';
+
+  @override
+  String get setupDoneBody =>
+      'Parkingson venter nå på din neste parkering. Du får en påminnelse når du forlater bilen.';
+
+  @override
   String get monitoringActive => 'Overvåking aktiv';
 
   @override
