@@ -42,6 +42,8 @@
   "setReminderTitle": "Påminnelse",
   "setReminderDesc": "Ange en tid för att gå tillbaka till bilen",
   "retry": "Försök igen",
+  "setupTitle": "Inställningar",
+  "setupDesc": "Anpassa appen",
   "batteryCardTitle": "Rekommenderas: undanta från batterioptimering",
   "batteryCardBody": "Valfritt. Utan detta kan Android (särskilt Samsung) stoppa rörelseövervakningen i bakgrunden, så att parkering utan Bluetooth inte alltid upptäcks.",
   "batteryCardButton": "Tillåt obegränsad bakgrund",

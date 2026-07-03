@@ -42,6 +42,8 @@
   "setReminderTitle": "Muistutus",
   "setReminderDesc": "Aseta aika kävellä takaisin autolle",
   "retry": "Yritä uudelleen",
+  "setupTitle": "Asetukset",
+  "setupDesc": "Mukauta sovellusta",
   "batteryCardTitle": "Suositus: vapauta akun optimoinnista",
   "batteryCardBody": "Valinnainen. Ilman tätä Android (erityisesti Samsung) voi pysäyttää liikkeen valvonnan taustalla, jolloin pysäköintiä ilman Bluetoothia ei aina havaita.",
   "batteryCardButton": "Salli rajoittamaton taustakäyttö",

@@ -42,6 +42,8 @@
   "setReminderTitle": "Recordatorio",
   "setReminderDesc": "Establece una hora para volver al coche",
   "retry": "Reintentar",
+  "setupTitle": "Configuración",
+  "setupDesc": "Personalizar la aplicación",
   "batteryCardTitle": "Recomendado: excluir de la optimización de batería",
   "batteryCardBody": "Opcional. Sin esto, Android (especialmente Samsung) puede detener la supervisión de movimiento en segundo plano, por lo que el estacionamiento sin Bluetooth no siempre se detecta.",
   "batteryCardButton": "Permitir segundo plano sin restricciones",

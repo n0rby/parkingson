@@ -113,11 +113,19 @@ class HomeScreen extends StatelessWidget {
                     ? l10n.findCarRoute(lastParkingLocation!.displayCapturedAt)
                     : l10n.findCarNone,
                 onTap: onFindCar,
+                accent: hpTeal,
               ),
               ActionRow(
                 title: l10n.ignoredLocationsAction,
                 subtitle: l10n.ignoredLocationsActionDesc,
                 onTap: onManageIgnoredLocations,
+                accent: hpTeal,
+              ),
+              ActionRow(
+                title: l10n.setupTitle,
+                subtitle: l10n.setupDesc,
+                onTap: () {},
+                accent: hpTeal,
               ),
             ],
           ),

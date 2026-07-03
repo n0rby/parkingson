@@ -148,6 +148,12 @@ class AppLocalizationsSv extends AppLocalizations {
   String get retry => 'Försök igen';
 
   @override
+  String get setupTitle => 'Inställningar';
+
+  @override
+  String get setupDesc => 'Anpassa appen';
+
+  @override
   String get batteryCardTitle =>
       'Rekommenderas: undanta från batterioptimering';
 

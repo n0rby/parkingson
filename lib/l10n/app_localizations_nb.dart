@@ -148,6 +148,12 @@ class AppLocalizationsNb extends AppLocalizations {
   String get retry => 'Prøv igjen';
 
   @override
+  String get setupTitle => 'Oppsett';
+
+  @override
+  String get setupDesc => 'Tilpass appen';
+
+  @override
   String get batteryCardTitle => 'Anbefalt: unnta fra batterioptimalisering';
 
   @override

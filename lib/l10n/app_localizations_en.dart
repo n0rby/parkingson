@@ -147,6 +147,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retry => 'Try again';
 
   @override
+  String get setupTitle => 'Setup';
+
+  @override
+  String get setupDesc => 'Customize the app';
+
+  @override
   String get batteryCardTitle =>
       'Recommended: exempt from battery optimization';
 

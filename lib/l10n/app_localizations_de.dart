@@ -149,6 +149,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get retry => 'Erneut versuchen';
 
   @override
+  String get setupTitle => 'Einrichtung';
+
+  @override
+  String get setupDesc => 'App anpassen';
+
+  @override
   String get batteryCardTitle =>
       'Empfohlen: von der Akku-Optimierung ausnehmen';
 

@@ -147,6 +147,12 @@ class AppLocalizationsDa extends AppLocalizations {
   String get retry => 'Prøv igen';
 
   @override
+  String get setupTitle => 'Opsætning';
+
+  @override
+  String get setupDesc => 'Tilpas appen';
+
+  @override
   String get batteryCardTitle => 'Anbefalet: undtag fra batterioptimering';
 
   @override

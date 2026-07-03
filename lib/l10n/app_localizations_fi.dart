@@ -149,6 +149,12 @@ class AppLocalizationsFi extends AppLocalizations {
   String get retry => 'Yritä uudelleen';
 
   @override
+  String get setupTitle => 'Asetukset';
+
+  @override
+  String get setupDesc => 'Mukauta sovellusta';
+
+  @override
   String get batteryCardTitle => 'Suositus: vapauta akun optimoinnista';
 
   @override

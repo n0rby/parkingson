@@ -48,6 +48,8 @@
   "setReminderTitle": "Reminder",
   "setReminderDesc": "Set a time to walk back to the car",
   "retry": "Try again",
+  "setupTitle": "Setup",
+  "setupDesc": "Customize the app",
 
   "batteryCardTitle": "Recommended: exempt from battery optimization",
   "batteryCardBody": "Optional. Without this, Android (especially Samsung) may stop background motion monitoring, so parking without Bluetooth isn't always detected.",

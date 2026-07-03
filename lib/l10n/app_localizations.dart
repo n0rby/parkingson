@@ -364,6 +364,18 @@ abstract class AppLocalizations {
   /// **'Prøv igen'**
   String get retry;
 
+  /// No description provided for @setupTitle.
+  ///
+  /// In da, this message translates to:
+  /// **'Opsætning'**
+  String get setupTitle;
+
+  /// No description provided for @setupDesc.
+  ///
+  /// In da, this message translates to:
+  /// **'Tilpas appen'**
+  String get setupDesc;
+
   /// No description provided for @batteryCardTitle.
   ///
   /// In da, this message translates to:

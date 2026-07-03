@@ -42,6 +42,8 @@
   "setReminderTitle": "Áminning",
   "setReminderDesc": "Stilltu tíma til að ganga til baka að bílnum",
   "retry": "Reyna aftur",
+  "setupTitle": "Uppsetning",
+  "setupDesc": "Sérsníða appið",
   "batteryCardTitle": "Mælt með: undanþiggja frá rafhlöðuhagræðingu",
   "batteryCardBody": "Valfrjálst. Án þessa getur Android (sérstaklega Samsung) stöðvað hreyfivöktun í bakgrunni, þannig að bílastæði án Bluetooth greinist ekki alltaf.",
   "batteryCardButton": "Leyfa ótakmarkaðan bakgrunn",

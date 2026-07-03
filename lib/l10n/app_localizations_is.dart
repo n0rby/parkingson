@@ -147,6 +147,12 @@ class AppLocalizationsIs extends AppLocalizations {
   String get retry => 'Reyna aftur';
 
   @override
+  String get setupTitle => 'Uppsetning';
+
+  @override
+  String get setupDesc => 'Sérsníða appið';
+
+  @override
   String get batteryCardTitle => 'Mælt með: undanþiggja frá rafhlöðuhagræðingu';
 
   @override

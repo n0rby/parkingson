@@ -151,6 +151,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get retry => 'Reintentar';
 
   @override
+  String get setupTitle => 'Configuración';
+
+  @override
+  String get setupDesc => 'Personalizar la aplicación';
+
+  @override
   String get batteryCardTitle =>
       'Recomendado: excluir de la optimización de batería';
 
