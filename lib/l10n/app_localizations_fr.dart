@@ -174,6 +174,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get soundVolume => 'Volume de l\'application';
 
   @override
+  String get soundAlarmSound => 'Sonnerie d\'alarme';
+
+  @override
   String get soundVibrateDnd => 'Vibrer uniquement en \"Ne pas déranger\"';
 
   @override

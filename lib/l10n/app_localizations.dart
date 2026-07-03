@@ -412,6 +412,12 @@ abstract class AppLocalizations {
   /// **'Appens lydstyrke'**
   String get soundVolume;
 
+  /// No description provided for @soundAlarmSound.
+  ///
+  /// In da, this message translates to:
+  /// **'Alarmlyd'**
+  String get soundAlarmSound;
+
   /// No description provided for @soundVibrateDnd.
   ///
   /// In da, this message translates to:

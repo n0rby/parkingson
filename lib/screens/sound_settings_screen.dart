@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../repositories/sound_settings_repository.dart';
 import '../theme.dart';
@@ -15,11 +16,14 @@ class SoundSettingsScreen extends StatefulWidget {
 }
 
 class _SoundSettingsScreenState extends State<SoundSettingsScreen> {
+  static const _channel = MethodChannel('dk.parkingson/alarm');
+
   final _repo = SoundSettingsRepository();
   SoundMode _mode = SoundMode.app;
   int _volume = 100;
   bool _vibrateInDnd = true;
   bool _vibrateWhenSilent = true;
+  String _alarmSoundTitle = '';
   bool _loaded = false;
 
   @override
@@ -33,15 +37,31 @@ class _SoundSettingsScreenState extends State<SoundSettingsScreen> {
     final volume = await _repo.getVolume();
     final vibrateDnd = await _repo.getVibrateInDnd();
     final vibrateSilent = await _repo.getVibrateWhenSilent();
+    String soundTitle = '';
+    try {
+      soundTitle = await _channel.invokeMethod('getAlarmSoundTitle') ?? '';
+    } catch (_) {}
     if (mounted) {
       setState(() {
         _mode = mode;
         _volume = volume;
         _vibrateInDnd = vibrateDnd;
         _vibrateWhenSilent = vibrateSilent;
+        _alarmSoundTitle = soundTitle;
         _loaded = true;
       });
     }
+  }
+
+  Future<void> _pickAlarmSound() async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      final title = await _channel
+          .invokeMethod('pickAlarmSound', {'title': l10n.soundAlarmSound});
+      if (title is String && mounted) {
+        setState(() => _alarmSoundTitle = title);
+      }
+    } catch (_) {}
   }
 
   void _selectMode(SoundMode mode) {
@@ -63,6 +83,27 @@ class _SoundSettingsScreenState extends State<SoundSettingsScreen> {
             ),
           )
         else ...[
+          ListCard(
+            onTap: _pickAlarmSound,
+            children: [
+              const Icon(Icons.music_note_outlined, color: hpTeal),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.soundAlarmSound,
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),
+                    if (_alarmSoundTitle.isNotEmpty)
+                      Text(_alarmSoundTitle,
+                          style: const TextStyle(color: hpMuted, fontSize: 12)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: hpSubtle),
+            ],
+          ),
+          const SizedBox(height: 16),
           _ModeTile(
             title: l10n.soundUsePhone,
             selected: _mode == SoundMode.phone,

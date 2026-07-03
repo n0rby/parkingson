@@ -50,6 +50,7 @@
   "soundUsePhone": "Använd telefonens volym",
   "soundUseApp": "Använd appens volym",
   "soundVolume": "Appens volym",
+  "soundAlarmSound": "Larmljud",
   "soundVibrateDnd": "Vibrera endast vid \"Stör ej\"",
   "soundVibrateSilent": "Vibrera endast vid volym 0",
   "batteryCardTitle": "Rekommenderas: undanta från batterioptimering",

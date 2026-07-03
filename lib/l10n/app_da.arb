@@ -57,6 +57,7 @@
   "soundUsePhone": "Brug telefonens lydstyrke",
   "soundUseApp": "Brug appens lydstyrke",
   "soundVolume": "Appens lydstyrke",
+  "soundAlarmSound": "Alarmlyd",
   "soundVibrateDnd": "Brug kun vibration ved \"Forstyr ikke\"",
   "soundVibrateSilent": "Brug kun vibration ved lydstyrke 0",
 

@@ -50,6 +50,7 @@
   "soundUsePhone": "Bruk telefonens volum",
   "soundUseApp": "Bruk appens volum",
   "soundVolume": "Appens volum",
+  "soundAlarmSound": "Alarmlyd",
   "soundVibrateDnd": "Bare vibrer ved \"Ikke forstyrr\"",
   "soundVibrateSilent": "Bare vibrer ved volum 0",
   "batteryCardTitle": "Anbefalt: unnta fra batterioptimalisering",

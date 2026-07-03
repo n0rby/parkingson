@@ -173,6 +173,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get soundVolume => 'App-Lautstärke';
 
   @override
+  String get soundAlarmSound => 'Alarmton';
+
+  @override
   String get soundVibrateDnd => 'Nur vibrieren bei \"Nicht stören\"';
 
   @override

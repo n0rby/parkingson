@@ -171,6 +171,9 @@ class AppLocalizationsIs extends AppLocalizations {
   String get soundVolume => 'Hljóðstyrkur appsins';
 
   @override
+  String get soundAlarmSound => 'Viðvörunarhljóð';
+
+  @override
   String get soundVibrateDnd => 'Aðeins titra í \"Ónáðið ekki\"';
 
   @override

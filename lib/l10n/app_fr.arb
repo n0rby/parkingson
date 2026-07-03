@@ -50,6 +50,7 @@
   "soundUsePhone": "Utiliser le volume du téléphone",
   "soundUseApp": "Utiliser le volume de l'application",
   "soundVolume": "Volume de l'application",
+  "soundAlarmSound": "Sonnerie d'alarme",
   "soundVibrateDnd": "Vibrer uniquement en \"Ne pas déranger\"",
   "soundVibrateSilent": "Vibrer uniquement quand le volume est à 0",
   "batteryCardTitle": "Recommandé : exclure de l'optimisation de la batterie",

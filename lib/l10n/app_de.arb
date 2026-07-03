@@ -56,6 +56,7 @@
   "soundUsePhone": "Telefonlautstärke verwenden",
   "soundUseApp": "App-Lautstärke verwenden",
   "soundVolume": "App-Lautstärke",
+  "soundAlarmSound": "Alarmton",
   "soundVibrateDnd": "Nur vibrieren bei \"Nicht stören\"",
   "soundVibrateSilent": "Nur vibrieren, wenn Lautstärke 0 ist",
 

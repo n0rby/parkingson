@@ -7,6 +7,7 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -195,8 +196,19 @@ object AlarmPlayer {
         vibrator = null
     }
 
+    private fun chosenAlarmUri(context: Context): Uri? {
+        val saved = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            .getString("flutter.alarm_sound_uri", null) ?: return null
+        return try {
+            Uri.parse(saved)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     private fun playAlarmSound(context: Context) {
-        val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+        val uri = chosenAlarmUri(context)
+            ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val audioManager = context.getSystemService(AudioManager::class.java)
         val handler = Handler(Looper.getMainLooper())

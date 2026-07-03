@@ -50,6 +50,7 @@
   "soundUsePhone": "Käytä puhelimen äänenvoimakkuutta",
   "soundUseApp": "Käytä sovelluksen äänenvoimakkuutta",
   "soundVolume": "Sovelluksen äänenvoimakkuus",
+  "soundAlarmSound": "Hälytysääni",
   "soundVibrateDnd": "Vain värinä \"Älä häiritse\" -tilassa",
   "soundVibrateSilent": "Vain värinä, kun äänenvoimakkuus on 0",
   "batteryCardTitle": "Suositus: vapauta akun optimoinnista",

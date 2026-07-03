@@ -173,6 +173,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get soundVolume => 'Sovelluksen äänenvoimakkuus';
 
   @override
+  String get soundAlarmSound => 'Hälytysääni';
+
+  @override
   String get soundVibrateDnd => 'Vain värinä \"Älä häiritse\" -tilassa';
 
   @override

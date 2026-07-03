@@ -172,6 +172,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get soundVolume => 'Appens volym';
 
   @override
+  String get soundAlarmSound => 'Larmljud';
+
+  @override
   String get soundVibrateDnd => 'Vibrera endast vid \"Stör ej\"';
 
   @override

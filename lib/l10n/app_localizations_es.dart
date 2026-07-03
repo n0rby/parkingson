@@ -175,6 +175,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soundVolume => 'Volumen de la aplicación';
 
   @override
+  String get soundAlarmSound => 'Sonido de alarma';
+
+  @override
   String get soundVibrateDnd => 'Solo vibrar en \"No molestar\"';
 
   @override

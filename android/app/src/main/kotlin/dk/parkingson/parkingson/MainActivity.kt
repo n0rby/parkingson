@@ -3,6 +3,7 @@ package dk.parkingson.parkingson
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,8 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
+    private var pendingSoundResult: MethodChannel.Result? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createNotificationChannels()
@@ -59,6 +62,11 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
                     "getMotionStatus" -> result.success(readMotionStatus(this))
+                    "getAlarmSoundTitle" -> result.success(currentAlarmSoundTitle())
+                    "pickAlarmSound" -> {
+                        pendingSoundResult = result
+                        launchAlarmPicker(call.argument<String>("title"))
+                    }
                     "isIgnoringBatteryOptimizations" -> {
                         val pm = getSystemService(PowerManager::class.java)
                         result.success(pm.isIgnoringBatteryOptimizations(packageName))
@@ -79,6 +87,68 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+    }
+
+    // ── Alarm sound picker ──────────────────────────────────────────────────
+    private val ringtonePickRequest = 5001
+
+    private fun currentAlarmSoundUri(): Uri? {
+        val saved = getSharedPreferences("FlutterSharedPreferences", MODE_PRIVATE)
+            .getString("flutter.alarm_sound_uri", null)
+        return if (saved != null) Uri.parse(saved)
+        else RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+    }
+
+    private fun currentAlarmSoundTitle(): String {
+        return try {
+            RingtoneManager.getRingtone(this, currentAlarmSoundUri())?.getTitle(this) ?: ""
+        } catch (_: Exception) {
+            ""
+        }
+    }
+
+    private fun launchAlarmPicker(title: String?) {
+        val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+            putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, currentAlarmSoundUri())
+            if (title != null) putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, title)
+        }
+        try {
+            startActivityForResult(intent, ringtonePickRequest)
+        } catch (_: Exception) {
+            pendingSoundResult?.success(null)
+            pendingSoundResult = null
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != ringtonePickRequest) return
+        if (resultCode == RESULT_OK) {
+            val uri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+            }
+            val prefs = getSharedPreferences("FlutterSharedPreferences", MODE_PRIVATE)
+            if (uri != null) {
+                prefs.edit().putString("flutter.alarm_sound_uri", uri.toString()).apply()
+            } else {
+                prefs.edit().remove("flutter.alarm_sound_uri").apply()
+            }
+            val title = try {
+                RingtoneManager.getRingtone(this, uri ?: currentAlarmSoundUri())?.getTitle(this) ?: ""
+            } catch (_: Exception) {
+                ""
+            }
+            pendingSoundResult?.success(title)
+        } else {
+            pendingSoundResult?.success(null)
+        }
+        pendingSoundResult = null
     }
 
     private fun createNotificationChannels() {
