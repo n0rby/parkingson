@@ -172,6 +172,12 @@ class AppLocalizationsSv extends AppLocalizations {
   String get soundVolume => 'Appens volym';
 
   @override
+  String get soundVibrateDnd => 'Vibrera vid \"Stör ej\"';
+
+  @override
+  String get soundVibrateSilent => 'Vibrera vid volym 0';
+
+  @override
   String get batteryCardTitle =>
       'Rekommenderas: undanta från batterioptimering';
 

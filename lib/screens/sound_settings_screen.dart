@@ -18,6 +18,8 @@ class _SoundSettingsScreenState extends State<SoundSettingsScreen> {
   final _repo = SoundSettingsRepository();
   SoundMode _mode = SoundMode.app;
   int _volume = 100;
+  bool _vibrateInDnd = true;
+  bool _vibrateWhenSilent = true;
   bool _loaded = false;
 
   @override
@@ -29,10 +31,14 @@ class _SoundSettingsScreenState extends State<SoundSettingsScreen> {
   Future<void> _load() async {
     final mode = await _repo.getMode();
     final volume = await _repo.getVolume();
+    final vibrateDnd = await _repo.getVibrateInDnd();
+    final vibrateSilent = await _repo.getVibrateWhenSilent();
     if (mounted) {
       setState(() {
         _mode = mode;
         _volume = volume;
+        _vibrateInDnd = vibrateDnd;
+        _vibrateWhenSilent = vibrateSilent;
         _loaded = true;
       });
     }
@@ -89,9 +95,52 @@ class _SoundSettingsScreenState extends State<SoundSettingsScreen> {
               onChangeEnd: (v) => _repo.setVolume(v.round()),
             ),
           ],
+          const SizedBox(height: 16),
+          _CheckRow(
+            label: l10n.soundVibrateDnd,
+            value: _vibrateInDnd,
+            onChanged: (v) {
+              setState(() => _vibrateInDnd = v);
+              _repo.setVibrateInDnd(v);
+            },
+          ),
+          const SizedBox(height: 8),
+          _CheckRow(
+            label: l10n.soundVibrateSilent,
+            value: _vibrateWhenSilent,
+            onChanged: (v) {
+              setState(() => _vibrateWhenSilent = v);
+              _repo.setVibrateWhenSilent(v);
+            },
+          ),
         ],
         const SizedBox(height: 16),
         TextButton(onPressed: widget.onBack, child: Text(l10n.backToOverview)),
+      ],
+    );
+  }
+}
+
+class _CheckRow extends StatelessWidget {
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _CheckRow({required this.label, required this.value, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListCard(
+      onTap: () => onChanged(!value),
+      children: [
+        Expanded(
+          child: Text(label, style: const TextStyle(color: hpText)),
+        ),
+        Checkbox(
+          value: value,
+          activeColor: hpTeal,
+          onChanged: (v) => onChanged(v ?? false),
+        ),
       ],
     );
   }

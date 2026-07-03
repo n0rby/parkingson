@@ -56,6 +56,8 @@
   "soundUsePhone": "Telefonlautstärke verwenden",
   "soundUseApp": "App-Lautstärke verwenden",
   "soundVolume": "App-Lautstärke",
+  "soundVibrateDnd": "Bei \"Nicht stören\" vibrieren",
+  "soundVibrateSilent": "Vibrieren, wenn Lautstärke 0 ist",
 
   "batteryCardTitle": "Empfohlen: von der Akku-Optimierung ausnehmen",
   "batteryCardBody": "Optional. Ohne dies kann Android (besonders Samsung) die Bewegungsüberwachung im Hintergrund stoppen, sodass Parken ohne Bluetooth nicht immer erkannt wird.",

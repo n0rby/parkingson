@@ -50,6 +50,8 @@
   "soundUsePhone": "Käytä puhelimen äänenvoimakkuutta",
   "soundUseApp": "Käytä sovelluksen äänenvoimakkuutta",
   "soundVolume": "Sovelluksen äänenvoimakkuus",
+  "soundVibrateDnd": "Värinä \"Älä häiritse\" -tilassa",
+  "soundVibrateSilent": "Värinä, kun äänenvoimakkuus on 0",
   "batteryCardTitle": "Suositus: vapauta akun optimoinnista",
   "batteryCardBody": "Valinnainen. Ilman tätä Android (erityisesti Samsung) voi pysäyttää liikkeen valvonnan taustalla, jolloin pysäköintiä ilman Bluetoothia ei aina havaita.",
   "batteryCardButton": "Salli rajoittamaton taustakäyttö",

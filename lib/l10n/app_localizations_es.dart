@@ -175,6 +175,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soundVolume => 'Volumen de la aplicación';
 
   @override
+  String get soundVibrateDnd => 'Vibrar en \"No molestar\"';
+
+  @override
+  String get soundVibrateSilent => 'Vibrar cuando el volumen es 0';
+
+  @override
   String get batteryCardTitle =>
       'Recomendado: excluir de la optimización de batería';
 

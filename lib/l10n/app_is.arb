@@ -50,6 +50,8 @@
   "soundUsePhone": "Nota hljóðstyrk símans",
   "soundUseApp": "Nota hljóðstyrk appsins",
   "soundVolume": "Hljóðstyrkur appsins",
+  "soundVibrateDnd": "Titra í \"Ónáðið ekki\"",
+  "soundVibrateSilent": "Titra þegar hljóðstyrkur er 0",
   "batteryCardTitle": "Mælt með: undanþiggja frá rafhlöðuhagræðingu",
   "batteryCardBody": "Valfrjálst. Án þessa getur Android (sérstaklega Samsung) stöðvað hreyfivöktun í bakgrunni, þannig að bílastæði án Bluetooth greinist ekki alltaf.",
   "batteryCardButton": "Leyfa ótakmarkaðan bakgrunn",

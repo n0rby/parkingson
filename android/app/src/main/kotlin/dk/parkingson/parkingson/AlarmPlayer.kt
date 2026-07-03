@@ -38,23 +38,42 @@ object AlarmPlayer {
     }
 
     fun trigger(context: Context) {
+        // Do Not Disturb: no sound; vibrate if the user enabled it. No voice.
         if (isDndActive(context)) {
-            // Do Not Disturb: vibration only — no voice at all. Discard the
-            // pending voice text so it is never spoken (not even on app open).
             takePendingVoice(context)
-            startPulseVibration(context)
-        } else {
-            // Take the pending voice now (and clear it) so opening the app
-            // later won't speak it a second time.
-            val voice = takePendingVoice(context)
-            playAlarmSound(context)
-            if (voice != null) {
-                val appContext = context.applicationContext
-                Handler(Looper.getMainLooper()).postDelayed({
-                    Speaker.speak(appContext, voice, Locale.getDefault().toLanguageTag())
-                }, 3300)
+            if (prefBool(context, "flutter.vibrate_in_dnd", true)) {
+                startPulseVibration(context)
             }
+            return
         }
+
+        // Apply the volume preference, then see if the alarm is effectively muted
+        // (app volume 0, or the phone's alarm volume is 0).
+        applyAlarmVolume(context)
+        val am = context.getSystemService(AudioManager::class.java)
+        val muted = am == null || am.getStreamVolume(AudioManager.STREAM_ALARM) == 0
+        if (muted) {
+            takePendingVoice(context)
+            if (prefBool(context, "flutter.vibrate_when_silent", true)) {
+                startPulseVibration(context)
+            }
+            return
+        }
+
+        // Normal: loud alarm, then the spoken reminder.
+        val voice = takePendingVoice(context)
+        playAlarmSound(context)
+        if (voice != null) {
+            val appContext = context.applicationContext
+            Handler(Looper.getMainLooper()).postDelayed({
+                Speaker.speak(appContext, voice, Locale.getDefault().toLanguageTag())
+            }, 3300)
+        }
+    }
+
+    private fun prefBool(context: Context, key: String, default: Boolean): Boolean {
+        return context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            .getBoolean(key, default)
     }
 
     /** Reads and clears the pending alarm voice text (if set within 5 minutes). */
@@ -146,9 +165,6 @@ object AlarmPlayer {
             ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val audioManager = context.getSystemService(AudioManager::class.java)
         val handler = Handler(Looper.getMainLooper())
-
-        // Apply the user's sound preference (app volume vs. phone volume).
-        applyAlarmVolume(context)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioManager.requestAudioFocus(

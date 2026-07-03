@@ -50,6 +50,8 @@
   "soundUsePhone": "Usar el volumen del teléfono",
   "soundUseApp": "Usar el volumen de la aplicación",
   "soundVolume": "Volumen de la aplicación",
+  "soundVibrateDnd": "Vibrar en \"No molestar\"",
+  "soundVibrateSilent": "Vibrar cuando el volumen es 0",
   "batteryCardTitle": "Recomendado: excluir de la optimización de batería",
   "batteryCardBody": "Opcional. Sin esto, Android (especialmente Samsung) puede detener la supervisión de movimiento en segundo plano, por lo que el estacionamiento sin Bluetooth no siempre se detecta.",
   "batteryCardButton": "Permitir segundo plano sin restricciones",

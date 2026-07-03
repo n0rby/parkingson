@@ -173,6 +173,12 @@ class AppLocalizationsFi extends AppLocalizations {
   String get soundVolume => 'Sovelluksen äänenvoimakkuus';
 
   @override
+  String get soundVibrateDnd => 'Värinä \"Älä häiritse\" -tilassa';
+
+  @override
+  String get soundVibrateSilent => 'Värinä, kun äänenvoimakkuus on 0';
+
+  @override
   String get batteryCardTitle => 'Suositus: vapauta akun optimoinnista';
 
   @override

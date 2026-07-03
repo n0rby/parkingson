@@ -50,6 +50,8 @@
   "soundUsePhone": "Använd telefonens volym",
   "soundUseApp": "Använd appens volym",
   "soundVolume": "Appens volym",
+  "soundVibrateDnd": "Vibrera vid \"Stör ej\"",
+  "soundVibrateSilent": "Vibrera vid volym 0",
   "batteryCardTitle": "Rekommenderas: undanta från batterioptimering",
   "batteryCardBody": "Valfritt. Utan detta kan Android (särskilt Samsung) stoppa rörelseövervakningen i bakgrunden, så att parkering utan Bluetooth inte alltid upptäcks.",
   "batteryCardButton": "Tillåt obegränsad bakgrund",
