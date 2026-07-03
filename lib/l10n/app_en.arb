@@ -29,6 +29,9 @@
   "permActivityDesc": "Detect driving and walking",
   "permNotifications": "Notifications",
   "permNotificationsDesc": "Send parking reminders",
+  "permBattery": "Unrestricted background",
+  "permBatteryDesc": "So battery saving doesn't stop monitoring",
+  "grantAllPermissions": "Grant all permissions",
 
   "monitoringActive": "Monitoring active",
   "lastParkedAt": "Last parked {time}",

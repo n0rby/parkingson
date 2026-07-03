@@ -92,6 +92,15 @@ class AppLocalizationsDa extends AppLocalizations {
   String get permNotificationsDesc => 'Send påmindelser om parkering';
 
   @override
+  String get permBattery => 'Ubegrænset baggrund';
+
+  @override
+  String get permBatteryDesc => 'Så batterisparing ikke stopper overvågningen';
+
+  @override
+  String get grantAllPermissions => 'Giv alle tilladelser';
+
+  @override
   String get monitoringActive => 'Overvågning aktiv';
 
   @override

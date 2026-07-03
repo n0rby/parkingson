@@ -93,6 +93,16 @@ class AppLocalizationsSv extends AppLocalizations {
   String get permNotificationsDesc => 'Skicka parkeringspåminnelser';
 
   @override
+  String get permBattery => 'Obegränsad bakgrund';
+
+  @override
+  String get permBatteryDesc =>
+      'Så att batterisparläge inte stoppar övervakningen';
+
+  @override
+  String get grantAllPermissions => 'Ge alla behörigheter';
+
+  @override
   String get monitoringActive => 'Övervakning aktiv';
 
   @override

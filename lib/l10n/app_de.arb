@@ -29,6 +29,9 @@
   "permActivityDesc": "Fahren und Gehen erkennen",
   "permNotifications": "Benachrichtigungen",
   "permNotificationsDesc": "Parkerinnerungen senden",
+  "permBattery": "Uneingeschränkter Hintergrund",
+  "permBatteryDesc": "Damit Energiesparen die Überwachung nicht stoppt",
+  "grantAllPermissions": "Alle Berechtigungen erteilen",
 
   "monitoringActive": "Überwachung aktiv",
   "lastParkedAt": "Zuletzt geparkt {time}",

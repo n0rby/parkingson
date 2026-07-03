@@ -29,6 +29,9 @@
   "permActivityDesc": "Detektér kørsel og gang",
   "permNotifications": "Notifikationer",
   "permNotificationsDesc": "Send påmindelser om parkering",
+  "permBattery": "Ubegrænset baggrund",
+  "permBatteryDesc": "Så batterisparing ikke stopper overvågningen",
+  "grantAllPermissions": "Giv alle tilladelser",
 
   "monitoringActive": "Overvågning aktiv",
   "lastParkedAt": "Sidst parkeret {time}",

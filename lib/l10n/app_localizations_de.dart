@@ -93,6 +93,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get permNotificationsDesc => 'Parkerinnerungen senden';
 
   @override
+  String get permBattery => 'Uneingeschränkter Hintergrund';
+
+  @override
+  String get permBatteryDesc =>
+      'Damit Energiesparen die Überwachung nicht stoppt';
+
+  @override
+  String get grantAllPermissions => 'Alle Berechtigungen erteilen';
+
+  @override
   String get monitoringActive => 'Überwachung aktiv';
 
   @override

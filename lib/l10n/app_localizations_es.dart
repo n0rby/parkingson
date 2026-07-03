@@ -95,6 +95,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get permNotificationsDesc => 'Enviar recordatorios de estacionamiento';
 
   @override
+  String get permBattery => 'Segundo plano sin restricciones';
+
+  @override
+  String get permBatteryDesc =>
+      'Para que el ahorro de batería no detenga la supervisión';
+
+  @override
+  String get grantAllPermissions => 'Conceder todos los permisos';
+
+  @override
   String get monitoringActive => 'Supervisión activa';
 
   @override

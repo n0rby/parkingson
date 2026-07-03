@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../l10n/app_localizations.dart';
 import '../theme.dart';
@@ -15,111 +16,51 @@ class PermissionsScreen extends StatefulWidget {
   State<PermissionsScreen> createState() => _PermissionsScreenState();
 }
 
-class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindingObserver {
-  Map<_PermItem, PermissionStatus> _statuses = {};
-  bool _checking = false;
+class _PermissionsScreenState extends State<PermissionsScreen> {
+  bool _requesting = false;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _checkAll();
-  }
+  Future<void> _requestAll() async {
+    if (_requesting) return;
+    setState(() => _requesting = true);
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  // Re-check after user returns from system settings — delayed to let Android propagate the change
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Future.delayed(const Duration(milliseconds: 600), _checkAll);
-    }
-  }
-
-  List<_PermItem> get _items => [
-        _PermItem.bluetooth,
-        _PermItem.locationAlways,
-        if (Platform.isAndroid) _PermItem.activityRecognition,
-        _PermItem.notifications,
-      ];
-
-  bool get _canActivate =>
-      _items.every((p) => _statuses[p]?.isGranted == true);
-
-  Future<PermissionStatus> _checkItem(_PermItem item) async {
-    if (item == _PermItem.bluetooth) {
-      final results = await [
-        Permission.bluetoothScan.status,
-        Permission.bluetoothConnect.status,
-      ].wait;
-      if (results.every((s) => s.isGranted)) return PermissionStatus.granted;
-      if (results.any((s) => s.isPermanentlyDenied)) return PermissionStatus.permanentlyDenied;
-      return PermissionStatus.denied;
-    }
-    if (item == _PermItem.locationAlways) {
-      // "Mens appen bruges" er tilstrækkeligt fordi baggrundstjenesten kører som foreground service
-      final always = await Permission.locationAlways.status;
-      if (always.isGranted) return PermissionStatus.granted;
-      final whenInUse = await Permission.locationWhenInUse.status;
-      if (whenInUse.isGranted) return PermissionStatus.granted;
-      if (always.isPermanentlyDenied || whenInUse.isPermanentlyDenied) return PermissionStatus.permanentlyDenied;
-      return PermissionStatus.denied;
-    }
-    return item.permission.status;
-  }
-
-  Future<void> _checkAll() async {
-    setState(() => _checking = true);
-    final map = <_PermItem, PermissionStatus>{};
-    for (final item in _items) {
-      map[item] = await _checkItem(item);
-    }
-    if (mounted) setState(() { _statuses = map; _checking = false; });
-  }
-
-  Future<void> _request(_PermItem item) async {
-    PermissionStatus status;
-
-    if (item == _PermItem.bluetooth) {
-      final results = await [
+    // Ask for all runtime permissions in one go (sequential system dialogs).
+    try {
+      await [
         Permission.bluetoothScan,
         Permission.bluetoothConnect,
+        Permission.locationWhenInUse,
+        if (Platform.isAndroid) Permission.activityRecognition,
+        Permission.notification,
       ].request();
-      if (results.values.every((s) => s.isGranted)) {
-        status = PermissionStatus.granted;
-      } else if (results.values.any((s) => s.isPermanentlyDenied)) {
-        status = PermissionStatus.permanentlyDenied;
-      } else {
-        status = PermissionStatus.denied;
-      }
-    } else if (item == _PermItem.locationAlways) {
-      // Forsøg "mens appen bruges" først — det er tilstrækkeligt med foreground service
-      final whenInUse = await Permission.locationWhenInUse.request();
-      if (whenInUse.isGranted) {
-        status = PermissionStatus.granted;
-      } else {
-        status = await Permission.locationAlways.request();
-      }
-    } else {
-      status = await item.permission.request();
+    } catch (_) {}
+
+    // Then the battery-optimization exemption (native system dialog).
+    if (Platform.isAndroid) {
+      try {
+        await const MethodChannel('dk.parkingson/alarm')
+            .invokeMethod('requestIgnoreBatteryOptimizations');
+      } catch (_) {}
     }
 
-    if (status.isPermanentlyDenied) {
-      await openAppSettings();
-      // Don't update status here — didChangeAppLifecycleState re-checks after returning
-      return;
+    if (mounted) {
+      setState(() => _requesting = false);
+      widget.onActivate();
     }
-
-    if (mounted) setState(() => _statuses[item] = status);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final items = <(IconData, String, String)>[
+      (Icons.bluetooth, l10n.permBluetooth, l10n.permBluetoothDesc),
+      (Icons.location_on_outlined, l10n.permLocation, l10n.permLocationDesc),
+      if (Platform.isAndroid)
+        (Icons.directions_walk, l10n.permActivity, l10n.permActivityDesc),
+      (Icons.notifications_outlined, l10n.permNotifications, l10n.permNotificationsDesc),
+      if (Platform.isAndroid)
+        (Icons.battery_saver_outlined, l10n.permBattery, l10n.permBatteryDesc),
+    ];
+
     return ScreenScaffold(
       title: l10n.permissionsTitle,
       children: [
@@ -127,126 +68,55 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
           l10n.permissionsBody,
           style: const TextStyle(color: hpMuted, height: 1.5),
         ),
-        const SizedBox(height: 24),
-        if (_checking)
-          const Center(child: CircularProgressIndicator())
-        else
-          ..._items.map((item) => _PermissionRow(
-                item: item,
-                status: _statuses[item],
-                onRequest: () => _request(item),
-              )),
+        const SizedBox(height: 20),
+        ...items.map((it) => _Bullet(icon: it.$1, title: it.$2, description: it.$3)),
         const SizedBox(height: 24),
         PrimaryButton(
-          label: l10n.activateMonitoring,
-          onPressed: _canActivate ? widget.onActivate : null,
+          label: l10n.grantAllPermissions,
+          onPressed: _requesting ? null : _requestAll,
         ),
-        if (!_canActivate) ...[
-          const SizedBox(height: 8),
-          Text(
-            l10n.grantAllToContinue,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: hpMuted, fontSize: 13),
-          ),
-        ],
       ],
     );
   }
 }
 
-class _PermissionRow extends StatelessWidget {
-  final _PermItem item;
-  final PermissionStatus? status;
-  final VoidCallback onRequest;
+class _Bullet extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
 
-  const _PermissionRow({
-    required this.item,
-    required this.status,
-    required this.onRequest,
-  });
+  const _Bullet({required this.icon, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final granted = status?.isGranted == true;
-    final denied = status?.isPermanentlyDenied == true;
-
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: granted
-                  ? Colors.green.withValues(alpha: 0.12)
-                  : hpCard,
+              color: hpCard,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              granted ? Icons.check_circle : item.icon,
-              color: granted ? Colors.green : hpTeal,
-              size: 20,
-            ),
+            child: Icon(icon, color: hpTeal, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title(l10n),
+                Text(title,
                     style: const TextStyle(fontWeight: FontWeight.w600, color: hpText)),
-                Text(item.description(l10n),
-                    style: const TextStyle(fontSize: 12, color: hpMuted)),
+                Text(description,
+                    style: const TextStyle(fontSize: 12, color: hpMuted, height: 1.3)),
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          if (!granted)
-            TextButton(
-              onPressed: onRequest,
-              child: Text(denied ? l10n.openSettings : l10n.grant),
-            )
-          else
-            Text(l10n.ok, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
-}
-
-enum _PermItem {
-  bluetooth,
-  locationAlways,
-  activityRecognition,
-  notifications;
-
-  Permission get permission => switch (this) {
-        bluetooth => Permission.bluetoothConnect,
-        locationAlways => Permission.locationAlways,
-        activityRecognition => Permission.activityRecognition,
-        notifications => Permission.notification,
-      };
-
-  String title(AppLocalizations l10n) => switch (this) {
-        bluetooth => l10n.permBluetooth,
-        locationAlways => l10n.permLocation,
-        activityRecognition => l10n.permActivity,
-        notifications => l10n.permNotifications,
-      };
-
-  String description(AppLocalizations l10n) => switch (this) {
-        bluetooth => l10n.permBluetoothDesc,
-        locationAlways => l10n.permLocationDesc,
-        activityRecognition => l10n.permActivityDesc,
-        notifications => l10n.permNotificationsDesc,
-      };
-
-  IconData get icon => switch (this) {
-        bluetooth => Icons.bluetooth,
-        locationAlways => Icons.location_on_outlined,
-        activityRecognition => Icons.directions_walk,
-        notifications => Icons.notifications_outlined,
-      };
 }

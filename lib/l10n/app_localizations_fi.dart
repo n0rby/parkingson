@@ -93,6 +93,15 @@ class AppLocalizationsFi extends AppLocalizations {
   String get permNotificationsDesc => 'Lähetä pysäköintimuistutuksia';
 
   @override
+  String get permBattery => 'Rajoittamaton taustakäyttö';
+
+  @override
+  String get permBatteryDesc => 'Jotta virransäästö ei pysäytä valvontaa';
+
+  @override
+  String get grantAllPermissions => 'Myönnä kaikki käyttöoikeudet';
+
+  @override
   String get monitoringActive => 'Valvonta käytössä';
 
   @override

@@ -91,6 +91,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get permNotificationsDesc => 'Send parking reminders';
 
   @override
+  String get permBattery => 'Unrestricted background';
+
+  @override
+  String get permBatteryDesc => 'So battery saving doesn\'t stop monitoring';
+
+  @override
+  String get grantAllPermissions => 'Grant all permissions';
+
+  @override
   String get monitoringActive => 'Monitoring active';
 
   @override

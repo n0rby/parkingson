@@ -268,6 +268,24 @@ abstract class AppLocalizations {
   /// **'Send påmindelser om parkering'**
   String get permNotificationsDesc;
 
+  /// No description provided for @permBattery.
+  ///
+  /// In da, this message translates to:
+  /// **'Ubegrænset baggrund'**
+  String get permBattery;
+
+  /// No description provided for @permBatteryDesc.
+  ///
+  /// In da, this message translates to:
+  /// **'Så batterisparing ikke stopper overvågningen'**
+  String get permBatteryDesc;
+
+  /// No description provided for @grantAllPermissions.
+  ///
+  /// In da, this message translates to:
+  /// **'Giv alle tilladelser'**
+  String get grantAllPermissions;
+
   /// No description provided for @monitoringActive.
   ///
   /// In da, this message translates to:

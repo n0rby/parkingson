@@ -94,6 +94,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get permNotificationsDesc => 'Envoyer des rappels de stationnement';
 
   @override
+  String get permBattery => 'Arrière-plan sans restriction';
+
+  @override
+  String get permBatteryDesc =>
+      'Pour que l\'économie de batterie n\'arrête pas la surveillance';
+
+  @override
+  String get grantAllPermissions => 'Accorder toutes les autorisations';
+
+  @override
   String get monitoringActive => 'Surveillance active';
 
   @override

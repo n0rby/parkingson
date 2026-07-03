@@ -92,6 +92,15 @@ class AppLocalizationsIs extends AppLocalizations {
   String get permNotificationsDesc => 'Senda bílastæðaáminningar';
 
   @override
+  String get permBattery => 'Ótakmarkaður bakgrunnur';
+
+  @override
+  String get permBatteryDesc => 'Svo rafhlöðusparnaður stöðvi ekki vöktun';
+
+  @override
+  String get grantAllPermissions => 'Veita allar heimildir';
+
+  @override
   String get monitoringActive => 'Vöktun virk';
 
   @override
