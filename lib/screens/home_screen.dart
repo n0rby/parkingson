@@ -16,24 +16,22 @@ class HomeScreen extends StatelessWidget {
   final List<CarDevice> monitoredCars;
   final LocationSnapshot? lastParkingLocation;
   final bool isPremium;
-  final VoidCallback onTestAlarm;
-  final VoidCallback onManageCars;
   final VoidCallback onManageIgnoredLocations;
   final VoidCallback onFindCar;
   final VoidCallback onBuyApp;
   final VoidCallback onSetReminder;
+  final VoidCallback onSetup;
 
   const HomeScreen({
     super.key,
     required this.monitoredCars,
     required this.lastParkingLocation,
     required this.isPremium,
-    required this.onTestAlarm,
-    required this.onManageCars,
     required this.onManageIgnoredLocations,
     required this.onFindCar,
     required this.onBuyApp,
     required this.onSetReminder,
+    required this.onSetup,
   });
 
   @override
@@ -96,18 +94,6 @@ class HomeScreen extends StatelessWidget {
                 accent: hpTeal,
               ),
               ActionRow(
-                title: l10n.testReminder,
-                subtitle: l10n.testReminderDesc,
-                onTap: onTestAlarm,
-                accent: hpOrange,
-              ),
-              ActionRow(
-                title: l10n.manageCars,
-                subtitle: l10n.manageCarsDesc,
-                onTap: onManageCars,
-                accent: hpTeal,
-              ),
-              ActionRow(
                 title: l10n.findCar,
                 subtitle: lastParkingLocation != null
                     ? l10n.findCarRoute(lastParkingLocation!.displayCapturedAt)
@@ -124,7 +110,7 @@ class HomeScreen extends StatelessWidget {
               ActionRow(
                 title: l10n.setupTitle,
                 subtitle: l10n.setupDesc,
-                onTap: () {},
+                onTap: onSetup,
                 accent: hpTeal,
               ),
             ],

@@ -11,6 +11,7 @@ import 'screens/home_screen.dart';
 import 'screens/ignored_locations_screen.dart';
 import 'screens/reminder_screen.dart';
 import 'screens/set_reminder_screen.dart';
+import 'screens/setup_screen.dart';
 import 'models/car_device.dart';
 import 'models/location_snapshot.dart';
 import 'models/ignored_location.dart';
@@ -20,7 +21,7 @@ import 'services/motion_service.dart';
 import 'services/notification_service.dart';
 import 'theme.dart';
 
-enum _Screen { welcome, cars, permissions, home, ignoredLocations, reminder, setReminder }
+enum _Screen { welcome, cars, permissions, home, ignoredLocations, reminder, setReminder, setup }
 
 class ParkingsonApp extends StatefulWidget {
   const ParkingsonApp({super.key});
@@ -190,6 +191,23 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
               .toList(),
           lastParkingLocation: _lastParkingLocation,
           isPremium: _isPremium,
+          onManageIgnoredLocations: () =>
+              setState(() => _screen = _Screen.ignoredLocations),
+          onFindCar: () {
+            if (_lastParkingLocation == null) return;
+            _locationService.navigateTo(
+              _lastParkingLocation!.latitude,
+              _lastParkingLocation!.longitude,
+            );
+          },
+          onBuyApp: () => _billingRepo.launchPurchaseFlow(),
+          onSetReminder: () => setState(() => _screen = _Screen.setReminder),
+          onSetup: () => setState(() => _screen = _Screen.setup),
+        );
+
+      case _Screen.setup:
+        return SetupScreen(
+          onManageCars: _goToCars,
           onTestAlarm: () async {
             final snapshot = await _locationService.getCurrentLocation() ??
                 LocationSnapshot(
@@ -209,18 +227,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
               });
             }
           },
-          onManageCars: _goToCars,
-          onManageIgnoredLocations: () =>
-              setState(() => _screen = _Screen.ignoredLocations),
-          onFindCar: () {
-            if (_lastParkingLocation == null) return;
-            _locationService.navigateTo(
-              _lastParkingLocation!.latitude,
-              _lastParkingLocation!.longitude,
-            );
-          },
-          onBuyApp: () => _billingRepo.launchPurchaseFlow(),
-          onSetReminder: () => setState(() => _screen = _Screen.setReminder),
+          onBack: () => setState(() => _screen = _Screen.home),
         );
 
       case _Screen.setReminder:
