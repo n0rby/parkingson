@@ -80,7 +80,11 @@ object AlarmPlayer {
         if (prefs.getString("flutter.sound_mode", "phone") == "app") {
             return prefs.getLong("flutter.app_volume", 100L).toInt() <= 0
         }
-        return am == null || am.getStreamVolume(AudioManager.STREAM_ALARM) == 0
+        if (am == null) return true
+        // Phone mode: respect the phone being silenced (silent or vibrate ringer
+        // mode), or the alarm volume being 0.
+        if (am.ringerMode != AudioManager.RINGER_MODE_NORMAL) return true
+        return am.getStreamVolume(AudioManager.STREAM_ALARM) == 0
     }
 
     private fun prefBool(context: Context, key: String, default: Boolean): Boolean {
