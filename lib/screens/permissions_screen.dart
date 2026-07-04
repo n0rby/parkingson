@@ -32,6 +32,15 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
       await Permission.locationWhenInUse.request();
       if (Platform.isAndroid) await Permission.activityRecognition.request();
       await Permission.notification.request();
+      // Background location ("Allow all the time") must be requested separately
+      // and only after while-in-use is granted. Without it, the background
+      // parking detection can't read GPS to save the parking spot. On Android
+      // 11+ this opens the system location settings so the user can pick
+      // "Allow all the time".
+      if (Platform.isAndroid &&
+          await Permission.locationWhenInUse.isGranted) {
+        await Permission.locationAlways.request();
+      }
     } catch (_) {}
 
     // Then the battery-optimization exemption (native system dialog).

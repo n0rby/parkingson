@@ -79,7 +79,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get permLocationDesc =>
-      'Enregistrer le lieu de stationnement et surveiller en arrière-plan';
+      'Enregistrer le lieu — choisissez \"Toujours autoriser\" pour l\'arrière-plan';
 
   @override
   String get permActivity => 'Activité physique';

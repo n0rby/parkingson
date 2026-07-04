@@ -77,7 +77,8 @@ class AppLocalizationsIs extends AppLocalizations {
   String get permLocation => 'Staðsetning';
 
   @override
-  String get permLocationDesc => 'Vista bílastæðið og fylgjast með í bakgrunni';
+  String get permLocationDesc =>
+      'Vista bílastæðið — veldu \"Leyfa alltaf\" svo það virki í bakgrunni';
 
   @override
   String get permActivity => 'Líkamleg hreyfing';

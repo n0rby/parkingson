@@ -78,7 +78,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get permLocationDesc =>
-      'Spara parkeringsplatsen och övervaka i bakgrunden';
+      'Spara parkeringsplatsen — välj \"Tillåt alltid\" så det fungerar i bakgrunden';
 
   @override
   String get permActivity => 'Fysisk aktivitet';

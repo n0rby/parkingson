@@ -24,7 +24,7 @@
   "permBluetooth": "Bluetooth",
   "permBluetoothDesc": "Erkennen, wann du dein Auto verlässt",
   "permLocation": "Standort",
-  "permLocationDesc": "Parkplatz speichern und im Hintergrund überwachen",
+  "permLocationDesc": "Parkplatz speichern — wähle \"Immer zulassen\", damit es im Hintergrund funktioniert",
   "permActivity": "Körperliche Aktivität",
   "permActivityDesc": "Fahren und Gehen erkennen",
   "permNotifications": "Benachrichtigungen",

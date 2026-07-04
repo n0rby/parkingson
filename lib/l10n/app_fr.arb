@@ -21,7 +21,7 @@
   "permBluetooth": "Bluetooth",
   "permBluetoothDesc": "Détecter quand vous quittez votre voiture",
   "permLocation": "Localisation",
-  "permLocationDesc": "Enregistrer le lieu de stationnement et surveiller en arrière-plan",
+  "permLocationDesc": "Enregistrer le lieu — choisissez \"Toujours autoriser\" pour l'arrière-plan",
   "permActivity": "Activité physique",
   "permActivityDesc": "Détecter la conduite et la marche",
   "permNotifications": "Notifications",

@@ -78,7 +78,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get permLocationDesc =>
-      'Lagre parkeringsstedet og overvåk i bakgrunnen';
+      'Lagre parkeringsstedet — velg \"Tillat alltid\" så det virker i bakgrunnen';
 
   @override
   String get permActivity => 'Fysisk aktivitet';

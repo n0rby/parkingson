@@ -78,7 +78,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get permLocationDesc =>
-      'Parkplatz speichern und im Hintergrund überwachen';
+      'Parkplatz speichern — wähle \"Immer zulassen\", damit es im Hintergrund funktioniert';
 
   @override
   String get permActivity => 'Körperliche Aktivität';

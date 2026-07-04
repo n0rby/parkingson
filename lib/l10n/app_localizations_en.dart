@@ -76,7 +76,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permLocationDesc =>
-      'Save the parking spot and monitor in the background';
+      'Save the parking spot — choose \"Allow all the time\" so it works in the background';
 
   @override
   String get permActivity => 'Physical activity';

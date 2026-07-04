@@ -21,7 +21,7 @@
   "permBluetooth": "Bluetooth",
   "permBluetoothDesc": "Detectar cuándo dejas tu coche",
   "permLocation": "Ubicación",
-  "permLocationDesc": "Guardar el lugar de estacionamiento y supervisar en segundo plano",
+  "permLocationDesc": "Guardar el lugar — elige \"Permitir siempre\" para que funcione en segundo plano",
   "permActivity": "Actividad física",
   "permActivityDesc": "Detectar conducción y caminata",
   "permNotifications": "Notificaciones",

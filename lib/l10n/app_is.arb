@@ -21,7 +21,7 @@
   "permBluetooth": "Bluetooth",
   "permBluetoothDesc": "Greina þegar þú yfirgefur bílinn",
   "permLocation": "Staðsetning",
-  "permLocationDesc": "Vista bílastæðið og fylgjast með í bakgrunni",
+  "permLocationDesc": "Vista bílastæðið — veldu \"Leyfa alltaf\" svo það virki í bakgrunni",
   "permActivity": "Líkamleg hreyfing",
   "permActivityDesc": "Greina akstur og göngu",
   "permNotifications": "Tilkynningar",

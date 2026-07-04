@@ -21,7 +21,7 @@
   "permBluetooth": "Bluetooth",
   "permBluetoothDesc": "Oppdag når du forlater bilen",
   "permLocation": "Posisjon",
-  "permLocationDesc": "Lagre parkeringsstedet og overvåk i bakgrunnen",
+  "permLocationDesc": "Lagre parkeringsstedet — velg \"Tillat alltid\" så det virker i bakgrunnen",
   "permActivity": "Fysisk aktivitet",
   "permActivityDesc": "Oppdag kjøring og gange",
   "permNotifications": "Varsler",

@@ -241,7 +241,7 @@ abstract class AppLocalizations {
   /// No description provided for @permLocationDesc.
   ///
   /// In da, this message translates to:
-  /// **'Gem parkeringsstedet og overvåg i baggrunden'**
+  /// **'Gem parkeringsstedet — vælg \"Tillad hele tiden\" så det virker i baggrunden'**
   String get permLocationDesc;
 
   /// No description provided for @permActivity.

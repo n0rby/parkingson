@@ -77,7 +77,8 @@ class AppLocalizationsDa extends AppLocalizations {
   String get permLocation => 'Placering';
 
   @override
-  String get permLocationDesc => 'Gem parkeringsstedet og overvåg i baggrunden';
+  String get permLocationDesc =>
+      'Gem parkeringsstedet — vælg \"Tillad hele tiden\" så det virker i baggrunden';
 
   @override
   String get permActivity => 'Fysisk aktivitet';

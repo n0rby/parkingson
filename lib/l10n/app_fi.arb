@@ -21,7 +21,7 @@
   "permBluetooth": "Bluetooth",
   "permBluetoothDesc": "Tunnista, kun poistut autostasi",
   "permLocation": "Sijainti",
-  "permLocationDesc": "Tallenna pysäköintipaikka ja valvo taustalla",
+  "permLocationDesc": "Tallenna pysäköintipaikka — valitse \"Salli aina\", jotta se toimii taustalla",
   "permActivity": "Fyysinen aktiivisuus",
   "permActivityDesc": "Tunnista ajaminen ja käveleminen",
   "permNotifications": "Ilmoitukset",

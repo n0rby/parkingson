@@ -24,7 +24,7 @@
   "permBluetooth": "Bluetooth",
   "permBluetoothDesc": "Detect when you leave your car",
   "permLocation": "Location",
-  "permLocationDesc": "Save the parking spot and monitor in the background",
+  "permLocationDesc": "Save the parking spot — choose \"Allow all the time\" so it works in the background",
   "permActivity": "Physical activity",
   "permActivityDesc": "Detect driving and walking",
   "permNotifications": "Notifications",

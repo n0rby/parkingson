@@ -80,7 +80,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get permLocationDesc =>
-      'Guardar el lugar de estacionamiento y supervisar en segundo plano';
+      'Guardar el lugar — elige \"Permitir siempre\" para que funcione en segundo plano';
 
   @override
   String get permActivity => 'Actividad física';

@@ -78,7 +78,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get permLocation => 'Sijainti';
 
   @override
-  String get permLocationDesc => 'Tallenna pysäköintipaikka ja valvo taustalla';
+  String get permLocationDesc =>
+      'Tallenna pysäköintipaikka — valitse \"Salli aina\", jotta se toimii taustalla';
 
   @override
   String get permActivity => 'Fyysinen aktiivisuus';
