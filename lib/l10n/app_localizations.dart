@@ -286,6 +286,48 @@ abstract class AppLocalizations {
   /// **'Giv alle tilladelser'**
   String get grantAllPermissions;
 
+  /// No description provided for @permMicrophone.
+  ///
+  /// In da, this message translates to:
+  /// **'Mikrofon'**
+  String get permMicrophone;
+
+  /// No description provided for @permMicrophoneDesc.
+  ///
+  /// In da, this message translates to:
+  /// **'Til stemmekommandoer på alarmen'**
+  String get permMicrophoneDesc;
+
+  /// No description provided for @voiceListening.
+  ///
+  /// In da, this message translates to:
+  /// **'Lytter…'**
+  String get voiceListening;
+
+  /// No description provided for @voicePrompt.
+  ///
+  /// In da, this message translates to:
+  /// **'Sig \"ignorér\" eller \"parkeringstid 30 minutter\"'**
+  String get voicePrompt;
+
+  /// No description provided for @voiceTimerSet.
+  ///
+  /// In da, this message translates to:
+  /// **'Parkeringstid sat til {time}'**
+  String voiceTimerSet(String time);
+
+  /// No description provided for @voiceNotUnderstood.
+  ///
+  /// In da, this message translates to:
+  /// **'Forstod ikke — prøv igen'**
+  String get voiceNotUnderstood;
+
+  /// No description provided for @voiceIgnoreConfirm.
+  ///
+  /// In da, this message translates to:
+  /// **'Lokationen ignoreres'**
+  String get voiceIgnoreConfirm;
+
   /// No description provided for @setupDoneTitle.
   ///
   /// In da, this message translates to:

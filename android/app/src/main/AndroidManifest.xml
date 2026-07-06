@@ -27,6 +27,9 @@
     <!-- Notifications (API 33+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Voice commands on the reminder screen (speech recognition) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <!-- Keep CPU alive during background work -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -135,6 +138,10 @@
         <intent>
             <action android:name="android.intent.action.MAIN"/>
             <category android:name="android.intent.category.LAUNCHER"/>
+        </intent>
+        <!-- Speech recognition service (voice commands) -->
+        <intent>
+            <action android:name="android.speech.RecognitionService"/>
         </intent>
     </queries>
 </manifest>

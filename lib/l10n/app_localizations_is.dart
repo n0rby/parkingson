@@ -102,6 +102,29 @@ class AppLocalizationsIs extends AppLocalizations {
   String get grantAllPermissions => 'Veita allar heimildir';
 
   @override
+  String get permMicrophone => 'Hljóðnemi';
+
+  @override
+  String get permMicrophoneDesc => 'Fyrir raddskipanir í áminningunni';
+
+  @override
+  String get voiceListening => 'Hlusta…';
+
+  @override
+  String get voicePrompt => 'Segðu \"hunsa\" eða \"bílastæðatími 30 mínútur\"';
+
+  @override
+  String voiceTimerSet(String time) {
+    return 'Bílastæðatími stilltur á $time';
+  }
+
+  @override
+  String get voiceNotUnderstood => 'Ég náði því ekki — reyndu aftur';
+
+  @override
+  String get voiceIgnoreConfirm => 'Hunsa þessa staðsetningu';
+
+  @override
   String get setupDoneTitle => 'Parkingson er í gangi';
 
   @override

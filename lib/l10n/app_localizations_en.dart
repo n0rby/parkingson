@@ -100,6 +100,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get grantAllPermissions => 'Grant all permissions';
 
   @override
+  String get permMicrophone => 'Microphone';
+
+  @override
+  String get permMicrophoneDesc => 'For voice commands on the reminder';
+
+  @override
+  String get voiceListening => 'Listening…';
+
+  @override
+  String get voicePrompt => 'Say \"ignore\" or \"parking time 30 minutes\"';
+
+  @override
+  String voiceTimerSet(String time) {
+    return 'Parking time set to $time';
+  }
+
+  @override
+  String get voiceNotUnderstood => 'Didn\'t catch that — try again';
+
+  @override
+  String get voiceIgnoreConfirm => 'Ignoring this location';
+
+  @override
   String get setupDoneTitle => 'Parkingson is running';
 
   @override

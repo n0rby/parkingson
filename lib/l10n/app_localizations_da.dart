@@ -102,6 +102,30 @@ class AppLocalizationsDa extends AppLocalizations {
   String get grantAllPermissions => 'Giv alle tilladelser';
 
   @override
+  String get permMicrophone => 'Mikrofon';
+
+  @override
+  String get permMicrophoneDesc => 'Til stemmekommandoer på alarmen';
+
+  @override
+  String get voiceListening => 'Lytter…';
+
+  @override
+  String get voicePrompt =>
+      'Sig \"ignorér\" eller \"parkeringstid 30 minutter\"';
+
+  @override
+  String voiceTimerSet(String time) {
+    return 'Parkeringstid sat til $time';
+  }
+
+  @override
+  String get voiceNotUnderstood => 'Forstod ikke — prøv igen';
+
+  @override
+  String get voiceIgnoreConfirm => 'Lokationen ignoreres';
+
+  @override
   String get setupDoneTitle => 'Parkingson kører';
 
   @override

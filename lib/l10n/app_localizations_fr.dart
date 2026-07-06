@@ -104,6 +104,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get grantAllPermissions => 'Accorder toutes les autorisations';
 
   @override
+  String get permMicrophone => 'Microphone';
+
+  @override
+  String get permMicrophoneDesc => 'Pour les commandes vocales du rappel';
+
+  @override
+  String get voiceListening => 'Écoute…';
+
+  @override
+  String get voicePrompt =>
+      'Dites \"ignorer\" ou \"temps de stationnement 30 minutes\"';
+
+  @override
+  String voiceTimerSet(String time) {
+    return 'Temps de stationnement réglé sur $time';
+  }
+
+  @override
+  String get voiceNotUnderstood => 'Je n\'ai pas compris — réessayez';
+
+  @override
+  String get voiceIgnoreConfirm => 'Ce lieu est ignoré';
+
+  @override
   String get setupDoneTitle => 'Parkingson est actif';
 
   @override

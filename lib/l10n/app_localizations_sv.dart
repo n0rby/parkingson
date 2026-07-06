@@ -103,6 +103,30 @@ class AppLocalizationsSv extends AppLocalizations {
   String get grantAllPermissions => 'Ge alla behörigheter';
 
   @override
+  String get permMicrophone => 'Mikrofon';
+
+  @override
+  String get permMicrophoneDesc => 'För röstkommandon på påminnelsen';
+
+  @override
+  String get voiceListening => 'Lyssnar…';
+
+  @override
+  String get voicePrompt =>
+      'Säg \"ignorera\" eller \"parkeringstid 30 minuter\"';
+
+  @override
+  String voiceTimerSet(String time) {
+    return 'Parkeringstid satt till $time';
+  }
+
+  @override
+  String get voiceNotUnderstood => 'Uppfattade inte — försök igen';
+
+  @override
+  String get voiceIgnoreConfirm => 'Ignorerar denna plats';
+
+  @override
   String get setupDoneTitle => 'Parkingson körs';
 
   @override

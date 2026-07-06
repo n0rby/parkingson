@@ -32,6 +32,15 @@
   "permBattery": "Unrestricted background",
   "permBatteryDesc": "So battery saving doesn't stop monitoring",
   "grantAllPermissions": "Grant all permissions",
+  "permMicrophone": "Microphone",
+  "permMicrophoneDesc": "For voice commands on the reminder",
+
+  "voiceListening": "Listening…",
+  "voicePrompt": "Say \"ignore\" or \"parking time 30 minutes\"",
+  "voiceTimerSet": "Parking time set to {time}",
+  "@voiceTimerSet": { "placeholders": { "time": { "type": "String" } } },
+  "voiceNotUnderstood": "Didn't catch that — try again",
+  "voiceIgnoreConfirm": "Ignoring this location",
 
   "setupDoneTitle": "Parkingson is running",
   "setupDoneBody": "Parkingson is now waiting for your next parking. You'll get a reminder when you leave the car.",

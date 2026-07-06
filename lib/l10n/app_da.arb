@@ -32,6 +32,15 @@
   "permBattery": "Ubegrænset baggrund",
   "permBatteryDesc": "Så batterisparing ikke stopper overvågningen",
   "grantAllPermissions": "Giv alle tilladelser",
+  "permMicrophone": "Mikrofon",
+  "permMicrophoneDesc": "Til stemmekommandoer på alarmen",
+
+  "voiceListening": "Lytter…",
+  "voicePrompt": "Sig \"ignorér\" eller \"parkeringstid 30 minutter\"",
+  "voiceTimerSet": "Parkeringstid sat til {time}",
+  "@voiceTimerSet": { "placeholders": { "time": { "type": "String" } } },
+  "voiceNotUnderstood": "Forstod ikke — prøv igen",
+  "voiceIgnoreConfirm": "Lokationen ignoreres",
 
   "setupDoneTitle": "Parkingson kører",
   "setupDoneBody": "Parkingson afventer nu din næste parkering. Du får en påmindelse, når du forlader bilen.",

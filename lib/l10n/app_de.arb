@@ -32,6 +32,15 @@
   "permBattery": "Uneingeschränkter Hintergrund",
   "permBatteryDesc": "Damit Energiesparen die Überwachung nicht stoppt",
   "grantAllPermissions": "Alle Berechtigungen erteilen",
+  "permMicrophone": "Mikrofon",
+  "permMicrophoneDesc": "Für Sprachbefehle bei der Erinnerung",
+
+  "voiceListening": "Höre zu…",
+  "voicePrompt": "Sag \"ignorieren\" oder \"Parkzeit 30 Minuten\"",
+  "voiceTimerSet": "Parkzeit auf {time} gesetzt",
+  "@voiceTimerSet": { "placeholders": { "time": { "type": "String" } } },
+  "voiceNotUnderstood": "Nicht verstanden — versuch es nochmal",
+  "voiceIgnoreConfirm": "Standort wird ignoriert",
 
   "setupDoneTitle": "Parkingson läuft",
   "setupDoneBody": "Parkingson wartet jetzt auf dein nächstes Parken. Du erhältst eine Erinnerung, wenn du das Auto verlässt.",

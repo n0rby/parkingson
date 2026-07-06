@@ -103,6 +103,30 @@ class AppLocalizationsFi extends AppLocalizations {
   String get grantAllPermissions => 'Myönnä kaikki käyttöoikeudet';
 
   @override
+  String get permMicrophone => 'Mikrofoni';
+
+  @override
+  String get permMicrophoneDesc => 'Muistutuksen äänikomentoja varten';
+
+  @override
+  String get voiceListening => 'Kuuntelee…';
+
+  @override
+  String get voicePrompt =>
+      'Sano \"ohita\" tai \"pysäköintiaika 30 minuuttia\"';
+
+  @override
+  String voiceTimerSet(String time) {
+    return 'Pysäköintiaika asetettu: $time';
+  }
+
+  @override
+  String get voiceNotUnderstood => 'En ymmärtänyt — yritä uudelleen';
+
+  @override
+  String get voiceIgnoreConfirm => 'Ohitetaan tämä sijainti';
+
+  @override
   String get setupDoneTitle => 'Parkingson on käynnissä';
 
   @override
