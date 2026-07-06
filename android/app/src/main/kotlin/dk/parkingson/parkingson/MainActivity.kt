@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.speech.RecognizerIntent
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -20,6 +21,8 @@ import java.io.ByteArrayOutputStream
 
 class MainActivity : FlutterActivity() {
     private var pendingSoundResult: MethodChannel.Result? = null
+    private var pendingVoiceResult: MethodChannel.Result? = null
+    private val voiceCaptureRequest = 5002
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +73,10 @@ class MainActivity : FlutterActivity() {
                     "getInstalledApps" -> result.success(installedLaunchableApps())
                     "launchApp" -> result.success(launchApp(call.argument<String>("package")))
                     "getAppIcon" -> result.success(appIconPng(call.argument<String>("package")))
+                    "startVoiceCapture" -> {
+                        pendingVoiceResult = result
+                        launchVoiceCapture(call.argument<String>("locale"))
+                    }
                     "getAlarmSoundTitle" -> result.success(currentAlarmSoundTitle())
                     "pickAlarmSound" -> {
                         pendingSoundResult = result
@@ -115,6 +122,27 @@ class MainActivity : FlutterActivity() {
             }
             .distinctBy { it["package"] }
             .sortedBy { (it["label"] ?: "").lowercase() }
+    }
+
+    // ── Voice capture (system speech recognizer) ───────────────────────────
+    // Uses the OS RecognizerIntent: a fresh recognition each time (no reused-
+    // recognizer bug), and the system handles mic/Bluetooth routing itself.
+    private fun launchVoiceCapture(locale: String?) {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
+            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
+            if (locale != null) {
+                putExtra(RecognizerIntent.EXTRA_LANGUAGE, locale)
+                putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, locale)
+            }
+        }
+        try {
+            startActivityForResult(intent, voiceCaptureRequest)
+        } catch (_: Exception) {
+            pendingVoiceResult?.success(null)
+            pendingVoiceResult = null
+        }
     }
 
     private fun launchApp(pkg: String?): Boolean {
@@ -191,6 +219,14 @@ class MainActivity : FlutterActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == voiceCaptureRequest) {
+            val texts = if (resultCode == RESULT_OK) {
+                data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            } else null
+            pendingVoiceResult?.success(texts?.toList() ?: emptyList<String>())
+            pendingVoiceResult = null
+            return
+        }
         if (requestCode != ringtonePickRequest) return
         if (resultCode == RESULT_OK) {
             val uri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

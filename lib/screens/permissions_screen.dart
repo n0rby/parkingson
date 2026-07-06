@@ -32,7 +32,6 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
       await Permission.locationWhenInUse.request();
       if (Platform.isAndroid) await Permission.activityRecognition.request();
       await Permission.notification.request();
-      await Permission.microphone.request();
       // Background location ("Allow all the time") must be requested separately
       // and only after while-in-use is granted. Without it, the background
       // parking detection can't read GPS to save the parking spot. On Android
@@ -67,7 +66,6 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
       if (Platform.isAndroid)
         (Icons.directions_walk, l10n.permActivity, l10n.permActivityDesc),
       (Icons.notifications_outlined, l10n.permNotifications, l10n.permNotificationsDesc),
-      (Icons.mic_none, l10n.permMicrophone, l10n.permMicrophoneDesc),
       if (Platform.isAndroid)
         (Icons.battery_saver_outlined, l10n.permBattery, l10n.permBatteryDesc),
     ];

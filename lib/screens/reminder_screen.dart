@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../l10n/app_localizations.dart';
 import '../models/ignored_location.dart';
 import '../models/location_snapshot.dart';
@@ -15,7 +14,7 @@ import '../widgets/parking_timer_selector.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/screen_scaffold.dart';
 
-enum _VoiceState { idle, listening, timerSet, notUnderstood, unavailable }
+enum _VoiceState { idle, listening, timerSet, notUnderstood }
 
 class ReminderScreen extends StatefulWidget {
   final LocationSnapshot parkingLocation;
@@ -41,9 +40,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
   final _tts = FlutterTts();
 
   _VoiceState _voiceState = _VoiceState.idle;
-  String _partialText = '';
+  String _heardText = '';
   Duration? _setDuration;
-  bool _handled = false;
+  bool _capturing = false;
 
   // Forces the timer selector to reload after a voice-set timer so its UI
   // reflects the spoken duration.
@@ -58,66 +57,33 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   @override
   void dispose() {
-    _voice.cancel();
     _tts.stop();
     super.dispose();
   }
 
   Future<void> _startVoice() async {
+    if (_capturing) return;
+    _capturing = true;
+
     // The alarm audio/vibration must stop before we listen, or it drowns the mic.
     try {
       await const MethodChannel('dk.parkingson/alarm')
           .invokeMethod('stopAlarmVibration');
     } catch (_) {}
 
-    if (await Permission.microphone.request() != PermissionStatus.granted) {
-      if (mounted) setState(() => _voiceState = _VoiceState.unavailable);
-      return;
-    }
+    if (mounted) setState(() => _voiceState = _VoiceState.listening);
 
-    final available = await _voice.initialize();
-    if (!available) {
-      if (mounted) setState(() => _voiceState = _VoiceState.unavailable);
-      return;
-    }
-
-    _handled = false;
-    if (mounted) {
-      setState(() {
-        _voiceState = _VoiceState.listening;
-        _partialText = '';
-      });
-    }
-    await _voice.listen(
-      onResult: (text, isFinal) {
-        if (mounted) setState(() => _partialText = text);
-        if (isFinal) _handle(text);
-      },
-      onDone: () {
-        // If listening ended without a matched command, treat the last partial
-        // as the final attempt.
-        if (!_handled) _handle(_partialText);
-      },
-    );
+    final locale = mounted
+        ? Localizations.localeOf(context).toLanguageTag()
+        : null;
+    final candidates = await _voice.capture(locale: locale);
+    _capturing = false;
+    if (!mounted) return;
+    _handle(candidates);
   }
 
-  void _handle(String text) {
-    if (_handled) return;
-    final command = classifyVoiceCommand(text);
-    if (command.type == VoiceCommandType.none) {
-      if (text.trim().isEmpty) {
-        // Nothing was said at all — quietly return to idle so manual controls
-        // are the obvious path.
-        if (mounted) setState(() => _voiceState = _VoiceState.idle);
-        return;
-      }
-      if (mounted) setState(() => _voiceState = _VoiceState.notUnderstood);
-      return;
-    }
-
-    _handled = true;
-    _voice.stop();
-
+  void _handle(List<String> candidates) {
+    final command = classifyBestOf(candidates);
     switch (command.type) {
       case VoiceCommandType.ignoreLocation:
         _speak(AppLocalizations.of(context).voiceIgnoreConfirm);
@@ -127,6 +93,13 @@ class _ReminderScreenState extends State<ReminderScreen> {
         _applyDuration(command.duration!);
         break;
       case VoiceCommandType.none:
+        setState(() {
+          _heardText = candidates.isEmpty ? '' : candidates.first;
+          // Nothing heard (cancelled) → back to idle; heard-but-unmatched →
+          // show the "didn't understand" hint with a retry.
+          _voiceState =
+              candidates.isEmpty ? _VoiceState.idle : _VoiceState.notUnderstood;
+        });
         break;
     }
   }
@@ -179,11 +152,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
         const SizedBox(height: 16),
         _VoicePanel(
           state: _voiceState,
-          partialText: _partialText,
+          heardText: _heardText,
           setDuration: _setDuration == null
               ? null
               : _formatDuration(_setDuration!, l10n),
-          onRetry: _startVoice,
+          onSpeak: _startVoice,
         ),
         const SizedBox(height: 16),
         const ParkingAppButtons(),
@@ -225,36 +198,37 @@ class _ReminderScreenState extends State<ReminderScreen> {
 /// The voice-command status card at the top of the reminder screen.
 class _VoicePanel extends StatelessWidget {
   final _VoiceState state;
-  final String partialText;
+  final String heardText;
   final String? setDuration;
-  final VoidCallback onRetry;
+  final VoidCallback onSpeak;
 
   const _VoicePanel({
     required this.state,
-    required this.partialText,
+    required this.heardText,
     required this.setDuration,
-    required this.onRetry,
+    required this.onSpeak,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    // Nothing to show when idle or unavailable — keep the screen clean and let
-    // the manual controls do the work.
-    if (state == _VoiceState.idle || state == _VoiceState.unavailable) {
-      return const SizedBox.shrink();
-    }
 
     late final IconData icon;
     late final Color color;
     late final String title;
     String? subtitle;
+    var tappable = false;
     switch (state) {
+      case _VoiceState.idle:
+        icon = Icons.mic_none;
+        color = hpTeal;
+        title = l10n.voicePrompt;
+        tappable = true;
+        break;
       case _VoiceState.listening:
         icon = Icons.mic;
         color = hpTeal;
         title = l10n.voiceListening;
-        subtitle = partialText.isEmpty ? l10n.voicePrompt : partialText;
         break;
       case _VoiceState.timerSet:
         icon = Icons.check_circle;
@@ -265,14 +239,12 @@ class _VoicePanel extends StatelessWidget {
         icon = Icons.help_outline;
         color = hpOrange;
         title = l10n.voiceNotUnderstood;
-        subtitle = partialText.isEmpty ? null : '"$partialText"';
+        subtitle = heardText.isEmpty ? null : '"$heardText"';
+        tappable = true;
         break;
-      case _VoiceState.idle:
-      case _VoiceState.unavailable:
-        return const SizedBox.shrink();
     }
 
-    return Container(
+    final card = Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: hpCard,
@@ -300,12 +272,14 @@ class _VoicePanel extends StatelessWidget {
           ),
           if (state == _VoiceState.notUnderstood)
             TextButton.icon(
-              onPressed: onRetry,
+              onPressed: onSpeak,
               icon: const Icon(Icons.mic, size: 18),
               label: Text(l10n.retry),
             ),
         ],
       ),
     );
+
+    return tappable ? GestureDetector(onTap: onSpeak, child: card) : card;
   }
 }

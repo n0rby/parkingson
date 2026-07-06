@@ -46,6 +46,17 @@ const Map<String, int> _numberWords = {
 const _hourWords = {'time', 'timer', 't', 'hour', 'hours', 'hr', 'hrs'};
 const _minuteWords = {'minut', 'minutter', 'min', 'mins', 'm', 'minute', 'minutes'};
 
+/// Classifies a list of recognizer candidates (best first), returning the first
+/// candidate that yields a real command. Falls back to [VoiceCommand.none] if
+/// none match.
+VoiceCommand classifyBestOf(List<String> candidates) {
+  for (final c in candidates) {
+    final command = classifyVoiceCommand(c);
+    if (command.type != VoiceCommandType.none) return command;
+  }
+  return const VoiceCommand.none();
+}
+
 VoiceCommand classifyVoiceCommand(String rawText) {
   final text = rawText.toLowerCase().trim();
   if (text.isEmpty) return const VoiceCommand.none();
