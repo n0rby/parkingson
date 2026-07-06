@@ -260,6 +260,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
                   longitude: 0,
                   capturedAtMillis: DateTime.now().millisecondsSinceEpoch,
                 );
+            // Short delay so you can lock the phone after tapping, to test the
+            // full-screen-over-lock-screen behaviour.
+            await Future<void>.delayed(const Duration(seconds: 2));
             // Show the visual notification and fire the DND-aware alarm
             // (sound + voice, or vibration, are handled natively).
             await NotificationService().showParkingReminder(payload: snapshot.encode());
