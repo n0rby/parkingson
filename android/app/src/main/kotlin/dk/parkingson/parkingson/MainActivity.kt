@@ -1,5 +1,6 @@
 package dk.parkingson.parkingson
 
+import android.app.KeyguardManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
@@ -14,6 +15,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.speech.RecognizerIntent
+import android.view.WindowManager
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -27,6 +29,18 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createNotificationChannels()
+        // Let the reminder appear on top of the lock screen and wake the screen
+        // when the full-screen alarm launches us.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        } else {
+            @Suppress("DEPRECATION")
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            )
+        }
     }
 
     override fun onResume() {
@@ -77,6 +91,11 @@ class MainActivity : FlutterActivity() {
                         pendingVoiceResult = result
                         launchVoiceCapture(call.argument<String>("locale"))
                     }
+                    "isDeviceLocked" -> {
+                        val km = getSystemService(KeyguardManager::class.java)
+                        result.success(km?.isKeyguardLocked == true)
+                    }
+                    "requestUnlock" -> requestUnlock(result)
                     "getAlarmSoundTitle" -> result.success(currentAlarmSoundTitle())
                     "pickAlarmSound" -> {
                         pendingSoundResult = result
@@ -122,6 +141,27 @@ class MainActivity : FlutterActivity() {
             }
             .distinctBy { it["package"] }
             .sortedBy { (it["label"] ?: "").lowercase() }
+    }
+
+    // ── Lock screen: bring up the unlock prompt so voice can run ────────────
+    private fun requestUnlock(result: MethodChannel.Result) {
+        val km = getSystemService(KeyguardManager::class.java)
+        if (km == null || !km.isKeyguardLocked) {
+            result.success(true)
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            km.requestDismissKeyguard(
+                this,
+                object : KeyguardManager.KeyguardDismissCallback() {
+                    override fun onDismissSucceeded() = result.success(true)
+                    override fun onDismissCancelled() = result.success(false)
+                    override fun onDismissError() = result.success(false)
+                }
+            )
+        } else {
+            result.success(false)
+        }
     }
 
     // ── Voice capture (system speech recognizer) ───────────────────────────

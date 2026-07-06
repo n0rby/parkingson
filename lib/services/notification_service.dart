@@ -108,6 +108,8 @@ class NotificationService {
       playSound: false,
       enableVibration: false,
       timeoutAfter: _reminderTimeoutMs,
+      category: AndroidNotificationCategory.alarm,
+      fullScreenIntent: true,
     );
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
@@ -149,6 +151,7 @@ Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
         importance: Importance.high,
         priority: Priority.high,
         category: AndroidNotificationCategory.alarm,
+        fullScreenIntent: true,
         playSound: false,
         enableVibration: false,
       ),
@@ -185,6 +188,8 @@ Future<void> showParkingReminderFromBackground({String? payload}) async {
         _visualChannelId, _visualChannelName,
         importance: Importance.high,
         priority: Priority.high,
+        category: AndroidNotificationCategory.alarm,
+        fullScreenIntent: true,
         playSound: false,
         enableVibration: false,
         timeoutAfter: _reminderTimeoutMs,

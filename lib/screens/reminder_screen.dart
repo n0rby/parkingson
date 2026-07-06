@@ -64,11 +64,26 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Future<void> _startVoice() async {
     if (_capturing) return;
     _capturing = true;
+    const channel = MethodChannel('dk.parkingson/alarm');
 
     // The alarm audio/vibration must stop before we listen, or it drowns the mic.
     try {
-      await const MethodChannel('dk.parkingson/alarm')
-          .invokeMethod('stopAlarmVibration');
+      await channel.invokeMethod('stopAlarmVibration');
+    } catch (_) {}
+
+    // Speech recognition needs an unlocked device (Android privacy rule). If the
+    // full-screen alarm launched us over the lock screen, bring up the unlock
+    // prompt first; a single biometric scan flows straight into listening.
+    try {
+      final locked = await channel.invokeMethod('isDeviceLocked') == true;
+      if (locked) {
+        final unlocked = await channel.invokeMethod('requestUnlock') == true;
+        if (!unlocked) {
+          _capturing = false;
+          if (mounted) setState(() => _voiceState = _VoiceState.idle);
+          return;
+        }
+      }
     } catch (_) {}
 
     if (mounted) setState(() => _voiceState = _VoiceState.listening);
