@@ -51,8 +51,11 @@ Future<void> fireAlarm(String voiceText) async {
     '${DateTime.now().millisecondsSinceEpoch}|$voiceText',
   );
   final intent = AndroidIntent(
+    // `action` is an arbitrary shared string (matches the receiver in the
+    // manifest); `package` must be the app's applicationId to deliver the
+    // explicit broadcast to our (non-exported) AlarmReceiver.
     action: 'dk.parkingson.parkingson.PLAY_ALARM',
-    package: 'dk.parkingson.parkingson',
+    package: 'henrock.n0rby.parkingson',
   );
   try {
     await intent.sendBroadcast();
