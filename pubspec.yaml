@@ -2,7 +2,7 @@ name: parkingson
 description: "Parking reminder app - never forget to pay for parking"
 publish_to: 'none'
 
-version: 0.1.0+2
+version: 0.1.0+3
 
 environment:
   sdk: ^3.12.2
