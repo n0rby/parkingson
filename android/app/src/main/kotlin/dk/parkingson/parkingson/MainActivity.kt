@@ -63,6 +63,10 @@ class MainActivity : FlutterActivity() {
                         AlarmPlayer.stopVibration(this)
                         result.success(null)
                     }
+                    "stopAlarm" -> {
+                        AlarmPlayer.stop(this)
+                        result.success(null)
+                    }
                     "speak" -> {
                         Speaker.speak(
                             this,

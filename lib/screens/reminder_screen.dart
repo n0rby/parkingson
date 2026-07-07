@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -43,6 +44,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
   String _heardText = '';
   Duration? _setDuration;
   bool _capturing = false;
+  // Auto-closes the voice UI 15 s after listening starts if no command lands.
+  Timer? _autoHide;
 
   // Forces the timer selector to reload after a voice-set timer so its UI
   // reflects the spoken duration.
@@ -57,18 +60,23 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   @override
   void dispose() {
+    _autoHide?.cancel();
     _tts.stop();
     super.dispose();
   }
 
+  // Sequence: stop the alarm → speak the reminder to completion → then listen
+  // for a command. Listening auto-closes after 15 s if nothing is recognised.
   Future<void> _startVoice() async {
     if (_capturing) return;
     _capturing = true;
+    _autoHide?.cancel();
     const channel = MethodChannel('dk.parkingson/alarm');
 
-    // The alarm audio/vibration must stop before we listen, or it drowns the mic.
+    // Stop the alarm (siren + the scheduled spoken reminder + vibration) so the
+    // announcement below isn't captured by the recognizer.
     try {
-      await channel.invokeMethod('stopAlarmVibration');
+      await channel.invokeMethod('stopAlarm');
     } catch (_) {}
 
     // Speech recognition needs an unlocked device (Android privacy rule). If the
@@ -86,25 +94,49 @@ class _ReminderScreenState extends State<ReminderScreen> {
       }
     } catch (_) {}
 
-    if (mounted) setState(() => _voiceState = _VoiceState.listening);
+    // 1) Speak "remember parking" and wait for it to finish.
+    await _announce();
+    if (!mounted) {
+      _capturing = false;
+      return;
+    }
 
-    final locale = mounted
-        ? Localizations.localeOf(context).toLanguageTag()
-        : null;
+    // 2) Then listen. Auto-close the panel after 15 s if no command lands.
+    setState(() => _voiceState = _VoiceState.listening);
+    _autoHide = Timer(const Duration(seconds: 15), () {
+      if (mounted) setState(() => _voiceState = _VoiceState.idle);
+    });
+
+    final locale = Localizations.localeOf(context).toLanguageTag();
     final candidates = await _voice.capture(locale: locale);
     _capturing = false;
     if (!mounted) return;
     _handle(candidates);
   }
 
+  /// Speaks the parking reminder and returns only once it has finished, so it
+  /// is never picked up by the recognizer.
+  Future<void> _announce() async {
+    if (!mounted) return;
+    final text = AppLocalizations.of(context).ttsRemember;
+    final tag = Localizations.localeOf(context).toLanguageTag();
+    try {
+      await _tts.setLanguage(tag);
+      await _tts.awaitSpeakCompletion(true);
+      await _tts.speak(text);
+    } catch (_) {}
+  }
+
   void _handle(List<String> candidates) {
     final command = classifyBestOf(candidates);
     switch (command.type) {
       case VoiceCommandType.ignoreLocation:
+        _autoHide?.cancel();
         _speak(AppLocalizations.of(context).voiceIgnoreConfirm);
         widget.onAddIgnoredLocation();
         break;
       case VoiceCommandType.setDuration:
+        _autoHide?.cancel();
         _applyDuration(command.duration!);
         break;
       case VoiceCommandType.none:

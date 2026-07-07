@@ -42,6 +42,15 @@ object Speaker {
         }
     }
 
+    /** Stops any ongoing or queued speech (e.g. when the app is opened). */
+    fun stop() {
+        queued = null
+        try {
+            tts?.stop()
+        } catch (_: Exception) {
+        }
+    }
+
     private fun doSpeak(engine: TextToSpeech, text: String, langTag: String) {
         try {
             engine.language = Locale.forLanguageTag(langTag)

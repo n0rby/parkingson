@@ -28,6 +28,9 @@ import java.util.Locale
 object AlarmPlayer {
     private var vibrator: Vibrator? = null
     private var savedAlarmVolume: Int? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private var pendingSpeak: Runnable? = null
+    private var currentPlayer: MediaPlayer? = null
 
     fun isDndActive(context: Context): Boolean {
         val nm = context.getSystemService(NotificationManager::class.java) ?: return false
@@ -66,12 +69,35 @@ object AlarmPlayer {
         val voice = takePendingVoice(context)
         playAlarmSound(context)
         if (voice != null) {
-            Handler(Looper.getMainLooper()).postDelayed({
+            val r = Runnable {
                 Speaker.speak(appContext, voice, Locale.getDefault().toLanguageTag())
-            }, 3300)
+                pendingSpeak = null
+            }
+            pendingSpeak = r
+            handler.postDelayed(r, 3300)
         }
         // Restore the original system alarm volume after the alarm + voice.
-        Handler(Looper.getMainLooper()).postDelayed({ restoreAlarmVolume(appContext) }, 12000)
+        handler.postDelayed({ restoreAlarmVolume(appContext) }, 12000)
+    }
+
+    /**
+     * Stops everything the alarm started — the sound, the queued/ongoing spoken
+     * reminder, and vibration. Called when the app opens the reminder screen so
+     * the announcement isn't captured by the voice recognizer.
+     */
+    fun stop(context: Context) {
+        pendingSpeak?.let { handler.removeCallbacks(it) }
+        pendingSpeak = null
+        Speaker.stop()
+        try {
+            currentPlayer?.let {
+                if (it.isPlaying) it.stop()
+                it.release()
+            }
+        } catch (_: Exception) {
+        }
+        currentPlayer = null
+        stopVibration(context)
     }
 
     /**
@@ -211,7 +237,6 @@ object AlarmPlayer {
             ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val audioManager = context.getSystemService(AudioManager::class.java)
-        val handler = Handler(Looper.getMainLooper())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioManager.requestAudioFocus(
@@ -228,6 +253,7 @@ object AlarmPlayer {
 
         try {
             val mp = MediaPlayer()
+            currentPlayer = mp
             mp.setAudioAttributes(
                 AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
@@ -242,9 +268,14 @@ object AlarmPlayer {
                 handler.postDelayed({
                     try { if (player.isPlaying) player.stop() } catch (_: Exception) {}
                     player.release()
+                    if (currentPlayer === player) currentPlayer = null
                 }, 3000)
             }
-            mp.setOnErrorListener { p, _, _ -> p.release(); true }
+            mp.setOnErrorListener { p, _, _ ->
+                p.release()
+                if (currentPlayer === p) currentPlayer = null
+                true
+            }
             mp.prepareAsync()
         } catch (_: Exception) {
         }
