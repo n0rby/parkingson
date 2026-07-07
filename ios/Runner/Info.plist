@@ -82,6 +82,24 @@
 	<string>Parkingson uses Bluetooth to detect when you connect to and disconnect from your car.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Parkingson uses motion detection to recognise when you have driven and then started walking, so it can remind you about parking.</string>
+	<!-- Voice commands on the reminder screen (iOS uses SFSpeechRecognizer). -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Parkingson uses the microphone so you can set your parking time or ignore a location by voice.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Parkingson uses speech recognition to understand your spoken parking commands.</string>
+
+	<!-- ===================== Parking-app deep links ====================== -->
+	<!-- iOS cannot enumerate installed apps; instead we probe a fixed set of
+	     known parking apps with canOpenURL. Add each app's URL scheme here.
+	     TODO(mac): verify the real schemes on device — these are best-effort. -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>easypark</string>
+		<string>qpark</string>
+		<string>apcoa</string>
+		<string>aimopark</string>
+		<string>parkman</string>
+	</array>
 
 	<!-- ===================== Google AdMob (iOS) =========================== -->
 	<!-- TODO: Replace with your real iOS AdMob app ID from the AdMob console.
