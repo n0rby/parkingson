@@ -50,11 +50,25 @@ object ServiceStarter {
             flags = flags or PendingIntent.FLAG_IMMUTABLE
         }
         val pending = PendingIntent.getBroadcast(context, WATCHDOG_REQUEST, intent, flags)
-        am.setInexactRepeating(
-            AlarmManager.RTC,
-            System.currentTimeMillis() + WATCHDOG_INTERVAL_MS,
-            WATCHDOG_INTERVAL_MS,
-            pending
-        )
+        val triggerAt = System.currentTimeMillis() + WATCHDOG_INTERVAL_MS
+
+        // An *exact* alarm firing is a valid window to (re)start a foreground
+        // service from the background on Android 12+; an inexact one is not. So
+        // schedule an exact alarm when we're allowed to — this is what lets the
+        // watchdog revive monitoring after the app is swiped away. Exact alarms
+        // are one-shot, so WatchdogReceiver reschedules the next one when it fires.
+        val canExact = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+            am.canScheduleExactAlarms()
+        try {
+            if (canExact) {
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pending)
+            } else {
+                // No exact-alarm permission — best effort (won't restart a dead
+                // FGS from the background, but keeps a live one supervised).
+                am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pending)
+            }
+        } catch (_: SecurityException) {
+            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pending)
+        }
     }
 }

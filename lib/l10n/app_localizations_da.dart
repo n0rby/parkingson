@@ -270,6 +270,16 @@ class AppLocalizationsDa extends AppLocalizations {
   String get batteryCardButton => 'Tillad ubegrænset baggrund';
 
   @override
+  String get exactAlarmCardTitle => 'Anbefalet: tillad alarmer og påmindelser';
+
+  @override
+  String get exactAlarmCardBody =>
+      'Lader appen genstarte overvågningen af sig selv, efter du har lukket den fra oversigten (\"Ryd alle\"). Uden den forbliver overvågningen slukket, til du åbner appen igen.';
+
+  @override
+  String get exactAlarmCardButton => 'Tillad alarmer og påmindelser';
+
+  @override
   String get motionFetching => 'Motion: henter status…';
 
   @override

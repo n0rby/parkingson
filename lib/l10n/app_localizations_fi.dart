@@ -273,6 +273,16 @@ class AppLocalizationsFi extends AppLocalizations {
   String get batteryCardButton => 'Salli rajoittamaton taustakäyttö';
 
   @override
+  String get exactAlarmCardTitle => 'Recommended: allow alarms & reminders';
+
+  @override
+  String get exactAlarmCardBody =>
+      'Lets the app restart monitoring by itself after you close it from recents (\"Clear all\"). Without it, monitoring stays off until you reopen the app.';
+
+  @override
+  String get exactAlarmCardButton => 'Allow alarms & reminders';
+
+  @override
   String get motionFetching => 'Liike: haetaan tilaa…';
 
   @override

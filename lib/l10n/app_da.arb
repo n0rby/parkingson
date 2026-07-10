@@ -91,6 +91,9 @@
   "batteryCardTitle": "Anbefalet: undtag fra batterioptimering",
   "batteryCardBody": "Valgfrit. Uden dette kan Android (især Samsung) stoppe bevægelsesovervågningen i baggrunden, så parkering uden Bluetooth ikke altid opdages.",
   "batteryCardButton": "Tillad ubegrænset baggrund",
+  "exactAlarmCardTitle": "Anbefalet: tillad alarmer og påmindelser",
+  "exactAlarmCardBody": "Lader appen genstarte overvågningen af sig selv, efter du har lukket den fra oversigten (\"Ryd alle\"). Uden den forbliver overvågningen slukket, til du åbner appen igen.",
+  "exactAlarmCardButton": "Tillad alarmer og påmindelser",
 
   "motionFetching": "Motion: henter status…",
   "motionUnavailable": "Motion: status utilgængelig",

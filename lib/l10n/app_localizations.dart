@@ -592,6 +592,24 @@ abstract class AppLocalizations {
   /// **'Allow unrestricted background'**
   String get batteryCardButton;
 
+  /// No description provided for @exactAlarmCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended: allow alarms & reminders'**
+  String get exactAlarmCardTitle;
+
+  /// No description provided for @exactAlarmCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Lets the app restart monitoring by itself after you close it from recents (\"Clear all\"). Without it, monitoring stays off until you reopen the app.'**
+  String get exactAlarmCardBody;
+
+  /// No description provided for @exactAlarmCardButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow alarms & reminders'**
+  String get exactAlarmCardButton;
+
   /// No description provided for @motionFetching.
   ///
   /// In en, this message translates to:

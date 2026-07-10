@@ -272,6 +272,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get batteryCardButton => 'Uneingeschränkten Hintergrund erlauben';
 
   @override
+  String get exactAlarmCardTitle => 'Recommended: allow alarms & reminders';
+
+  @override
+  String get exactAlarmCardBody =>
+      'Lets the app restart monitoring by itself after you close it from recents (\"Clear all\"). Without it, monitoring stays off until you reopen the app.';
+
+  @override
+  String get exactAlarmCardButton => 'Allow alarms & reminders';
+
+  @override
   String get motionFetching => 'Bewegung: Status wird geladen…';
 
   @override

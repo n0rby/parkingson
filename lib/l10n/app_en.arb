@@ -91,6 +91,9 @@
   "batteryCardTitle": "Recommended: exempt from battery optimization",
   "batteryCardBody": "Optional. Without this, Android (especially Samsung) may stop background motion monitoring, so parking without Bluetooth isn't always detected.",
   "batteryCardButton": "Allow unrestricted background",
+  "exactAlarmCardTitle": "Recommended: allow alarms & reminders",
+  "exactAlarmCardBody": "Lets the app restart monitoring by itself after you close it from recents (\"Clear all\"). Without it, monitoring stays off until you reopen the app.",
+  "exactAlarmCardButton": "Allow alarms & reminders",
 
   "motionFetching": "Motion: fetching status…",
   "motionUnavailable": "Motion: status unavailable",

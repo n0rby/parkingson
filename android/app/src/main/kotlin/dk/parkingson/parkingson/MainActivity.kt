@@ -1,5 +1,6 @@
 package dk.parkingson.parkingson
 
+import android.app.AlarmManager
 import android.app.KeyguardManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -122,6 +123,28 @@ class MainActivity : FlutterActivity() {
                                 startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
                             } catch (_: Exception) {}
                         }
+                        result.success(null)
+                    }
+                    "canScheduleExactAlarms" -> {
+                        val am = getSystemService(AlarmManager::class.java)
+                        result.success(
+                            Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+                                am?.canScheduleExactAlarms() == true
+                        )
+                    }
+                    "requestScheduleExactAlarms" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            try {
+                                startActivity(
+                                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                        .setData(Uri.parse("package:$packageName"))
+                                )
+                            } catch (_: Exception) {}
+                        }
+                        result.success(null)
+                    }
+                    "rescheduleWatchdog" -> {
+                        ServiceStarter.scheduleWatchdog(this)
                         result.success(null)
                     }
                     else -> result.notImplemented()

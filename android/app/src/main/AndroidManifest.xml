@@ -40,6 +40,12 @@
     <!-- Restart service after phone reboot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Exact alarm: the only reliable way to (re)start the foreground service
+         from the background on Android 12+ (an exact alarm firing is a valid
+         FGS-start window; an inexact one is not). Used by the watchdog to revive
+         monitoring after the user swipes the app away ("Clear all"). -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <!-- Internet (AdMob + billing) -->
     <uses-permission android:name="android.permission.INTERNET" />
 

@@ -86,6 +86,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const _BatteryOptimizationCard(),
+              const _ExactAlarmCard(),
               const Divider(),
               ActionRow(
                 title: l10n.setReminderTitle,
@@ -210,6 +211,107 @@ class _BatteryOptimizationCardState extends State<_BatteryOptimizationCard>
               onPressed: _request,
               style: FilledButton.styleFrom(backgroundColor: hpOrange),
               child: Text(l10n.batteryCardButton),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Prompts for the "Alarms & reminders" (SCHEDULE_EXACT_ALARM) permission, which
+/// is what lets the watchdog restart the foreground service from the background
+/// after the app is swiped away. Hidden once granted.
+class _ExactAlarmCard extends StatefulWidget {
+  const _ExactAlarmCard();
+
+  @override
+  State<_ExactAlarmCard> createState() => _ExactAlarmCardState();
+}
+
+class _ExactAlarmCardState extends State<_ExactAlarmCard>
+    with WidgetsBindingObserver {
+  static const _channel = MethodChannel('dk.parkingson/alarm');
+  bool _granted = true; // assume granted until checked → card hidden by default
+  bool _dismissed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _check();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _check();
+  }
+
+  Future<void> _check() async {
+    try {
+      final v = await _channel.invokeMethod('canScheduleExactAlarms');
+      final granted = v == true;
+      if (granted) {
+        // Upgrade the watchdog to an exact alarm now that we're allowed to.
+        await _channel.invokeMethod('rescheduleWatchdog');
+      }
+      if (mounted) setState(() => _granted = granted);
+    } catch (_) {}
+  }
+
+  Future<void> _request() async {
+    try {
+      await _channel.invokeMethod('requestScheduleExactAlarms');
+    } catch (_) {}
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_granted || _dismissed) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    return Container(
+      margin: const EdgeInsets.only(top: 8, bottom: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: hpCard,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: hpOrange.withValues(alpha: 0.4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.alarm, color: hpOrange, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(l10n.exactAlarmCardTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),
+              ),
+              GestureDetector(
+                onTap: () => setState(() => _dismissed = true),
+                child: const Icon(Icons.close, size: 18, color: hpSubtle),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            l10n.exactAlarmCardBody,
+            style: const TextStyle(fontSize: 12, color: hpMuted, height: 1.4),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: _request,
+              style: FilledButton.styleFrom(backgroundColor: hpOrange),
+              child: Text(l10n.exactAlarmCardButton),
             ),
           ),
         ],
