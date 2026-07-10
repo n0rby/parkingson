@@ -50,6 +50,10 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
         val now = System.currentTimeMillis()
 
         if (activityType == DetectedActivity.IN_VEHICLE) {
+            // Mirror to the Flutter store as soft "was driving" corroboration for
+            // the confidence check (never a hard gate — AR is too flaky for that).
+            context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+                .edit().putString("flutter.last_in_vehicle_at", now.toString()).apply()
             if (prefs.getLong(KEY_IN_VEHICLE_STARTED_AT, 0L) == 0L) {
                 prefs.edit().putLong(KEY_IN_VEHICLE_STARTED_AT, now).apply()
             }

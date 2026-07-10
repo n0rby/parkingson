@@ -8,9 +8,12 @@ import '../widgets/primary_button.dart';
 class CarsScreen extends StatelessWidget {
   final List<CarDevice> pairedDevices;
   final Set<String> selectedAddresses;
+  final Set<String> usbAccessories;
   final bool btOnlyMode;
   final ValueChanged<Set<String>> onSelectionChange;
   final ValueChanged<bool> onBtOnlyModeChange;
+  final VoidCallback onRegisterUsbAccessory;
+  final ValueChanged<String> onRemoveUsbAccessory;
   final VoidCallback onNext;
   final VoidCallback onOpenBluetoothSettings;
 
@@ -18,9 +21,12 @@ class CarsScreen extends StatelessWidget {
     super.key,
     required this.pairedDevices,
     required this.selectedAddresses,
+    required this.usbAccessories,
     required this.btOnlyMode,
     required this.onSelectionChange,
     required this.onBtOnlyModeChange,
+    required this.onRegisterUsbAccessory,
+    required this.onRemoveUsbAccessory,
     required this.onNext,
     required this.onOpenBluetoothSettings,
   });
@@ -66,6 +72,37 @@ class CarsScreen extends StatelessWidget {
                   ]),
                   const SizedBox(height: 16),
                   Text(l10n.carsBody),
+                  const SizedBox(height: 16),
+                  // ── USB car (cable / Android Auto) ──────────────────────────
+                  Text(l10n.carsWithUsb,
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),
+                  const SizedBox(height: 4),
+                  Text(l10n.usbCarsBody),
+                  const SizedBox(height: 8),
+                  if (usbAccessories.isEmpty)
+                    Text(l10n.noUsbCarRegistered,
+                        style: const TextStyle(color: hpMuted))
+                  else
+                    ...usbAccessories.map((id) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: ListCard(children: [
+                            Expanded(
+                              child: Text(id,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600)),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () => onRemoveUsbAccessory(id),
+                            ),
+                          ]),
+                        )),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    onPressed: onRegisterUsbAccessory,
+                    icon: const Icon(Icons.usb),
+                    label: Text(l10n.registerConnectedUsbCar),
+                  ),
                   const SizedBox(height: 16),
                   Text(l10n.carsWithBluetooth,
                       style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),

@@ -36,6 +36,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noPairedDevices => 'Aucun appareil Bluetooth appairé trouvé.';
 
   @override
+  String get carsWithUsb => 'Bil via USB-kabel';
+
+  @override
+  String get usbCarsBody =>
+      'Forbinder du telefonen til bilen med kabel (fx Android Auto), så sæt kablet i nu og registrér bilen.';
+
+  @override
+  String get registerConnectedUsbCar => 'Registrér tilsluttet bil';
+
+  @override
+  String get noUsbCarRegistered => 'Ingen USB-bil registreret endnu.';
+
+  @override
+  String get usbCarCaptureFailed =>
+      'Ingen bil-forbindelse fundet. Sæt kablet i bilen og prøv igen.';
+
+  @override
   String get activateParkingMonitoring =>
       'Activer la surveillance du stationnement';
 

@@ -35,6 +35,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noPairedDevices => 'No paired Bluetooth devices found.';
 
   @override
+  String get carsWithUsb => 'Car via USB cable';
+
+  @override
+  String get usbCarsBody =>
+      'If you connect your phone to the car with a cable (e.g. Android Auto), plug it in now and register the car.';
+
+  @override
+  String get registerConnectedUsbCar => 'Register connected car';
+
+  @override
+  String get noUsbCarRegistered => 'No USB car registered yet.';
+
+  @override
+  String get usbCarCaptureFailed =>
+      'No car connection found. Plug the cable into the car and try again.';
+
+  @override
   String get activateParkingMonitoring => 'Activate parking monitoring';
 
   @override

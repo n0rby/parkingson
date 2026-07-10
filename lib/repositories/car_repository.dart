@@ -3,6 +3,7 @@ import '../models/monitoring_mode.dart';
 
 class CarRepository {
   static const _keySelectedAddresses = 'selected_car_addresses';
+  static const _keySelectedUsbAccessories = 'selected_usb_accessories';
   static const _keyMonitoringMode = 'monitoring_mode';
   static const _keySetupCompleted = 'setup_completed';
   static const _keyBtOnlyMode = 'bt_only_mode';
@@ -17,6 +18,16 @@ class CarRepository {
   Future<void> saveSelectedCarAddresses(Set<String> addresses) async {
     final p = await _prefs;
     await p.setStringList(_keySelectedAddresses, addresses.toList());
+  }
+
+  Future<Set<String>> getSelectedUsbAccessories() async {
+    final p = await _prefs;
+    return p.getStringList(_keySelectedUsbAccessories)?.toSet() ?? {};
+  }
+
+  Future<void> saveSelectedUsbAccessories(Set<String> accessories) async {
+    final p = await _prefs;
+    await p.setStringList(_keySelectedUsbAccessories, accessories.toList());
   }
 
   Future<MonitoringMode> getMonitoringMode() async {

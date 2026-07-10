@@ -160,6 +160,36 @@ abstract class AppLocalizations {
   /// **'Ingen parrede Bluetooth-enheder fundet.'**
   String get noPairedDevices;
 
+  /// No description provided for @carsWithUsb.
+  ///
+  /// In da, this message translates to:
+  /// **'Bil via USB-kabel'**
+  String get carsWithUsb;
+
+  /// No description provided for @usbCarsBody.
+  ///
+  /// In da, this message translates to:
+  /// **'Forbinder du telefonen til bilen med kabel (fx Android Auto), så sæt kablet i nu og registrér bilen.'**
+  String get usbCarsBody;
+
+  /// No description provided for @registerConnectedUsbCar.
+  ///
+  /// In da, this message translates to:
+  /// **'Registrér tilsluttet bil'**
+  String get registerConnectedUsbCar;
+
+  /// No description provided for @noUsbCarRegistered.
+  ///
+  /// In da, this message translates to:
+  /// **'Ingen USB-bil registreret endnu.'**
+  String get noUsbCarRegistered;
+
+  /// No description provided for @usbCarCaptureFailed.
+  ///
+  /// In da, this message translates to:
+  /// **'Ingen bil-forbindelse fundet. Sæt kablet i bilen og prøv igen.'**
+  String get usbCarCaptureFailed;
+
   /// No description provided for @activateParkingMonitoring.
   ///
   /// In da, this message translates to:

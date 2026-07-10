@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
+import android.hardware.usb.UsbManager
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -88,6 +89,7 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
                     "getMotionStatus" -> result.success(readMotionStatus(this))
+                    "getUsbAccessory" -> result.success(currentUsbAccessoryId())
                     "getInstalledApps" -> result.success(installedLaunchableApps())
                     "launchApp" -> result.success(launchApp(call.argument<String>("package")))
                     "getAppIcon" -> result.success(appIconPng(call.argument<String>("package")))
@@ -125,6 +127,15 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+    }
+
+    // ── USB accessory (setup: register the car head unit currently plugged in) ─
+    private fun currentUsbAccessoryId(): String? {
+        val um = getSystemService(UsbManager::class.java) ?: return null
+        val acc = um.accessoryList?.firstOrNull() ?: return null
+        val mfr = acc.manufacturer?.trim().orEmpty()
+        val model = acc.model?.trim().orEmpty()
+        return "$mfr/$model".replace("|", " ").trim('/').ifBlank { null }
     }
 
     // ── Installed apps (for the parking-app picker) ─────────────────────────

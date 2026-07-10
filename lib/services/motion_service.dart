@@ -25,14 +25,28 @@ AppLocalizations _deviceL10n() {
 // Keys for background ↔ UI messaging
 const _evtStop = 'stop';
 const _evtUpdateAddresses = 'update_addresses';
+const _evtUpdateUsbAccessories = 'update_usb_accessories';
 const _evtParkingDetected = 'parking_detected';
 const _evtPayloadKey = 'location';
 
 class MotionService {
   static const minVehicleDurationMs = 10000;
-  // Shared across BT and motion sources so a single parking never fires twice
-  // (e.g. BT disconnect + on-foot both detected for the same park).
-  static const reminderCooldownMs = 120000;
+  // Dedup so a single parking never alarms twice when several sources (BT, USB,
+  // motion) report it. A repeat is treated as the *same* park only if it is BOTH
+  // very recent AND at ~the same spot as the last one.
+  static const dedupCooldownMs = 20000; // 20 s
+  static const dedupRadiusMeters = 30.0; // 30 m
+
+  // A car connection must last at least this long to count as a real drive
+  // (not a momentary pair/unpair in the driveway). The connection's *duration*
+  // is our steadiest "was driving" evidence — far more reliable than Activity
+  // Recognition.
+  static const minDriveConnectionMs = 90 * 1000;
+
+  // How recently Activity Recognition must have seen IN_VEHICLE for it to count
+  // as corroboration. Generous on purpose: AR is laggy/unstable, so it only
+  // ever *raises* confidence here — it never gates.
+  static const inVehicleWindowMs = 10 * 60 * 1000;
 
   final _service = FlutterBackgroundService();
 
@@ -78,6 +92,11 @@ class MotionService {
     _service.invoke(_evtUpdateAddresses, {'addresses': addresses.toList()});
   }
 
+  Future<void> updateUsbAccessories(Set<String> accessories) async {
+    _service.invoke(
+        _evtUpdateUsbAccessories, {'accessories': accessories.toList()});
+  }
+
   Future<bool> get isRunning => _service.isRunning();
 }
 
@@ -104,55 +123,114 @@ void _onStart(ServiceInstance service) async {
       (prefs.getStringList('selected_car_addresses') ?? [])
           .map((e) => e.toUpperCase())
           .toSet();
+  Set<String> selectedUsbAccessories =
+      (prefs.getStringList('selected_usb_accessories') ?? [])
+          .map((e) => e.toUpperCase())
+          .toSet();
 
-  int? lastReminderMs;
-
-  // Fires the parking flow unless we're still within the shared cooldown.
+  // Fires the parking flow. Duplicate suppression (the same park reported by
+  // several sources) is handled by location + time in _handleCarParked.
   Future<void> tryFireReminder() async {
-    final now = DateTime.now().millisecondsSinceEpoch;
-    if (lastReminderMs != null &&
-        now - lastReminderMs! < MotionService.reminderCooldownMs) {
-      return;
-    }
-    lastReminderMs = now;
     await _handleCarParked(service);
   }
 
-  // Parking is detected from two native sources, both bridged via
-  // SharedPreferences: classic-Bluetooth ACL disconnect (CarBluetoothReceiver)
-  // and drive-then-walk motion (ActivityRecognitionReceiver). Baseline the
-  // "last seen" markers to now so we don't fire on stale pre-startup events.
+  // Parking is detected from several native sources, all bridged via
+  // SharedPreferences: classic-Bluetooth ACL disconnect (CarBluetoothReceiver),
+  // USB car head-unit unplug (CarUsbReceiver), USB power drop (PowerReceiver),
+  // and drive-then-walk motion (ActivityRecognitionReceiver). Each is a crisp
+  // "leaving" trigger; how much corroboration it needs before we sound the loud
+  // alarm is decided per-trigger in [_shouldFire]. Baseline every source to now
+  // so we don't fire on stale pre-startup events.
   await prefs.reload();
-  int lastSeenDisconnectTs = DateTime.now().millisecondsSinceEpoch;
-  int lastSeenMotionTs = DateTime.now().millisecondsSinceEpoch;
+  final startTs = DateTime.now().millisecondsSinceEpoch;
+  final lastSeen = <String, int>{
+    'bt': startTs,
+    'usbAcc': startTs,
+    'usbPower': startTs,
+    'motion': startTs,
+  };
 
   Timer.periodic(const Duration(seconds: 3), (_) async {
     await prefs.reload();
+    final now = DateTime.now().millisecondsSinceEpoch;
 
-    // ── Motion: car without Bluetooth (drove, then started walking) ──────────
-    final motionTs = int.tryParse(prefs.getString('motion_parking_event') ?? '');
-    if (motionTs != null && motionTs > lastSeenMotionTs) {
-      lastSeenMotionTs = motionTs;
-      await tryFireReminder();
+    // Returns a fresh (id, ts) disconnect for [source], advancing its marker,
+    // or null if nothing new. Reuses the "value|timestamp" event format.
+    (String, int)? takeFresh(String source, String key) {
+      final ev = _parseBtEvent(prefs.getString(key));
+      if (ev == null || ev.$2 <= lastSeen[source]!) return null;
+      lastSeen[source] = ev.$2;
+      return ev;
     }
 
-    // ── Bluetooth: monitored car stereo disconnected ─────────────────────────
-    final event = _parseBtEvent(prefs.getString('bt_last_disconnect'));
-    if (event == null) return;
-    final (address, ts) = event;
-    if (ts <= lastSeenDisconnectTs) return;
-    lastSeenDisconnectTs = ts;
+    // Debounce a connection trigger: wait, then confirm it didn't reconnect
+    // (a transient drop while still driving).
+    Future<bool> stillDisconnected(String connectKey, int disconnectTs) async {
+      await Future.delayed(const Duration(seconds: 5));
+      await prefs.reload();
+      final reconnect = _parseBtEvent(prefs.getString(connectKey));
+      return reconnect == null || reconnect.$2 <= disconnectTs;
+    }
 
-    if (!selectedAddresses.contains(address.toUpperCase())) return;
+    // Soft corroboration: did Activity Recognition see IN_VEHICLE recently?
+    // Mirrored to the Flutter store by ActivityRecognitionReceiver. Never a gate.
+    final inVehicleAt = int.tryParse(prefs.getString('last_in_vehicle_at') ?? '');
+    final inVehicleRecent = inVehicleAt != null &&
+        now - inVehicleAt <= MotionService.inVehicleWindowMs;
 
-    // Debounce: wait a few seconds and make sure the car didn't reconnect
-    // (transient drop while still driving).
-    await Future.delayed(const Duration(seconds: 5));
-    await prefs.reload();
-    final reconnect = _parseBtEvent(prefs.getString('bt_last_connect'));
-    if (reconnect != null && reconnect.$2 > ts) return;
+    // ── Motion: drove, then started walking (Activity Recognition) ───────────
+    // motion_parking_event is a bare timestamp (no "id|ts"), so it needs its
+    // own parse rather than takeFresh/_parseBtEvent.
+    final motionTs = int.tryParse(prefs.getString('motion_parking_event') ?? '');
+    if (motionTs != null && motionTs > lastSeen['motion']!) {
+      lastSeen['motion'] = motionTs;
+      if (_shouldFire(
+          trigger: _Trigger.motion,
+          connectionDurationMs: null,
+          inVehicleRecent: inVehicleRecent)) {
+        await tryFireReminder();
+      }
+    }
 
-    await tryFireReminder();
+    // ── Bluetooth: monitored car stereo disconnected (high trust) ────────────
+    final bt = takeFresh('bt', 'bt_last_disconnect');
+    if (bt != null && selectedAddresses.contains(bt.$1.toUpperCase())) {
+      if (await stillDisconnected('bt_last_connect', bt.$2) &&
+          _shouldFire(
+              trigger: _Trigger.btWhitelisted,
+              connectionDurationMs: _connectionDurationMs(
+                  prefs.getString('bt_last_connect'), bt.$2),
+              inVehicleRecent: inVehicleRecent)) {
+        await tryFireReminder();
+      }
+    }
+
+    // ── USB accessory: monitored car head unit unplugged (high trust) ────────
+    final usbAcc = takeFresh('usbAcc', 'usb_last_disconnect');
+    if (usbAcc != null &&
+        selectedUsbAccessories.contains(usbAcc.$1.toUpperCase())) {
+      if (await stillDisconnected('usb_last_connect', usbAcc.$2) &&
+          _shouldFire(
+              trigger: _Trigger.usbAccessory,
+              connectionDurationMs: _connectionDurationMs(
+                  prefs.getString('usb_last_connect'), usbAcc.$2),
+              inVehicleRecent: inVehicleRecent)) {
+        await tryFireReminder();
+      }
+    }
+
+    // ── USB power: a plain charge cable dropped (low trust → needs evidence) ──
+    final usbPwr = takeFresh('usbPower', 'usbpower_last_disconnect');
+    if (usbPwr != null) {
+      if (await stillDisconnected('usbpower_last_connect', usbPwr.$2) &&
+          _shouldFire(
+              trigger: _Trigger.usbPower,
+              connectionDurationMs: _connectionDurationMs(
+                  prefs.getString('usbpower_last_connect'), usbPwr.$2),
+              inVehicleRecent: inVehicleRecent)) {
+        await tryFireReminder();
+      }
+    }
   });
 
   // Parking timer check — every minute
@@ -167,12 +245,20 @@ void _onStart(ServiceInstance service) async {
         .toSet();
   });
 
+  // Same, for the USB car head units registered during setup.
+  service.on(_evtUpdateUsbAccessories).listen((data) {
+    selectedUsbAccessories = (List<String>.from(data?['accessories'] ?? []))
+        .map((e) => e.toUpperCase())
+        .toSet();
+  });
+
   service.on(_evtStop).listen((_) {
     service.stopSelf();
   });
 }
 
-/// Parses a "ADDRESS|timestamp" event string written by CarBluetoothReceiver.
+/// Parses a "value|timestamp" event string written by the native receivers
+/// (CarBluetoothReceiver, CarUsbReceiver, PowerReceiver).
 (String, int)? _parseBtEvent(String? raw) {
   if (raw == null) return null;
   final i = raw.lastIndexOf('|');
@@ -180,6 +266,56 @@ void _onStart(ServiceInstance service) async {
   final ts = int.tryParse(raw.substring(i + 1));
   if (ts == null) return null;
   return (raw.substring(0, i), ts);
+}
+
+/// The trigger sources that can start a parking reminder, ordered by how much
+/// we trust them on their own.
+enum _Trigger { btWhitelisted, usbAccessory, usbPower, motion }
+
+/// The *soft* decision: is this event trustworthy enough to sound the loud
+/// reminder? The hard suppression (ignored location) still happens later in
+/// [_handleCarParked] — this only stops the weak triggers from firing on noise.
+///
+/// Principle: unreliable signals (Activity Recognition, GPS) may only *raise*
+/// confidence, never gate — otherwise the flakiest signal decides our misses.
+bool _shouldFire({
+  required _Trigger trigger,
+  required int? connectionDurationMs,
+  required bool inVehicleRecent,
+}) {
+  // Independent evidence we were actually driving.
+  final droveLongEnough = connectionDurationMs != null &&
+      connectionDurationMs >= MotionService.minDriveConnectionMs;
+  final drivingEvidence = droveLongEnough || inVehicleRecent;
+
+  switch (trigger) {
+    // Self-identifying / high trust: the whitelisted car (BT) or a monitored
+    // car head unit (USB accessory) was connected and dropped. Fire on that
+    // alone, as BT does today; the ignored-location check is the only guard.
+    case _Trigger.btWhitelisted:
+    case _Trigger.usbAccessory:
+      return true;
+
+    // Activity Recognition already required IN_VEHICLE >= 10s before writing
+    // this event, so it carries its own driving evidence.
+    case _Trigger.motion:
+      return true;
+
+    // Ambiguous: a plain USB power drop fires for *every* charger. Demand
+    // independent driving evidence before we dare sound the alarm.
+    case _Trigger.usbPower:
+      return drivingEvidence;
+  }
+}
+
+/// Duration of the just-ended connection, from its matching connect event, or
+/// null if we never saw a connect (so we can't prove a drive).
+int? _connectionDurationMs(String? connectRaw, int disconnectTs) {
+  final connect = _parseBtEvent(connectRaw);
+  if (connect == null) return null;
+  final connectedAt = connect.$2;
+  if (connectedAt <= 0 || connectedAt >= disconnectTs) return null;
+  return disconnectTs - connectedAt;
 }
 
 Future<void> _checkParkingTimer() async {
@@ -248,6 +384,14 @@ Future<int?> _osrmWalkingSeconds({
 }
 
 Future<void> _handleCarParked(ServiceInstance service) async {
+  final ignoredRepo = IgnoredLocationRepository();
+
+  // For duplicate suppression: the last parking we actually reminded about.
+  final lastPark = await ignoredRepo.getLastParkingLocation();
+  final recentPark = lastPark != null &&
+      DateTime.now().millisecondsSinceEpoch - lastPark.capturedAtMillis <
+          MotionService.dedupCooldownMs;
+
   // Get the best location we can: a fresh GPS fix, else a recent cached fix.
   Position? position;
   try {
@@ -269,7 +413,19 @@ Future<void> _handleCarParked(ServiceInstance service) async {
     } catch (_) {}
   }
 
-  final ignoredRepo = IgnoredLocationRepository();
+  // Dedup: the same parking hit by BT + USB + motion fires within moments and
+  // ~the same spot. Treat it as a repeat only if it's BOTH recent AND near the
+  // last park (or recent and we can't verify the location).
+  if (recentPark) {
+    if (position == null) return;
+    final metersFromLast = Geolocator.distanceBetween(
+      position.latitude,
+      position.longitude,
+      lastPark.latitude,
+      lastPark.longitude,
+    );
+    if (metersFromLast < MotionService.dedupRadiusMeters) return;
+  }
 
   if (position == null) {
     // We can't verify the location. Don't risk a false alarm inside an ignored

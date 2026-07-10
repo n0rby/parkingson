@@ -34,7 +34,7 @@ const _visualChannel = AndroidNotificationChannel(
 );
 
 // How long the reminder notification stays before Android auto-dismisses it.
-const _reminderTimeoutMs = 60000;
+const _reminderTimeoutMs = 20000;
 
 const _pendingVoiceKey = 'pending_alarm_voice';
 

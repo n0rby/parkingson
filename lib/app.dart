@@ -45,6 +45,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
 
   List<CarDevice> _pairedDevices = [];
   Set<String> _selectedAddresses = {};
+  Set<String> _usbAccessories = {};
   bool _btOnlyMode = false;
   bool _isPremium = false;
   List<IgnoredLocation> _ignoredLocations = [];
@@ -108,6 +109,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
   Future<void> _loadState() async {
     final btOnly = await _carRepo.getBtOnlyMode();
     final carAddresses = await _carRepo.getSelectedCarAddresses();
+    final usbAccessories = await _carRepo.getSelectedUsbAccessories();
     final setupDone = await _carRepo.isSetupCompleted();
     final ignored = await _ignoredRepo.getIgnoredLocations();
     final lastLocation = await _ignoredRepo.getLastParkingLocation();
@@ -117,6 +119,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
       setState(() {
         _btOnlyMode = btOnly;
         _selectedAddresses = carAddresses;
+        _usbAccessories = usbAccessories;
         _ignoredLocations = ignored;
         _lastParkingLocation = lastLocation;
         _pairedDevices = paired;
@@ -144,6 +147,36 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
     if (mounted) setState(() { _pairedDevices = paired; _screen = _Screen.cars; });
   }
 
+  Future<void> _registerUsbAccessory(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    String? id;
+    try {
+      id = await const MethodChannel('dk.parkingson/alarm')
+          .invokeMethod<String>('getUsbAccessory');
+    } catch (_) {
+      id = null;
+    }
+    if (id == null || id.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.usbCarCaptureFailed)),
+        );
+      }
+      return;
+    }
+    final updated = Set<String>.from(_usbAccessories)..add(id);
+    setState(() => _usbAccessories = updated);
+    await _carRepo.saveSelectedUsbAccessories(updated);
+    _motionService.updateUsbAccessories(updated);
+  }
+
+  Future<void> _removeUsbAccessory(String id) async {
+    final updated = Set<String>.from(_usbAccessories)..remove(id);
+    setState(() => _usbAccessories = updated);
+    await _carRepo.saveSelectedUsbAccessories(updated);
+    _motionService.updateUsbAccessories(updated);
+  }
+
   void _startMonitoring() {
     _motionService.startMonitoring(
       onParkingDetected: (snapshot) {
@@ -159,6 +192,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
       },
     );
     _motionService.updateAddresses(_selectedAddresses);
+    _motionService.updateUsbAccessories(_usbAccessories);
     // Motion detection (cars without Bluetooth) runs natively via Activity
     // Recognition. Enable it unless the user chose Bluetooth-only mode.
     const channel = MethodChannel('dk.parkingson/alarm');
@@ -190,7 +224,10 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
         return CarsScreen(
           pairedDevices: _pairedDevices,
           selectedAddresses: _selectedAddresses,
+          usbAccessories: _usbAccessories,
           btOnlyMode: _btOnlyMode,
+          onRegisterUsbAccessory: () => _registerUsbAccessory(context),
+          onRemoveUsbAccessory: _removeUsbAccessory,
           onSelectionChange: (addresses) async {
             setState(() => _selectedAddresses = addresses);
             await _carRepo.saveSelectedCarAddresses(addresses);
