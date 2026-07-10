@@ -114,830 +114,830 @@ abstract class AppLocalizations {
 
   /// No description provided for @welcomeTagline.
   ///
-  /// In da, this message translates to:
-  /// **'Undgå parkeringsbøder'**
+  /// In en, this message translates to:
+  /// **'Avoid parking fines'**
   String get welcomeTagline;
 
   /// No description provided for @welcomeBody.
   ///
-  /// In da, this message translates to:
-  /// **'Få en påmindelse, når du forlader en af dine biler, og gem automatisk stedet, så du kan finde bilen igen.'**
+  /// In en, this message translates to:
+  /// **'Get a reminder when you leave one of your cars, and automatically save the spot so you can find the car again.'**
   String get welcomeBody;
 
   /// No description provided for @getStarted.
   ///
-  /// In da, this message translates to:
-  /// **'Kom i gang'**
+  /// In en, this message translates to:
+  /// **'Get started'**
   String get getStarted;
 
   /// No description provided for @carsTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Vælg dine biler'**
+  /// In en, this message translates to:
+  /// **'Choose your cars'**
   String get carsTitle;
 
   /// No description provided for @btOnlyMode.
   ///
-  /// In da, this message translates to:
-  /// **'Brug kun BT, for at reducere antallet af falske alarmer'**
+  /// In en, this message translates to:
+  /// **'Use Bluetooth only, to reduce false alarms'**
   String get btOnlyMode;
 
   /// No description provided for @carsBody.
   ///
-  /// In da, this message translates to:
-  /// **'Vælg din bils Bluetooth — den forbindelse telefonen laver til bilens stereo, når du sætter dig ind. Vælg ikke hovedtelefoner eller headset. Vi har forhåndsvalgt dem der ligner biler.'**
+  /// In en, this message translates to:
+  /// **'Choose your car\'s Bluetooth — the connection your phone makes to the car stereo when you get in. Don\'t choose headphones or a headset. We\'ve pre-selected the ones that look like cars.'**
   String get carsBody;
 
   /// No description provided for @carsWithBluetooth.
   ///
-  /// In da, this message translates to:
-  /// **'Biler med Bluetooth'**
+  /// In en, this message translates to:
+  /// **'Cars with Bluetooth'**
   String get carsWithBluetooth;
 
   /// No description provided for @noPairedDevices.
   ///
-  /// In da, this message translates to:
-  /// **'Ingen parrede Bluetooth-enheder fundet.'**
+  /// In en, this message translates to:
+  /// **'No paired Bluetooth devices found.'**
   String get noPairedDevices;
 
   /// No description provided for @carsWithUsb.
   ///
-  /// In da, this message translates to:
-  /// **'Bil via USB-kabel'**
+  /// In en, this message translates to:
+  /// **'Car via USB cable'**
   String get carsWithUsb;
 
   /// No description provided for @usbCarsBody.
   ///
-  /// In da, this message translates to:
-  /// **'Forbinder du telefonen til bilen med kabel (fx Android Auto), så sæt kablet i nu og registrér bilen.'**
+  /// In en, this message translates to:
+  /// **'If you connect your phone to the car with a cable (e.g. Android Auto), plug it in now and register the car.'**
   String get usbCarsBody;
 
   /// No description provided for @registerConnectedUsbCar.
   ///
-  /// In da, this message translates to:
-  /// **'Registrér tilsluttet bil'**
+  /// In en, this message translates to:
+  /// **'Register connected car'**
   String get registerConnectedUsbCar;
 
   /// No description provided for @noUsbCarRegistered.
   ///
-  /// In da, this message translates to:
-  /// **'Ingen USB-bil registreret endnu.'**
+  /// In en, this message translates to:
+  /// **'No USB car registered yet.'**
   String get noUsbCarRegistered;
 
   /// No description provided for @usbCarCaptureFailed.
   ///
-  /// In da, this message translates to:
-  /// **'Ingen bil-forbindelse fundet. Sæt kablet i bilen og prøv igen.'**
+  /// In en, this message translates to:
+  /// **'No car connection found. Plug the cable into the car and try again.'**
   String get usbCarCaptureFailed;
 
   /// No description provided for @activateParkingMonitoring.
   ///
-  /// In da, this message translates to:
-  /// **'Aktiver parkeringsovervågning'**
+  /// In en, this message translates to:
+  /// **'Activate parking monitoring'**
   String get activateParkingMonitoring;
 
   /// No description provided for @save.
   ///
-  /// In da, this message translates to:
-  /// **'Gem'**
+  /// In en, this message translates to:
+  /// **'Save'**
   String get save;
 
   /// No description provided for @systemBluetoothSettings.
   ///
-  /// In da, this message translates to:
-  /// **'System Bluetooth-indstillinger'**
+  /// In en, this message translates to:
+  /// **'System Bluetooth settings'**
   String get systemBluetoothSettings;
 
   /// No description provided for @permissionsTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Tilladelser'**
+  /// In en, this message translates to:
+  /// **'Permissions'**
   String get permissionsTitle;
 
   /// No description provided for @permissionsBody.
   ///
-  /// In da, this message translates to:
-  /// **'Appen har brug for følgende tilladelser for at overvåge din bil i baggrunden.'**
+  /// In en, this message translates to:
+  /// **'The app needs the following permissions to monitor your car in the background.'**
   String get permissionsBody;
 
   /// No description provided for @activateMonitoring.
   ///
-  /// In da, this message translates to:
-  /// **'Aktiver overvågning'**
+  /// In en, this message translates to:
+  /// **'Activate monitoring'**
   String get activateMonitoring;
 
   /// No description provided for @grantAllToContinue.
   ///
-  /// In da, this message translates to:
-  /// **'Giv alle tilladelser ovenfor for at fortsætte.'**
+  /// In en, this message translates to:
+  /// **'Grant all permissions above to continue.'**
   String get grantAllToContinue;
 
   /// No description provided for @openSettings.
   ///
-  /// In da, this message translates to:
-  /// **'Indstillinger'**
+  /// In en, this message translates to:
+  /// **'Settings'**
   String get openSettings;
 
   /// No description provided for @grant.
   ///
-  /// In da, this message translates to:
-  /// **'Giv'**
+  /// In en, this message translates to:
+  /// **'Grant'**
   String get grant;
 
   /// No description provided for @ok.
   ///
-  /// In da, this message translates to:
+  /// In en, this message translates to:
   /// **'OK'**
   String get ok;
 
   /// No description provided for @permBluetooth.
   ///
-  /// In da, this message translates to:
+  /// In en, this message translates to:
   /// **'Bluetooth'**
   String get permBluetooth;
 
   /// No description provided for @permBluetoothDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Registrér hvornår du forlader din bil'**
+  /// In en, this message translates to:
+  /// **'Detect when you leave your car'**
   String get permBluetoothDesc;
 
   /// No description provided for @permLocation.
   ///
-  /// In da, this message translates to:
-  /// **'Placering'**
+  /// In en, this message translates to:
+  /// **'Location'**
   String get permLocation;
 
   /// No description provided for @permLocationDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Gem parkeringsstedet — vælg \"Tillad hele tiden\" så det virker i baggrunden'**
+  /// In en, this message translates to:
+  /// **'Save the parking spot — choose \"Allow all the time\" so it works in the background'**
   String get permLocationDesc;
 
   /// No description provided for @permActivity.
   ///
-  /// In da, this message translates to:
-  /// **'Fysisk aktivitet'**
+  /// In en, this message translates to:
+  /// **'Physical activity'**
   String get permActivity;
 
   /// No description provided for @permActivityDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Detektér kørsel og gang'**
+  /// In en, this message translates to:
+  /// **'Detect driving and walking'**
   String get permActivityDesc;
 
   /// No description provided for @permNotifications.
   ///
-  /// In da, this message translates to:
-  /// **'Notifikationer'**
+  /// In en, this message translates to:
+  /// **'Notifications'**
   String get permNotifications;
 
   /// No description provided for @permNotificationsDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Send påmindelser om parkering'**
+  /// In en, this message translates to:
+  /// **'Send parking reminders'**
   String get permNotificationsDesc;
 
   /// No description provided for @permBattery.
   ///
-  /// In da, this message translates to:
-  /// **'Ubegrænset baggrund'**
+  /// In en, this message translates to:
+  /// **'Unrestricted background'**
   String get permBattery;
 
   /// No description provided for @permBatteryDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Så batterisparing ikke stopper overvågningen'**
+  /// In en, this message translates to:
+  /// **'So battery saving doesn\'t stop monitoring'**
   String get permBatteryDesc;
 
   /// No description provided for @grantAllPermissions.
   ///
-  /// In da, this message translates to:
-  /// **'Giv alle tilladelser'**
+  /// In en, this message translates to:
+  /// **'Grant all permissions'**
   String get grantAllPermissions;
 
   /// No description provided for @permMicrophone.
   ///
-  /// In da, this message translates to:
-  /// **'Mikrofon'**
+  /// In en, this message translates to:
+  /// **'Microphone'**
   String get permMicrophone;
 
   /// No description provided for @permMicrophoneDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Til stemmekommandoer på alarmen'**
+  /// In en, this message translates to:
+  /// **'For voice commands on the reminder'**
   String get permMicrophoneDesc;
 
   /// No description provided for @voiceListening.
   ///
-  /// In da, this message translates to:
-  /// **'Lytter…'**
+  /// In en, this message translates to:
+  /// **'Listening…'**
   String get voiceListening;
 
   /// No description provided for @voicePrompt.
   ///
-  /// In da, this message translates to:
-  /// **'Sig \"ignorér\" eller \"parkeringstid 30 minutter\"'**
+  /// In en, this message translates to:
+  /// **'Say \"ignore\" or \"parking time 30 minutes\"'**
   String get voicePrompt;
 
   /// No description provided for @voiceTimerSet.
   ///
-  /// In da, this message translates to:
-  /// **'Parkeringstid sat til {time}'**
+  /// In en, this message translates to:
+  /// **'Parking time set to {time}'**
   String voiceTimerSet(String time);
 
   /// No description provided for @voiceNotUnderstood.
   ///
-  /// In da, this message translates to:
-  /// **'Forstod ikke — prøv igen'**
+  /// In en, this message translates to:
+  /// **'Didn\'t catch that — try again'**
   String get voiceNotUnderstood;
 
   /// No description provided for @voiceIgnoreConfirm.
   ///
-  /// In da, this message translates to:
-  /// **'Lokationen ignoreres'**
+  /// In en, this message translates to:
+  /// **'Ignoring this location'**
   String get voiceIgnoreConfirm;
 
   /// No description provided for @setupDoneTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Parkingson kører'**
+  /// In en, this message translates to:
+  /// **'Parkingson is running'**
   String get setupDoneTitle;
 
   /// No description provided for @setupDoneBody.
   ///
-  /// In da, this message translates to:
-  /// **'Parkingson afventer nu din næste parkering. Du får en påmindelse, når du forlader bilen.'**
+  /// In en, this message translates to:
+  /// **'Parkingson is now waiting for your next parking. You\'ll get a reminder when you leave the car.'**
   String get setupDoneBody;
 
   /// No description provided for @monitoringActive.
   ///
-  /// In da, this message translates to:
-  /// **'Overvågning aktiv'**
+  /// In en, this message translates to:
+  /// **'Monitoring active'**
   String get monitoringActive;
 
   /// No description provided for @lastParkedAt.
   ///
-  /// In da, this message translates to:
-  /// **'Sidst parkeret {time}'**
+  /// In en, this message translates to:
+  /// **'Last parked {time}'**
   String lastParkedAt(String time);
 
   /// No description provided for @lastParkedNever.
   ///
-  /// In da, this message translates to:
-  /// **'Sidst parkeret ikke målt endnu'**
+  /// In en, this message translates to:
+  /// **'Last parked not measured yet'**
   String get lastParkedNever;
 
   /// No description provided for @parkingExpires.
   ///
-  /// In da, this message translates to:
-  /// **'Parkering udløber {time}'**
+  /// In en, this message translates to:
+  /// **'Parking expires {time}'**
   String parkingExpires(String time);
 
   /// No description provided for @removeAdsButton.
   ///
-  /// In da, this message translates to:
-  /// **'Slip for reklamer og støt en rar programmør. Næsten gratis!'**
+  /// In en, this message translates to:
+  /// **'Remove ads and support a nice developer. Almost free!'**
   String get removeAdsButton;
 
   /// No description provided for @testReminder.
   ///
-  /// In da, this message translates to:
-  /// **'Test påmindelse'**
+  /// In en, this message translates to:
+  /// **'Test reminder'**
   String get testReminder;
 
   /// No description provided for @testReminderDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Se notifikation, sirene og stemme'**
+  /// In en, this message translates to:
+  /// **'See notification, siren and voice'**
   String get testReminderDesc;
 
   /// No description provided for @manageCars.
   ///
-  /// In da, this message translates to:
-  /// **'Administrer biler'**
+  /// In en, this message translates to:
+  /// **'Manage cars'**
   String get manageCars;
 
   /// No description provided for @manageCarsDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Tilføj, fjern eller skift biler'**
+  /// In en, this message translates to:
+  /// **'Add, remove or change cars'**
   String get manageCarsDesc;
 
   /// No description provided for @findCar.
   ///
-  /// In da, this message translates to:
-  /// **'Find min bil'**
+  /// In en, this message translates to:
+  /// **'Find my car'**
   String get findCar;
 
   /// No description provided for @findCarRoute.
   ///
-  /// In da, this message translates to:
-  /// **'Rute til sidst parkeret {time}'**
+  /// In en, this message translates to:
+  /// **'Route to last parked {time}'**
   String findCarRoute(String time);
 
   /// No description provided for @findCarNone.
   ///
-  /// In da, this message translates to:
-  /// **'Ingen parkeringsplacering gemt endnu'**
+  /// In en, this message translates to:
+  /// **'No parking location saved yet'**
   String get findCarNone;
 
   /// No description provided for @ignoredLocationsAction.
   ///
-  /// In da, this message translates to:
-  /// **'Ignorerede lokationer'**
+  /// In en, this message translates to:
+  /// **'Ignored locations'**
   String get ignoredLocationsAction;
 
   /// No description provided for @ignoredLocationsActionDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Steder der ikke udløser alarm'**
+  /// In en, this message translates to:
+  /// **'Places that don\'t trigger an alarm'**
   String get ignoredLocationsActionDesc;
 
   /// No description provided for @setReminderTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Påmindelse'**
+  /// In en, this message translates to:
+  /// **'Reminder'**
   String get setReminderTitle;
 
   /// No description provided for @setReminderDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Sæt tid til at gå tilbage til bilen'**
+  /// In en, this message translates to:
+  /// **'Set a time to walk back to the car'**
   String get setReminderDesc;
 
   /// No description provided for @retry.
   ///
-  /// In da, this message translates to:
-  /// **'Prøv igen'**
+  /// In en, this message translates to:
+  /// **'Try again'**
   String get retry;
 
   /// No description provided for @setupTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Opsætning'**
+  /// In en, this message translates to:
+  /// **'Setup'**
   String get setupTitle;
 
   /// No description provided for @setupDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Tilpas appen'**
+  /// In en, this message translates to:
+  /// **'Customize the app'**
   String get setupDesc;
 
   /// No description provided for @soundTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Lyd'**
+  /// In en, this message translates to:
+  /// **'Sound'**
   String get soundTitle;
 
   /// No description provided for @soundDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Lydstyrke for alarm'**
+  /// In en, this message translates to:
+  /// **'Alarm volume'**
   String get soundDesc;
 
   /// No description provided for @soundUsePhone.
   ///
-  /// In da, this message translates to:
-  /// **'Brug telefonens lydstyrke'**
+  /// In en, this message translates to:
+  /// **'Use the phone\'s volume'**
   String get soundUsePhone;
 
   /// No description provided for @soundUseApp.
   ///
-  /// In da, this message translates to:
-  /// **'Brug appens lydstyrke'**
+  /// In en, this message translates to:
+  /// **'Use the app\'s volume'**
   String get soundUseApp;
 
   /// No description provided for @soundVolume.
   ///
-  /// In da, this message translates to:
-  /// **'Appens lydstyrke'**
+  /// In en, this message translates to:
+  /// **'App volume'**
   String get soundVolume;
 
   /// No description provided for @soundAlarmSound.
   ///
-  /// In da, this message translates to:
-  /// **'Alarmlyd'**
+  /// In en, this message translates to:
+  /// **'Alarm sound'**
   String get soundAlarmSound;
 
   /// No description provided for @soundVibrateDnd.
   ///
-  /// In da, this message translates to:
-  /// **'Brug kun vibration ved \"Forstyr ikke\"'**
+  /// In en, this message translates to:
+  /// **'Only vibrate in Do Not Disturb'**
   String get soundVibrateDnd;
 
   /// No description provided for @soundVibrateSilent.
   ///
-  /// In da, this message translates to:
-  /// **'Brug kun vibration ved lydstyrke 0'**
+  /// In en, this message translates to:
+  /// **'Only vibrate when volume is 0'**
   String get soundVibrateSilent;
 
   /// No description provided for @parkingAppsTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Parkeringsapps'**
+  /// In en, this message translates to:
+  /// **'Parking apps'**
   String get parkingAppsTitle;
 
   /// No description provided for @parkingAppsDesc.
   ///
-  /// In da, this message translates to:
-  /// **'Vælg de apps du bruger til parkering'**
+  /// In en, this message translates to:
+  /// **'Choose the apps you use for parking'**
   String get parkingAppsDesc;
 
   /// No description provided for @parkingAppsBody.
   ///
-  /// In da, this message translates to:
-  /// **'Markér de apps du bruger til at betale for parkering, fx EasyPark eller Q-Park.'**
+  /// In en, this message translates to:
+  /// **'Select the apps you use to pay for parking, e.g. EasyPark or Q-Park.'**
   String get parkingAppsBody;
 
   /// No description provided for @parkingAppsSearch.
   ///
-  /// In da, this message translates to:
-  /// **'Søg apps'**
+  /// In en, this message translates to:
+  /// **'Search apps'**
   String get parkingAppsSearch;
 
   /// No description provided for @parkingAppsKnown.
   ///
-  /// In da, this message translates to:
-  /// **'Parkeringsapps'**
+  /// In en, this message translates to:
+  /// **'Parking apps'**
   String get parkingAppsKnown;
 
   /// No description provided for @parkingAppsOther.
   ///
-  /// In da, this message translates to:
-  /// **'Andre apps'**
+  /// In en, this message translates to:
+  /// **'Other apps'**
   String get parkingAppsOther;
 
   /// No description provided for @parkingAppsNone.
   ///
-  /// In da, this message translates to:
-  /// **'Ingen apps fundet.'**
+  /// In en, this message translates to:
+  /// **'No apps found.'**
   String get parkingAppsNone;
 
   /// No description provided for @batteryCardTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Anbefalet: undtag fra batterioptimering'**
+  /// In en, this message translates to:
+  /// **'Recommended: exempt from battery optimization'**
   String get batteryCardTitle;
 
   /// No description provided for @batteryCardBody.
   ///
-  /// In da, this message translates to:
-  /// **'Valgfrit. Uden dette kan Android (især Samsung) stoppe bevægelsesovervågningen i baggrunden, så parkering uden Bluetooth ikke altid opdages.'**
+  /// In en, this message translates to:
+  /// **'Optional. Without this, Android (especially Samsung) may stop background motion monitoring, so parking without Bluetooth isn\'t always detected.'**
   String get batteryCardBody;
 
   /// No description provided for @batteryCardButton.
   ///
-  /// In da, this message translates to:
-  /// **'Tillad ubegrænset baggrund'**
+  /// In en, this message translates to:
+  /// **'Allow unrestricted background'**
   String get batteryCardButton;
 
   /// No description provided for @motionFetching.
   ///
-  /// In da, this message translates to:
-  /// **'Motion: henter status…'**
+  /// In en, this message translates to:
+  /// **'Motion: fetching status…'**
   String get motionFetching;
 
   /// No description provided for @motionUnavailable.
   ///
-  /// In da, this message translates to:
-  /// **'Motion: status utilgængelig'**
+  /// In en, this message translates to:
+  /// **'Motion: status unavailable'**
   String get motionUnavailable;
 
   /// No description provided for @motionNoPermission.
   ///
-  /// In da, this message translates to:
-  /// **'Motion: ingen tilladelse til fysisk aktivitet'**
+  /// In en, this message translates to:
+  /// **'Motion: no physical activity permission'**
   String get motionNoPermission;
 
   /// No description provided for @motionError.
   ///
-  /// In da, this message translates to:
-  /// **'Motion-fejl: {error}'**
+  /// In en, this message translates to:
+  /// **'Motion error: {error}'**
   String motionError(String error);
 
   /// No description provided for @motionRegistering.
   ///
-  /// In da, this message translates to:
-  /// **'Motion: registrerer…'**
+  /// In en, this message translates to:
+  /// **'Motion: registering…'**
   String get motionRegistering;
 
   /// No description provided for @motionActive.
   ///
-  /// In da, this message translates to:
-  /// **'Motion aktiv'**
+  /// In en, this message translates to:
+  /// **'Motion active'**
   String get motionActive;
 
   /// No description provided for @motionDormant.
   ///
-  /// In da, this message translates to:
-  /// **'Motion i dvale'**
+  /// In en, this message translates to:
+  /// **'Motion dormant'**
   String get motionDormant;
 
   /// No description provided for @motionWaitingData.
   ///
-  /// In da, this message translates to:
-  /// **'afventer data'**
+  /// In en, this message translates to:
+  /// **'waiting for data'**
   String get motionWaitingData;
 
   /// No description provided for @motionVehicleTimer.
   ///
-  /// In da, this message translates to:
-  /// **'bil-timer kører'**
+  /// In en, this message translates to:
+  /// **'vehicle timer running'**
   String get motionVehicleTimer;
 
   /// No description provided for @motionWakesOnMovement.
   ///
-  /// In da, this message translates to:
-  /// **'vågner ved bevægelse'**
+  /// In en, this message translates to:
+  /// **'wakes on movement'**
   String get motionWakesOnMovement;
 
   /// No description provided for @activityInVehicle.
   ///
-  /// In da, this message translates to:
-  /// **'I bil'**
+  /// In en, this message translates to:
+  /// **'In vehicle'**
   String get activityInVehicle;
 
   /// No description provided for @activityOnBicycle.
   ///
-  /// In da, this message translates to:
-  /// **'På cykel'**
+  /// In en, this message translates to:
+  /// **'On bicycle'**
   String get activityOnBicycle;
 
   /// No description provided for @activityOnFoot.
   ///
-  /// In da, this message translates to:
-  /// **'Til fods'**
+  /// In en, this message translates to:
+  /// **'On foot'**
   String get activityOnFoot;
 
   /// No description provided for @activityStill.
   ///
-  /// In da, this message translates to:
-  /// **'Stille'**
+  /// In en, this message translates to:
+  /// **'Still'**
   String get activityStill;
 
   /// No description provided for @activityTilting.
   ///
-  /// In da, this message translates to:
-  /// **'Vipper'**
+  /// In en, this message translates to:
+  /// **'Tilting'**
   String get activityTilting;
 
   /// No description provided for @activityWalking.
   ///
-  /// In da, this message translates to:
-  /// **'Går'**
+  /// In en, this message translates to:
+  /// **'Walking'**
   String get activityWalking;
 
   /// No description provided for @activityRunning.
   ///
-  /// In da, this message translates to:
-  /// **'Løber'**
+  /// In en, this message translates to:
+  /// **'Running'**
   String get activityRunning;
 
   /// No description provided for @activityUnknown.
   ///
-  /// In da, this message translates to:
-  /// **'Ukendt'**
+  /// In en, this message translates to:
+  /// **'Unknown'**
   String get activityUnknown;
 
   /// No description provided for @ignoredLocationsTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Ignorerede placeringer'**
+  /// In en, this message translates to:
+  /// **'Ignored locations'**
   String get ignoredLocationsTitle;
 
   /// No description provided for @ignoredLocationsRadiusInfo.
   ///
-  /// In da, this message translates to:
-  /// **'Alarmer vises ikke inden for {meters} meter fra disse steder.'**
+  /// In en, this message translates to:
+  /// **'Alarms are not shown within {meters} metres of these places.'**
   String ignoredLocationsRadiusInfo(int meters);
 
   /// No description provided for @addCurrentLocation.
   ///
-  /// In da, this message translates to:
-  /// **'Tilføj nuværende placering'**
+  /// In en, this message translates to:
+  /// **'Add current location'**
   String get addCurrentLocation;
 
   /// No description provided for @sortBy.
   ///
-  /// In da, this message translates to:
-  /// **'Sortér efter'**
+  /// In en, this message translates to:
+  /// **'Sort by'**
   String get sortBy;
 
   /// No description provided for @sortTime.
   ///
-  /// In da, this message translates to:
-  /// **'Tidspunkt'**
+  /// In en, this message translates to:
+  /// **'Time'**
   String get sortTime;
 
   /// No description provided for @sortName.
   ///
-  /// In da, this message translates to:
-  /// **'Navn'**
+  /// In en, this message translates to:
+  /// **'Name'**
   String get sortName;
 
   /// No description provided for @sortDistance.
   ///
-  /// In da, this message translates to:
-  /// **'Afstand'**
+  /// In en, this message translates to:
+  /// **'Distance'**
   String get sortDistance;
 
   /// No description provided for @noIgnoredLocations.
   ///
-  /// In da, this message translates to:
-  /// **'Ingen ignorerede placeringer'**
+  /// In en, this message translates to:
+  /// **'No ignored locations'**
   String get noIgnoredLocations;
 
   /// No description provided for @noIgnoredLocationsBody.
   ///
-  /// In da, this message translates to:
-  /// **'Du kan tilføje en placering fra en påmindelse.'**
+  /// In en, this message translates to:
+  /// **'You can add a location from a reminder.'**
   String get noIgnoredLocationsBody;
 
   /// No description provided for @ignoredLocationDefault.
   ///
-  /// In da, this message translates to:
-  /// **'Ignoreret placering'**
+  /// In en, this message translates to:
+  /// **'Ignored location'**
   String get ignoredLocationDefault;
 
   /// No description provided for @addedAt.
   ///
-  /// In da, this message translates to:
-  /// **'Tilføjet {time}'**
+  /// In en, this message translates to:
+  /// **'Added {time}'**
   String addedAt(String time);
 
   /// No description provided for @tapToOpenMap.
   ///
-  /// In da, this message translates to:
-  /// **'Tryk for at åbne i kort'**
+  /// In en, this message translates to:
+  /// **'Tap to open in map'**
   String get tapToOpenMap;
 
   /// No description provided for @deleteAll.
   ///
-  /// In da, this message translates to:
-  /// **'Slet alle'**
+  /// In en, this message translates to:
+  /// **'Delete all'**
   String get deleteAll;
 
   /// No description provided for @backToOverview.
   ///
-  /// In da, this message translates to:
-  /// **'Tilbage til oversigt'**
+  /// In en, this message translates to:
+  /// **'Back to overview'**
   String get backToOverview;
 
   /// No description provided for @finishSetup.
   ///
-  /// In da, this message translates to:
-  /// **'Færdig'**
+  /// In en, this message translates to:
+  /// **'Done'**
   String get finishSetup;
 
   /// No description provided for @locationFetchError.
   ///
-  /// In da, this message translates to:
-  /// **'Kunne ikke hente placering.'**
+  /// In en, this message translates to:
+  /// **'Could not get location.'**
   String get locationFetchError;
 
   /// No description provided for @locationAdded.
   ///
-  /// In da, this message translates to:
-  /// **'Placering tilføjet.'**
+  /// In en, this message translates to:
+  /// **'Location added.'**
   String get locationAdded;
 
   /// No description provided for @reminderTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Husk at betale for parkering!'**
+  /// In en, this message translates to:
+  /// **'Remember to pay for parking!'**
   String get reminderTitle;
 
   /// No description provided for @reminderBody.
   ///
-  /// In da, this message translates to:
-  /// **'Vi har registreret at du har forladt din bil. Husk at betale for parkering!'**
+  /// In en, this message translates to:
+  /// **'We detected that you left your car. Remember to pay for parking!'**
   String get reminderBody;
 
   /// No description provided for @coordinates.
   ///
-  /// In da, this message translates to:
-  /// **'Koordinater'**
+  /// In en, this message translates to:
+  /// **'Coordinates'**
   String get coordinates;
 
   /// No description provided for @registeredLabel.
   ///
-  /// In da, this message translates to:
-  /// **'Registreret'**
+  /// In en, this message translates to:
+  /// **'Registered'**
   String get registeredLabel;
 
   /// No description provided for @ignoreThisLocation.
   ///
-  /// In da, this message translates to:
-  /// **'Ignorer altid denne placering'**
+  /// In en, this message translates to:
+  /// **'Always ignore this location'**
   String get ignoreThisLocation;
 
   /// No description provided for @timerCheckbox.
   ///
-  /// In da, this message translates to:
-  /// **'Påmind mig om at gå tilbage i tide'**
+  /// In en, this message translates to:
+  /// **'Remind me to walk back in time'**
   String get timerCheckbox;
 
   /// No description provided for @timerHelp.
   ///
-  /// In da, this message translates to:
-  /// **'Angiv hvor længe du må parkere her'**
+  /// In en, this message translates to:
+  /// **'Set how long you may park here'**
   String get timerHelp;
 
   /// No description provided for @pickTime.
   ///
-  /// In da, this message translates to:
-  /// **'Vælg tid'**
+  /// In en, this message translates to:
+  /// **'Pick time'**
   String get pickTime;
 
   /// No description provided for @expiresAt.
   ///
-  /// In da, this message translates to:
-  /// **'Udløber kl. {time}'**
+  /// In en, this message translates to:
+  /// **'Expires at {time}'**
   String expiresAt(String time);
 
   /// No description provided for @pickExpiryTime.
   ///
-  /// In da, this message translates to:
-  /// **'Vælg udløbstidspunkt'**
+  /// In en, this message translates to:
+  /// **'Choose expiry time'**
   String get pickExpiryTime;
 
   /// No description provided for @timerConfirmBody.
   ///
-  /// In da, this message translates to:
-  /// **'Du får besked i god tid til at gå tilbage til bilen.'**
+  /// In en, this message translates to:
+  /// **'You\'ll be notified in good time to walk back to the car.'**
   String get timerConfirmBody;
 
   /// No description provided for @close.
   ///
-  /// In da, this message translates to:
-  /// **'Luk'**
+  /// In en, this message translates to:
+  /// **'Close'**
   String get close;
 
   /// No description provided for @ignoreHint.
   ///
-  /// In da, this message translates to:
-  /// **'Tryk \"Ignorer altid\" for steder som hjemme eller arbejde, hvor du sjældent skal betale for parkering. Alarmen vises ikke igen inden for {meters} meter herfra. Med tiden vil du opleve færre unødvendige alarmer.'**
+  /// In en, this message translates to:
+  /// **'Tap \"Always ignore\" for places like home or work, where you rarely need to pay for parking. The alarm won\'t show again within {meters} metres of here. Over time you\'ll experience fewer unnecessary alarms.'**
   String ignoreHint(int meters);
 
   /// No description provided for @durationMinutes.
   ///
-  /// In da, this message translates to:
+  /// In en, this message translates to:
   /// **'{minutes} min'**
   String durationMinutes(int minutes);
 
   /// No description provided for @durationHours.
   ///
-  /// In da, this message translates to:
-  /// **'{hours} t'**
+  /// In en, this message translates to:
+  /// **'{hours} h'**
   String durationHours(int hours);
 
   /// No description provided for @durationHoursMinutes.
   ///
-  /// In da, this message translates to:
-  /// **'{hours} t {minutes} min'**
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes} min'**
   String durationHoursMinutes(int hours, int minutes);
 
   /// No description provided for @notifParkingTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Husk at betale for parkering!'**
+  /// In en, this message translates to:
+  /// **'Remember to pay for parking!'**
   String get notifParkingTitle;
 
   /// No description provided for @notifParkingBody.
   ///
-  /// In da, this message translates to:
-  /// **'Vi registrerede at du har forladt din bil.'**
+  /// In en, this message translates to:
+  /// **'We detected that you left your car.'**
   String get notifParkingBody;
 
   /// No description provided for @notifWalkBackTitle.
   ///
-  /// In da, this message translates to:
-  /// **'Skynd dig tilbage til bilen!'**
+  /// In en, this message translates to:
+  /// **'Hurry back to the car!'**
   String get notifWalkBackTitle;
 
   /// No description provided for @notifWalkBackBody.
   ///
-  /// In da, this message translates to:
-  /// **'Du skal gå nu — gangtid ca. {minutes} min og parkering udløber snart.'**
+  /// In en, this message translates to:
+  /// **'You should walk now — walking time approx. {minutes} min and parking expires soon.'**
   String notifWalkBackBody(int minutes);
 
   /// No description provided for @ttsRemember.
   ///
-  /// In da, this message translates to:
-  /// **'Husk parkering eller slå alarm for dette sted fra'**
+  /// In en, this message translates to:
+  /// **'Remember parking, or turn off the alarm for this place'**
   String get ttsRemember;
 
   /// No description provided for @monitoringTitle.
   ///
-  /// In da, this message translates to:
+  /// In en, this message translates to:
   /// **'Parkingson'**
   String get monitoringTitle;
 
   /// No description provided for @monitoringBody.
   ///
-  /// In da, this message translates to:
-  /// **'Overvåger din bil...'**
+  /// In en, this message translates to:
+  /// **'Monitoring your car...'**
   String get monitoringBody;
 }
 

@@ -208,6 +208,16 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      // Match the device language when we support it; otherwise fall back to
+      // English (not the alphabetically-first locale, which would be Danish).
+      localeResolutionCallback: (deviceLocale, supported) {
+        if (deviceLocale != null) {
+          for (final l in supported) {
+            if (l.languageCode == deviceLocale.languageCode) return l;
+          }
+        }
+        return const Locale('en');
+      },
       home: Builder(builder: (context) => _buildScreen(context)),
     );
   }
