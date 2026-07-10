@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-const removeAdsProductId = 'remove_ads';
+// Must match the in-app product ID created in Google Play Console.
+const removeAdsProductId = 'fjern_reklamer';
 
 class BillingRepository {
   final _iap = InAppPurchase.instance;
