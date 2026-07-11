@@ -31,11 +31,10 @@ const _ignoreKeywords = [
   'ohita', 'sivuuta', // fi
   'hunsa', 'sleppa', // is
   'hoppa över', 'hopp over', // sv/nb
-  // Natural phrases that mirror the on-screen "ignore" button, so the button
-  // teaches a spoken command that actually works. Phrases (not lone words) to
-  // avoid false positives.
-  'stop alarmer her', 'stop alarm her', 'ingen alarm', // da
-  'stop alarms here', 'stop alarm here', 'no alarm here', // en
+  // Natural phrases that mirror the on-screen "ignore" button. Short stems, so
+  // "stop alarm" also catches "stop alarmer", "stop alarmer her", "stop alarms
+  // here", etc. Phrases (not lone words like "stop") to avoid false positives.
+  'stop alarm', 'ingen alarm', 'no alarm',
 ];
 
 // Number words (single tokens) across the nine languages. The recognizer
@@ -165,7 +164,13 @@ VoiceCommand classifyBestOf(List<String> candidates) {
 }
 
 VoiceCommand classifyVoiceCommand(String rawText) {
-  final text = rawText.toLowerCase().trim();
+  // Lower-case and strip punctuation so substring matching is robust to what
+  // the recognizer returns ("Stop alarmer, her!" -> "stop alarmer her").
+  final text = rawText
+      .toLowerCase()
+      .replaceAll(RegExp(r'[.,;:!?"()\-]'), ' ')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
   if (text.isEmpty) return const VoiceCommand.none();
 
   // Ignore takes priority — it's a discrete, unambiguous action.
