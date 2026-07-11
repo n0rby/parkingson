@@ -453,6 +453,33 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String spokenMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutter',
+      one: '1 minut',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String spokenHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count timer',
+      one: '1 time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String spokenHoursAndMinutes(String hours, String minutes) {
+    return '$hours og $minutes';
+  }
+
+  @override
   String get notifParkingTitle => 'Husk at betale for parkering!';
 
   @override

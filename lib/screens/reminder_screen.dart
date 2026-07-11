@@ -216,11 +216,15 @@ class _ReminderScreenState extends State<ReminderScreen> {
     } catch (_) {}
   }
 
+  // Spelled-out form for the spoken + on-screen confirmation ("5 minutter", not
+  // "5 min") so it reads naturally aloud. The compact "min" form stays on the
+  // timer-selector chips.
   String _formatDuration(Duration d, AppLocalizations l10n) {
-    if (d.inMinutes < 60) return l10n.durationMinutes(d.inMinutes);
+    if (d.inMinutes < 60) return l10n.spokenMinutes(d.inMinutes);
     final h = d.inHours;
     final m = d.inMinutes.remainder(60);
-    return m == 0 ? l10n.durationHours(h) : l10n.durationHoursMinutes(h, m);
+    if (m == 0) return l10n.spokenHours(h);
+    return l10n.spokenHoursAndMinutes(l10n.spokenHours(h), l10n.spokenMinutes(m));
   }
 
   @override

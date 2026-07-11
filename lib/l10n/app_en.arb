@@ -156,6 +156,12 @@
   "@durationHours": { "placeholders": { "hours": { "type": "int" } } },
   "durationHoursMinutes": "{hours} h {minutes} min",
   "@durationHoursMinutes": { "placeholders": { "hours": { "type": "int" }, "minutes": { "type": "int" } } },
+  "spokenMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
+  "@spokenMinutes": { "placeholders": { "count": { "type": "int" } } },
+  "spokenHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@spokenHours": { "placeholders": { "count": { "type": "int" } } },
+  "spokenHoursAndMinutes": "{hours} and {minutes}",
+  "@spokenHoursAndMinutes": { "placeholders": { "hours": { "type": "String" }, "minutes": { "type": "String" } } },
 
   "notifParkingTitle": "Remember to pay for parking!",
   "notifParkingBody": "We detected that you left your car.",

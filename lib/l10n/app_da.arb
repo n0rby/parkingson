@@ -156,6 +156,9 @@
   "@durationHours": { "placeholders": { "hours": { "type": "int" } } },
   "durationHoursMinutes": "{hours} t {minutes} min",
   "@durationHoursMinutes": { "placeholders": { "hours": { "type": "int" }, "minutes": { "type": "int" } } },
+  "spokenMinutes": "{count, plural, =1{1 minut} other{{count} minutter}}",
+  "spokenHours": "{count, plural, =1{1 time} other{{count} timer}}",
+  "spokenHoursAndMinutes": "{hours} og {minutes}",
 
   "notifParkingTitle": "Husk at betale for parkering!",
   "notifParkingBody": "Vi registrerede at du har forladt din bil.",

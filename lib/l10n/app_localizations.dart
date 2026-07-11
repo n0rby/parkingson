@@ -916,6 +916,24 @@ abstract class AppLocalizations {
   /// **'{hours} h {minutes} min'**
   String durationHoursMinutes(int hours, int minutes);
 
+  /// No description provided for @spokenMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute} other{{count} minutes}}'**
+  String spokenMinutes(int count);
+
+  /// No description provided for @spokenHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String spokenHours(int count);
+
+  /// No description provided for @spokenHoursAndMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} and {minutes}'**
+  String spokenHoursAndMinutes(String hours, String minutes);
+
   /// No description provided for @notifParkingTitle.
   ///
   /// In en, this message translates to:
