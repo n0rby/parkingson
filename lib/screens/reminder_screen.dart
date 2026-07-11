@@ -44,8 +44,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
   String _heardText = '';
   Duration? _setDuration;
   bool _capturing = false;
-  // Auto-closes the voice UI 15 s after listening starts if no command lands.
-  Timer? _autoHide;
+  // If the user doesn't react (speak or tap a button) within this window, the
+  // reminder stops listening and closes itself.
+  static const _noResponseTimeout = Duration(seconds: 20);
+  Timer? _idleTimeout;
 
   // Forces the timer selector to reload after a voice-set timer so its UI
   // reflects the spoken duration.
@@ -60,9 +62,35 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   @override
   void dispose() {
-    _autoHide?.cancel();
+    _idleTimeout?.cancel();
     _tts.stop();
     super.dispose();
+  }
+
+  /// (Re)starts the no-response countdown. Called whenever the user does
+  /// something (speaks a command, taps anywhere). The countdown also runs
+  /// through the announce + listen phase, so a recognizer that never returns
+  /// is torn down instead of listening forever.
+  void _bumpIdleTimeout() {
+    _idleTimeout?.cancel();
+    _idleTimeout = Timer(_noResponseTimeout, _autoDismiss);
+  }
+
+  /// No reaction in time: stop the spoken reminder, stop listening, stop any
+  /// lingering alarm sound/vibration, and close the reminder.
+  Future<void> _autoDismiss() async {
+    _idleTimeout?.cancel();
+    const channel = MethodChannel('dk.parkingson/alarm');
+    try {
+      await _tts.stop();
+    } catch (_) {}
+    try {
+      await channel.invokeMethod('cancelVoiceCapture');
+    } catch (_) {}
+    try {
+      await channel.invokeMethod('stopAlarm');
+    } catch (_) {}
+    if (mounted) widget.onDismiss();
   }
 
   // Sequence: stop the alarm → speak the reminder to completion → then listen
@@ -70,7 +98,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Future<void> _startVoice() async {
     if (_capturing) return;
     _capturing = true;
-    _autoHide?.cancel();
+    _bumpIdleTimeout();
     const channel = MethodChannel('dk.parkingson/alarm');
 
     // Stop the alarm (siren + the scheduled spoken reminder + vibration) so the
@@ -101,11 +129,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
       return;
     }
 
-    // 2) Then listen. Auto-close the panel after 15 s if no command lands.
+    // 2) Then listen. The no-response countdown from _bumpIdleTimeout keeps
+    // running, so if nothing is recognised the screen closes on its own.
     setState(() => _voiceState = _VoiceState.listening);
-    _autoHide = Timer(const Duration(seconds: 15), () {
-      if (mounted) setState(() => _voiceState = _VoiceState.idle);
-    });
 
     final locale = Localizations.localeOf(context).toLanguageTag();
     final candidates = await _voice.capture(locale: locale);
@@ -131,15 +157,16 @@ class _ReminderScreenState extends State<ReminderScreen> {
     final command = classifyBestOf(candidates);
     switch (command.type) {
       case VoiceCommandType.ignoreLocation:
-        _autoHide?.cancel();
+        _idleTimeout?.cancel(); // navigating away
         _speak(AppLocalizations.of(context).voiceIgnoreConfirm);
         widget.onAddIgnoredLocation();
         break;
       case VoiceCommandType.setDuration:
-        _autoHide?.cancel();
+        _bumpIdleTimeout(); // stays on screen → close on its own if left alone
         _applyDuration(command.duration!);
         break;
       case VoiceCommandType.none:
+        _bumpIdleTimeout();
         setState(() {
           _heardText = candidates.isEmpty ? '' : candidates.first;
           // Nothing heard (cancelled) → back to idle; heard-but-unmatched →
@@ -189,7 +216,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return ScreenScaffold(
+    // Any tap anywhere counts as "the user reacted" and restarts the countdown.
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: (_) => _bumpIdleTimeout(),
+      child: ScreenScaffold(
       title: l10n.reminderTitle,
       children: [
         Text(
@@ -238,6 +269,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
           style: const TextStyle(color: hpMuted, fontSize: 13, height: 1.5),
         ),
       ],
+      ),
     );
   }
 }

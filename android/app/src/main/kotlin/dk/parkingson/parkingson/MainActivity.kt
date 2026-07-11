@@ -98,6 +98,14 @@ class MainActivity : FlutterActivity() {
                         pendingVoiceResult = result
                         launchVoiceCapture(call.argument<String>("locale"))
                     }
+                    "cancelVoiceCapture" -> {
+                        // Tear down the system recognizer if it's still up (e.g.
+                        // the reminder's no-response timeout fired).
+                        try {
+                            finishActivity(voiceCaptureRequest)
+                        } catch (_: Exception) {}
+                        result.success(null)
+                    }
                     "isDeviceLocked" -> {
                         val km = getSystemService(KeyguardManager::class.java)
                         result.success(km?.isKeyguardLocked == true)
