@@ -409,14 +409,6 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
               _screen = _Screen.home;
             });
           },
-          onNavigateToCar: () {
-            _stopAlarmVibration();
-            _locationService.navigateTo(
-              _reminderLocation!.latitude,
-              _reminderLocation!.longitude,
-            );
-            setState(() => _screen = _Screen.home);
-          },
           onDismiss: () {
             _stopAlarmVibration();
             setState(() => _screen = _Screen.home);

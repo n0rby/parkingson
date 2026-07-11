@@ -12,7 +12,6 @@ import '../services/voice_command_service.dart';
 import '../theme.dart';
 import '../widgets/parking_app_buttons.dart';
 import '../widgets/parking_timer_selector.dart';
-import '../widgets/primary_button.dart';
 import '../widgets/screen_scaffold.dart';
 
 enum _VoiceState { idle, listening, timerSet, notUnderstood }
@@ -20,14 +19,12 @@ enum _VoiceState { idle, listening, timerSet, notUnderstood }
 class ReminderScreen extends StatefulWidget {
   final LocationSnapshot parkingLocation;
   final VoidCallback onAddIgnoredLocation;
-  final VoidCallback onNavigateToCar;
   final VoidCallback onDismiss;
 
   const ReminderScreen({
     super.key,
     required this.parkingLocation,
     required this.onAddIgnoredLocation,
-    required this.onNavigateToCar,
     required this.onDismiss,
   });
 
@@ -252,8 +249,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
         const SizedBox(height: 16),
         const ParkingAppButtons(),
         const SizedBox(height: 24),
-        PrimaryButton(label: l10n.findCar, onPressed: widget.onNavigateToCar),
-        const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(
