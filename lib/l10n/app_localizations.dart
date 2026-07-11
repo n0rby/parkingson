@@ -337,7 +337,7 @@ abstract class AppLocalizations {
   /// No description provided for @voicePrompt.
   ///
   /// In en, this message translates to:
-  /// **'Say e.g. \"30 minutes\" or \"Stop alarms here\"'**
+  /// **'Say e.g. \"30 minutes\" or \"No alarm here\"'**
   String get voicePrompt;
 
   /// No description provided for @voiceTimerSet.
@@ -847,7 +847,7 @@ abstract class AppLocalizations {
   /// No description provided for @ignoreThisLocation.
   ///
   /// In en, this message translates to:
-  /// **'Stop alarms here'**
+  /// **'No alarm here'**
   String get ignoreThisLocation;
 
   /// No description provided for @timerCheckbox.

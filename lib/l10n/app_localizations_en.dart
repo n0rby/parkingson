@@ -126,7 +126,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voiceListening => 'Listening…';
 
   @override
-  String get voicePrompt => 'Say e.g. \"30 minutes\" or \"Stop alarms here\"';
+  String get voicePrompt => 'Say e.g. \"30 minutes\" or \"No alarm here\"';
 
   @override
   String voiceTimerSet(String time) {
@@ -404,7 +404,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registeredLabel => 'Registered';
 
   @override
-  String get ignoreThisLocation => 'Stop alarms here';
+  String get ignoreThisLocation => 'No alarm here';
 
   @override
   String get timerCheckbox => 'Remind me to walk back in time';

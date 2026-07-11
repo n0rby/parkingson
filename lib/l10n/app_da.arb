@@ -41,7 +41,7 @@
   "permMicrophoneDesc": "Til stemmekommandoer på alarmen",
 
   "voiceListening": "Lytter…",
-  "voicePrompt": "Sig fx \"30 minutter\" eller \"Stop alarmer her\"",
+  "voicePrompt": "Sig fx \"30 minutter\" eller \"Ingen alarm her\"",
   "voiceTimerSet": "Parkeringstid sat til {time}",
   "@voiceTimerSet": { "placeholders": { "time": { "type": "String" } } },
   "voiceNotUnderstood": "Forstod ikke — prøv igen",
@@ -139,7 +139,7 @@
   "reminderBody": "Vi har registreret at du har forladt din bil. Husk at betale for parkering!",
   "coordinates": "Koordinater",
   "registeredLabel": "Registreret",
-  "ignoreThisLocation": "Stop alarmer her",
+  "ignoreThisLocation": "Ingen alarm her",
   "timerCheckbox": "Påmind mig om at gå tilbage i tide",
   "timerHelp": "Angiv hvor længe du må parkere her",
   "pickTime": "Vælg tid",

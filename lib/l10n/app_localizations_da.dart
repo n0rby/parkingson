@@ -128,7 +128,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get voiceListening => 'Lytter…';
 
   @override
-  String get voicePrompt => 'Sig fx \"30 minutter\" eller \"Stop alarmer her\"';
+  String get voicePrompt => 'Sig fx \"30 minutter\" eller \"Ingen alarm her\"';
 
   @override
   String voiceTimerSet(String time) {
@@ -405,7 +405,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get registeredLabel => 'Registreret';
 
   @override
-  String get ignoreThisLocation => 'Stop alarmer her';
+  String get ignoreThisLocation => 'Ingen alarm her';
 
   @override
   String get timerCheckbox => 'Påmind mig om at gå tilbage i tide';
