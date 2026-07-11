@@ -45,7 +45,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
   bool _sirenPlayed = false;
   // If the user doesn't react (speak or tap a button) within this window, the
   // reminder stops listening and closes itself. Just this one timer.
-  static const _noResponseTimeout = Duration(seconds: 15);
+  // TODO: pause this while a confirmation is being spoken instead of relying on
+  // the window being long enough.
+  static const _noResponseTimeout = Duration(seconds: 20);
   Timer? _idleTimeout;
 
   // Forces the timer selector to reload after a voice-set timer so its UI
@@ -154,7 +156,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
     final candidates = await _voice.capture(locale: locale);
     _capturing = false;
     if (!mounted) return;
-    _handle(candidates);
+    await _handle(candidates);
   }
 
   /// Speaks the parking reminder and returns only once it has finished, so it
@@ -170,17 +172,22 @@ class _ReminderScreenState extends State<ReminderScreen> {
     } catch (_) {}
   }
 
-  void _handle(List<String> candidates) {
+  // Pauses the no-response timer while a confirmation is spoken so it can't cut
+  // the announcement off, then restarts the full window afterwards (or lets the
+  // screen navigate away).
+  Future<void> _handle(List<String> candidates) async {
     final command = classifyBestOf(candidates);
     switch (command.type) {
       case VoiceCommandType.ignoreLocation:
-        _idleTimeout?.cancel(); // navigating away
-        _speak(AppLocalizations.of(context).voiceIgnoreConfirm);
+        _idleTimeout?.cancel(); // paused; we navigate away after confirming
+        await _speak(AppLocalizations.of(context).voiceIgnoreConfirm);
+        if (!mounted) return;
         widget.onAddIgnoredLocation();
         break;
       case VoiceCommandType.setDuration:
-        _bumpIdleTimeout(); // stays on screen → close on its own if left alone
-        _applyDuration(command.duration!);
+        _idleTimeout?.cancel(); // paused while confirming
+        await _applyDuration(command.duration!);
+        if (mounted) _bumpIdleTimeout(); // full window starts after the confirmation
         break;
       case VoiceCommandType.none:
         _bumpIdleTimeout();
@@ -203,19 +210,23 @@ class _ReminderScreenState extends State<ReminderScreen> {
     ));
     if (!mounted) return;
     final l10n = AppLocalizations.of(context);
-    _speak(l10n.voiceTimerSet(_formatDuration(d, l10n)));
     setState(() {
       _setDuration = d;
       _voiceState = _VoiceState.timerSet;
       _timerLoadExisting = true;
       _timerKey++; // rebuild the selector so it reloads the active timer
     });
+    // Awaited so the no-response timer stays paused until the confirmation ends.
+    await _speak(l10n.voiceTimerSet(_formatDuration(d, l10n)));
   }
 
+  /// Speaks a confirmation and returns only once it has finished, so the
+  /// no-response timer can stay paused for exactly as long as we're talking.
   Future<void> _speak(String text) async {
     try {
       final tag = Localizations.localeOf(context).toLanguageTag();
       await _tts.setLanguage(tag);
+      await _tts.awaitSpeakCompletion(true);
     } catch (_) {}
     try {
       await _tts.stop();
