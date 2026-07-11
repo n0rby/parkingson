@@ -173,6 +173,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get testReminderDesc => 'See notification, siren and voice';
 
   @override
+  String get otherTitle => 'Other';
+
+  @override
+  String get otherDesc => 'Fallback detection and advanced settings';
+
+  @override
+  String get settingOff => 'Off';
+
+  @override
+  String get motionFallbackTitle => 'Fallback timer (no walking detected)';
+
+  @override
+  String get motionFallbackDesc =>
+      'Without Bluetooth/USB, the app detects parking from motion. If you drive and stop but it never detects you walking, it fires the alarm after this delay. Longer = fewer false alarms in traffic, but slower. Off uses walking only.';
+
+  @override
   String get manageCars => 'Manage cars';
 
   @override

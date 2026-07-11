@@ -54,22 +54,39 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
             // the confidence check (never a hard gate — AR is too flaky for that).
             context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
                 .edit().putString("flutter.last_in_vehicle_at", now.toString()).apply()
+            // Track the last time we saw the vehicle, so the fallback below can
+            // tell when we've clearly left it. A brief stop (red light) keeps
+            // refreshing this, so it never trips mid-drive.
+            val edit = prefs.edit().putLong(KEY_LAST_IN_VEHICLE_AT, now)
             if (prefs.getLong(KEY_IN_VEHICLE_STARTED_AT, 0L) == 0L) {
-                prefs.edit().putLong(KEY_IN_VEHICLE_STARTED_AT, now).apply()
+                edit.putLong(KEY_IN_VEHICLE_STARTED_AT, now)
             }
+            edit.apply()
             return
         }
 
-        if (!isOnFoot(activityType)) return
-
+        // Any non-vehicle activity. We conclude "parked" either the fast way
+        // (clearly on foot now) or via the fallback (drove, then haven't seen the
+        // vehicle for a sustained window — catches STILL/UNKNOWN that never turn
+        // into ON_FOOT).
         val vehicleStartedAt = prefs.getLong(KEY_IN_VEHICLE_STARTED_AT, 0L)
+        if (vehicleStartedAt == 0L) return // never drove → nothing to conclude
+
         val lastReminderAt = prefs.getLong(KEY_LAST_REMINDER_AT, 0L)
-        val wasInVehicleLongEnough = vehicleStartedAt > 0L && now - vehicleStartedAt >= MIN_VEHICLE_DURATION_MS
+        val wasInVehicleLongEnough = now - vehicleStartedAt >= MIN_VEHICLE_DURATION_MS
         val isPastCooldown = now - lastReminderAt >= MOTION_COOLDOWN_MS
         if (!wasInVehicleLongEnough || !isPastCooldown) return
 
+        val fallbackMs = fallbackThresholdMs(context)
+        val lastInVehicleAt = prefs.getLong(KEY_LAST_IN_VEHICLE_AT, vehicleStartedAt)
+        val leftVehicleLongEnough =
+            fallbackMs > 0L && now - lastInVehicleAt >= fallbackMs
+
+        if (!isOnFoot(activityType) && !leftVehicleLongEnough) return
+
         prefs.edit()
             .remove(KEY_IN_VEHICLE_STARTED_AT)
+            .remove(KEY_LAST_IN_VEHICLE_AT)
             .putLong(KEY_LAST_REMINDER_AT, now)
             .apply()
 
@@ -78,6 +95,14 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
             .edit()
             .putString("flutter.motion_parking_event", now.toString())
             .apply()
+    }
+
+    /** The user-configured fallback window in ms (from the "Andet" settings). */
+    private fun fallbackThresholdMs(context: Context): Long {
+        val seconds = context
+            .getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            .getLong("flutter.motion_fallback_seconds", MOTION_FALLBACK_DEFAULT_SECONDS)
+        return seconds * 1000L
     }
 
     private fun isOnFoot(type: Int): Boolean {

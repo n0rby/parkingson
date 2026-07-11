@@ -175,6 +175,22 @@ class AppLocalizationsDa extends AppLocalizations {
   String get testReminderDesc => 'Se notifikation, sirene og stemme';
 
   @override
+  String get otherTitle => 'Andet';
+
+  @override
+  String get otherDesc => 'Reserve-detektion og avancerede indstillinger';
+
+  @override
+  String get settingOff => 'Fra';
+
+  @override
+  String get motionFallbackTitle => 'Reserve-timer (uden gang-registrering)';
+
+  @override
+  String get motionFallbackDesc =>
+      'Uden Bluetooth/USB registrerer appen parkering via bevægelse. Kører du og standser, men den aldrig registrerer at du går, udløses alarmen efter denne tid. Længere = færre falske alarmer i trafik, men langsommere. Fra bruger kun gang-registrering.';
+
+  @override
   String get manageCars => 'Administrer biler';
 
   @override

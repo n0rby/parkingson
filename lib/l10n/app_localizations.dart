@@ -412,6 +412,36 @@ abstract class AppLocalizations {
   /// **'See notification, siren and voice'**
   String get testReminderDesc;
 
+  /// No description provided for @otherTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get otherTitle;
+
+  /// No description provided for @otherDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fallback detection and advanced settings'**
+  String get otherDesc;
+
+  /// No description provided for @settingOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get settingOff;
+
+  /// No description provided for @motionFallbackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fallback timer (no walking detected)'**
+  String get motionFallbackTitle;
+
+  /// No description provided for @motionFallbackDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Without Bluetooth/USB, the app detects parking from motion. If you drive and stop but it never detects you walking, it fires the alarm after this delay. Longer = fewer false alarms in traffic, but slower. Off uses walking only.'**
+  String get motionFallbackDesc;
+
   /// No description provided for @manageCars.
   ///
   /// In en, this message translates to:

@@ -11,6 +11,7 @@ class SetupScreen extends StatelessWidget {
   final VoidCallback onTestAlarm;
   final VoidCallback onSound;
   final VoidCallback onParkingApps;
+  final VoidCallback onOther;
   final VoidCallback onBack;
 
   const SetupScreen({
@@ -19,6 +20,7 @@ class SetupScreen extends StatelessWidget {
     required this.onTestAlarm,
     required this.onSound,
     required this.onParkingApps,
+    required this.onOther,
     required this.onBack,
   });
 
@@ -51,6 +53,12 @@ class SetupScreen extends StatelessWidget {
           subtitle: l10n.testReminderDesc,
           onTap: onTestAlarm,
           accent: hpOrange,
+        ),
+        ActionRow(
+          title: l10n.otherTitle,
+          subtitle: l10n.otherDesc,
+          onTap: onOther,
+          accent: hpTeal,
         ),
         const SizedBox(height: 16),
         TextButton(onPressed: onBack, child: Text(l10n.backToOverview)),

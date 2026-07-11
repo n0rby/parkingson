@@ -17,6 +17,7 @@ const val ACTION_ACTIVITY_UPDATE = "dk.parkingson.parkingson.ACTIVITY_UPDATE"
 
 const val MOTION_PREFS = "motion_state"
 const val KEY_IN_VEHICLE_STARTED_AT = "in_vehicle_started_at"
+const val KEY_LAST_IN_VEHICLE_AT = "last_in_vehicle_at"
 const val KEY_LAST_REMINDER_AT = "last_reminder_at"
 const val KEY_REGISTERED = "registered"
 const val KEY_LAST_ERROR = "last_error"
@@ -28,6 +29,11 @@ const val MIN_VEHICLE_DURATION_MS = 10_000L
 const val MOTION_COOLDOWN_MS = 10_000L
 const val ACTIVITY_UPDATE_INTERVAL_MS = 15_000L
 const val MIN_ACTIVITY_CONFIDENCE = 35
+
+// Fallback: if a drive ends but Activity Recognition never reports ON_FOOT
+// (it can stay STILL/UNKNOWN), treat "haven't seen the vehicle for this long"
+// as having parked. User-configurable ("Andet" settings); 0 disables it.
+const val MOTION_FALLBACK_DEFAULT_SECONDS = 120L
 
 // Battery-saving dormancy: after being still this long (while parked and with no
 // walk-back timer) we pause the periodic activity sampling. Cheap transition
