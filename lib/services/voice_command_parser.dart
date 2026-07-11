@@ -31,6 +31,11 @@ const _ignoreKeywords = [
   'ohita', 'sivuuta', // fi
   'hunsa', 'sleppa', // is
   'hoppa över', 'hopp over', // sv/nb
+  // Natural phrases that mirror the on-screen "ignore" button, so the button
+  // teaches a spoken command that actually works. Phrases (not lone words) to
+  // avoid false positives.
+  'stop alarmer her', 'stop alarm her', 'ingen alarm', // da
+  'stop alarms here', 'stop alarm here', 'no alarm here', // en
 ];
 
 // Number words (single tokens) across the nine languages. The recognizer

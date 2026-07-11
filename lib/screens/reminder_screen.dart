@@ -315,6 +315,9 @@ class _VoicePanel extends StatelessWidget {
     late final Color color;
     late final String title;
     String? subtitle;
+    // Spoken-command examples, shown while listening and after a miss so the
+    // user learns what to say (idle already shows them as the title).
+    String? examplesLine;
     var tappable = false;
     switch (state) {
       case _VoiceState.idle:
@@ -327,6 +330,7 @@ class _VoicePanel extends StatelessWidget {
         icon = Icons.mic;
         color = hpTeal;
         title = l10n.voiceListening;
+        examplesLine = l10n.voicePrompt;
         break;
       case _VoiceState.timerSet:
         icon = Icons.check_circle;
@@ -338,6 +342,7 @@ class _VoicePanel extends StatelessWidget {
         color = hpOrange;
         title = l10n.voiceNotUnderstood;
         subtitle = heardText.isEmpty ? null : '"$heardText"';
+        examplesLine = l10n.voicePrompt;
         tappable = true;
         break;
     }
@@ -364,6 +369,12 @@ class _VoicePanel extends StatelessWidget {
                 if (subtitle != null) ...[
                   const SizedBox(height: 4),
                   Text(subtitle, style: const TextStyle(color: hpMuted, height: 1.3)),
+                ],
+                if (examplesLine != null) ...[
+                  const SizedBox(height: 4),
+                  Text(examplesLine,
+                      style: const TextStyle(
+                          color: hpMuted, fontSize: 12, height: 1.3)),
                 ],
               ],
             ),
