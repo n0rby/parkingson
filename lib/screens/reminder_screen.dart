@@ -44,9 +44,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
   String _heardText = '';
   Duration? _setDuration;
   bool _capturing = false;
+  // Let the alarm siren play once before the reminder silences it.
+  bool _sirenPlayed = false;
   // If the user doesn't react (speak or tap a button) within this window, the
-  // reminder stops listening and closes itself.
-  static const _noResponseTimeout = Duration(seconds: 20);
+  // reminder stops listening and closes itself. Just this one timer.
+  static const _noResponseTimeout = Duration(seconds: 15);
   Timer? _idleTimeout;
 
   // Forces the timer selector to reload after a voice-set timer so its UI
@@ -101,8 +103,19 @@ class _ReminderScreenState extends State<ReminderScreen> {
     _bumpIdleTimeout();
     const channel = MethodChannel('dk.parkingson/alarm');
 
-    // Stop the alarm (siren + the scheduled spoken reminder + vibration) so the
-    // announcement below isn't captured by the recognizer.
+    // Let the alarm siren actually play before we silence it. When the reminder
+    // opens instantly (device unlocked), stopping it right away kills the siren
+    // before it's even audible — you'd only hear the spoken reminder. Wait once
+    // (~the siren's length, and before the native voice at 3.3 s), then stop it
+    // so the announcement below isn't captured by the recognizer.
+    if (!_sirenPlayed) {
+      _sirenPlayed = true;
+      await Future.delayed(const Duration(milliseconds: 2500));
+      if (!mounted) {
+        _capturing = false;
+        return;
+      }
+    }
     try {
       await channel.invokeMethod('stopAlarm');
     } catch (_) {}
