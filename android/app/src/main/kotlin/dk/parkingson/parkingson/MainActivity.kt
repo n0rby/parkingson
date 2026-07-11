@@ -69,6 +69,10 @@ class MainActivity : FlutterActivity() {
                         AlarmPlayer.stop(this)
                         result.success(null)
                     }
+                    "stopAlarmVoice" -> {
+                        AlarmPlayer.stopVoice(this)
+                        result.success(null)
+                    }
                     "speak" -> {
                         Speaker.speak(
                             this,

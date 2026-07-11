@@ -100,6 +100,13 @@ class _ReminderScreenState extends State<ReminderScreen> {
     _bumpIdleTimeout();
     const channel = MethodChannel('dk.parkingson/alarm');
 
+    // Cancel the native spoken reminder right away (the siren keeps playing).
+    // Otherwise, if a screen lock delays this screen past the native voice's
+    // trigger, both it and the announcement below play and you hear it twice.
+    try {
+      await channel.invokeMethod('stopAlarmVoice');
+    } catch (_) {}
+
     // Let the alarm siren actually play before we silence it. When the reminder
     // opens instantly (device unlocked), stopping it right away kills the siren
     // before it's even audible — you'd only hear the spoken reminder. Wait once

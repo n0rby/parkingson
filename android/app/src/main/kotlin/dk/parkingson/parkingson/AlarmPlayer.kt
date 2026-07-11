@@ -85,6 +85,18 @@ object AlarmPlayer {
      * reminder, and vibration. Called when the app opens the reminder screen so
      * the announcement isn't captured by the voice recognizer.
      */
+    /**
+     * Cancels only the queued/ongoing spoken reminder, leaving the siren and
+     * vibration running. The reminder screen calls this up front so the native
+     * voice can't double up with its own announcement (e.g. when a screen lock
+     * delays the reminder past the native voice's 3.3 s trigger).
+     */
+    fun stopVoice(context: Context) {
+        pendingSpeak?.let { handler.removeCallbacks(it) }
+        pendingSpeak = null
+        Speaker.stop()
+    }
+
     fun stop(context: Context) {
         pendingSpeak?.let { handler.removeCallbacks(it) }
         pendingSpeak = null
