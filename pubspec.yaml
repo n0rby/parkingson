@@ -2,7 +2,7 @@ name: parkingson
 description: "Parking reminder app - never forget to pay for parking"
 publish_to: 'none'
 
-version: 0.1.0+13
+version: 0.1.0+14
 
 environment:
   sdk: ^3.12.2
@@ -26,6 +26,7 @@ dependencies:
   intl: ^0.20.2
   flutter_tts: ^4.2.0
   android_intent_plus: ^5.3.0
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:
