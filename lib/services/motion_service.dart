@@ -30,7 +30,12 @@ const _evtParkingDetected = 'parking_detected';
 const _evtPayloadKey = 'location';
 
 class MotionService {
-  static const minVehicleDurationMs = 10000;
+  // Motion fallback guard: the phone must actually have moved during the
+  // "drive" before a motion-only parking counts — protects against Activity
+  // Recognition's occasional false IN_VEHICLE while sitting still.
+  static const minDriveDistanceMeters = 250.0;
+  // A drive segment is forgotten if IN_VEHICLE hasn't been seen for this long.
+  static const driveResetMs = 10 * 60 * 1000;
   // Dedup so a single parking never alarms twice when several sources (BT, USB,
   // motion) report it. A repeat is treated as the *same* park only if it is BOTH
   // very recent AND at ~the same spot as the last one.
@@ -130,9 +135,18 @@ void _onStart(ServiceInstance service) async {
 
   // Fires the parking flow. Duplicate suppression (the same park reported by
   // several sources) is handled by location + time in _handleCarParked.
-  Future<void> tryFireReminder() async {
-    await _handleCarParked(service);
+  // [requireMovement]/[driveStart] apply only to the motion source, so a false
+  // IN_VEHICLE while stationary (zero displacement) doesn't alarm.
+  Future<void> tryFireReminder(
+      {bool requireMovement = false, LocationSnapshot? driveStart}) async {
+    await _handleCarParked(service,
+        requireMovement: requireMovement, driveStart: driveStart);
   }
+
+  // Where the current drive segment began (last known position when IN_VEHICLE
+  // was first seen), used for the motion displacement check.
+  LocationSnapshot? driveStartLoc;
+  int lastInVehicleTs = 0;
 
   // Parking is detected from several native sources, all bridged via
   // SharedPreferences: classic-Bluetooth ACL disconnect (CarBluetoothReceiver),
@@ -178,7 +192,29 @@ void _onStart(ServiceInstance service) async {
     final inVehicleRecent = inVehicleAt != null &&
         now - inVehicleAt <= MotionService.inVehicleWindowMs;
 
-    // ── Motion: drove, then started walking (Activity Recognition) ───────────
+    // Remember where a drive segment began (its start position), so the motion
+    // park can verify the phone actually moved. A brief stop keeps refreshing
+    // last_in_vehicle_at; a long gap forgets the segment.
+    if (inVehicleAt != null && inVehicleAt > lastInVehicleTs) {
+      if (driveStartLoc == null) {
+        try {
+          final p = await Geolocator.getLastKnownPosition();
+          if (p != null) {
+            driveStartLoc = LocationSnapshot(
+              latitude: p.latitude,
+              longitude: p.longitude,
+              capturedAtMillis: inVehicleAt,
+            );
+          }
+        } catch (_) {}
+      }
+      lastInVehicleTs = inVehicleAt;
+    } else if (driveStartLoc != null &&
+        now - lastInVehicleTs > MotionService.driveResetMs) {
+      driveStartLoc = null;
+    }
+
+    // ── Motion: drove, then left the vehicle (Activity Recognition) ──────────
     // motion_parking_event is a bare timestamp (no "id|ts"), so it needs its
     // own parse rather than takeFresh/_parseBtEvent.
     final motionTs = int.tryParse(prefs.getString('motion_parking_event') ?? '');
@@ -188,8 +224,9 @@ void _onStart(ServiceInstance service) async {
           trigger: _Trigger.motion,
           connectionDurationMs: null,
           inVehicleRecent: inVehicleRecent)) {
-        await tryFireReminder();
+        await tryFireReminder(requireMovement: true, driveStart: driveStartLoc);
       }
+      driveStartLoc = null; // consumed for this drive segment
     }
 
     // ── Bluetooth: monitored car stereo disconnected (high trust) ────────────
@@ -383,7 +420,8 @@ Future<int?> _osrmWalkingSeconds({
   }
 }
 
-Future<void> _handleCarParked(ServiceInstance service) async {
+Future<void> _handleCarParked(ServiceInstance service,
+    {bool requireMovement = false, LocationSnapshot? driveStart}) async {
   final ignoredRepo = IgnoredLocationRepository();
 
   // For duplicate suppression: the last parking we actually reminded about.
@@ -411,6 +449,21 @@ Future<void> _handleCarParked(ServiceInstance service) async {
         position = last;
       }
     } catch (_) {}
+  }
+
+  // Motion displacement guard: a real drive covers ground, but Activity
+  // Recognition sometimes reports a false IN_VEHICLE while you sit still. If we
+  // know where the "drive" started and the phone hasn't actually moved, it
+  // wasn't a real trip — don't alarm. (Only motion sets requireMovement; BT/USB
+  // are trusted "left the car" events.)
+  if (requireMovement && driveStart != null && position != null) {
+    final moved = Geolocator.distanceBetween(
+      driveStart.latitude,
+      driveStart.longitude,
+      position.latitude,
+      position.longitude,
+    );
+    if (moved < MotionService.minDriveDistanceMeters) return;
   }
 
   // Dedup: the same parking hit by BT + USB + motion fires within moments and

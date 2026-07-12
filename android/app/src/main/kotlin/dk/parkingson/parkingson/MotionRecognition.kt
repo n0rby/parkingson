@@ -25,7 +25,7 @@ const val KEY_LAST_ACTIVITY_TYPE = "last_activity_type"
 const val KEY_LAST_ACTIVITY_CONFIDENCE = "last_activity_confidence"
 const val KEY_LAST_ACTIVITY_AT = "last_activity_at"
 
-const val MIN_VEHICLE_DURATION_MS = 10_000L
+const val MIN_VEHICLE_DURATION_MS = 60_000L
 const val MOTION_COOLDOWN_MS = 10_000L
 const val ACTIVITY_UPDATE_INTERVAL_MS = 15_000L
 const val MIN_ACTIVITY_CONFIDENCE = 35
