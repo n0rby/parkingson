@@ -116,8 +116,8 @@ object AlarmPlayer {
      * In app-volume mode, "muted" means the chosen app volume is 0 (checked
      * directly, since some devices clamp the alarm stream above 0). In
      * phone-volume mode, it means the phone is silenced/vibrate, the alarm
-     * volume is at its minimum, or — if "vibrate when silent" is enabled — the
-     * ring volume is turned down to 0/1.
+     * volume is at its minimum, or — if "vibrate when silent" is enabled — any
+     * of the ring/notification/media volumes is turned down to 0/1.
      */
     private fun isAlarmMuted(context: Context, am: AudioManager?): Boolean {
         val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
@@ -138,14 +138,17 @@ object AlarmPlayer {
             0
         }
         if (vol <= min) return true
-        // Opt-in: when "vibrate when silent" is enabled, also treat the ring
-        // volume turned down to 0/1 as silenced — that's what most people reach
-        // for when they mean "turn the volume down" (the volume rocker controls
-        // the ring, not the alarm stream). Routes to the vibrate-only, no-voice
-        // path.
-        if (prefBool(context, "flutter.vibrate_when_silent", true) &&
-            am.getStreamVolume(AudioManager.STREAM_RING) <= 1) {
-            return true
+        // Opt-in: most people don't distinguish the phone's separate volume
+        // sliders (ring / notification / media), so when "vibrate when silent"
+        // is on, treat *any* of them turned down to 0/1 as "they wanted it
+        // quiet". Routes to the vibrate-only, no-voice path.
+        if (prefBool(context, "flutter.vibrate_when_silent", true)) {
+            val streams = intArrayOf(
+                AudioManager.STREAM_RING,
+                AudioManager.STREAM_NOTIFICATION,
+                AudioManager.STREAM_MUSIC
+            )
+            if (streams.any { am.getStreamVolume(it) <= 1 }) return true
         }
         return false
     }
