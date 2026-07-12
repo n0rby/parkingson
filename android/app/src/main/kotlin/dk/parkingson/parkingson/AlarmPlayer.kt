@@ -124,9 +124,18 @@ object AlarmPlayer {
         }
         if (am == null) return true
         // Phone mode: respect the phone being silenced (silent or vibrate ringer
-        // mode), or the alarm volume being 0.
+        // mode), or the alarm volume turned all the way down.
         if (am.ringerMode != AudioManager.RINGER_MODE_NORMAL) return true
-        return am.getStreamVolume(AudioManager.STREAM_ALARM) == 0
+        // Compare to the stream's *minimum* settable volume, not 0: some OEMs
+        // (e.g. Samsung) clamp the minimum alarm volume to 1, so a plain "== 0"
+        // never fires and the alarm sounds faintly instead of vibrating.
+        val vol = am.getStreamVolume(AudioManager.STREAM_ALARM)
+        val min = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            am.getStreamMinVolume(AudioManager.STREAM_ALARM)
+        } else {
+            0
+        }
+        return vol <= min
     }
 
     private fun prefBool(context: Context, key: String, default: Boolean): Boolean {
