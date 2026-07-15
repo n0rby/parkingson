@@ -32,8 +32,9 @@ const val MIN_ACTIVITY_CONFIDENCE = 35
 
 // Fallback: if a drive ends but Activity Recognition never reports ON_FOOT
 // (it can stay STILL/UNKNOWN), treat "haven't seen the vehicle for this long"
-// as having parked. User-configurable ("Andet" settings); 0 disables it.
-const val MOTION_FALLBACK_DEFAULT_SECONDS = 120L
+// as having parked. User-configurable ("Andet" settings); 0 disables it, and
+// off is the default — it's low-confidence and only for cars without BT/USB.
+const val MOTION_FALLBACK_DEFAULT_SECONDS = 0L
 
 // Battery-saving dormancy: after being still this long (while parked and with no
 // walk-back timer) we pause the periodic activity sampling. Cheap transition

@@ -439,8 +439,14 @@ abstract class AppLocalizations {
   /// No description provided for @motionFallbackDesc.
   ///
   /// In en, this message translates to:
-  /// **'Without Bluetooth/USB, the app detects parking from motion. If you drive and stop but it never detects you walking, it fires the alarm after this delay. Longer = fewer false alarms in traffic, but slower. Off uses walking only.'**
+  /// **'Only for cars without Bluetooth/USB. If you drive and stop but the app never detects you walking, it fires the alarm after this delay. Off by default (low confidence — can misfire in traffic).'**
   String get motionFallbackDesc;
+
+  /// No description provided for @motionFallbackHasCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Your car is detected via Bluetooth/USB, so this fallback isn\'t needed.'**
+  String get motionFallbackHasCar;
 
   /// No description provided for @manageCars.
   ///

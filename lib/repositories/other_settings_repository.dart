@@ -5,8 +5,9 @@ class OtherSettingsRepository {
   // Read natively by ActivityRecognitionReceiver (flutter.motion_fallback_seconds).
   static const _keyFallbackSeconds = 'motion_fallback_seconds';
 
-  /// Default fallback window: 2 minutes.
-  static const defaultFallbackSeconds = 120;
+  /// Default fallback window: off (low-confidence; opt-in, and only meaningful
+  /// for users with no BT/USB car).
+  static const defaultFallbackSeconds = 0;
 
   Future<SharedPreferences> get _prefs => SharedPreferences.getInstance();
 

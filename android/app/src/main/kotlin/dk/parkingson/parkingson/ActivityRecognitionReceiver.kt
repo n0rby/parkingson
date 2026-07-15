@@ -82,7 +82,8 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
         val leftVehicleLongEnough =
             fallbackMs > 0L && now - lastInVehicleAt >= fallbackMs
 
-        if (!isOnFoot(activityType) && !leftVehicleLongEnough) return
+        val onFoot = isOnFoot(activityType)
+        if (!onFoot && !leftVehicleLongEnough) return
 
         prefs.edit()
             .remove(KEY_IN_VEHICLE_STARTED_AT)
@@ -90,10 +91,14 @@ class ActivityRecognitionReceiver : BroadcastReceiver() {
             .putLong(KEY_LAST_REMINDER_AT, now)
             .apply()
 
-        // Bridge to the Dart background isolate (same pipeline as BT detection).
+        // Bridge to the Dart isolate. ON_FOOT ("walked away") is the reliable
+        // signal and fires for everyone; the timeout fallback is low-confidence,
+        // so it goes to a separate key that Dart only honours for users with no
+        // BT/USB car (see motion_service).
+        val key = if (onFoot) "flutter.motion_parking_event" else "flutter.motion_fallback_event"
         context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
             .edit()
-            .putString("flutter.motion_parking_event", now.toString())
+            .putString(key, now.toString())
             .apply()
     }
 

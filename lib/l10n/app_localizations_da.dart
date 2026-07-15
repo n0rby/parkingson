@@ -188,7 +188,11 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get motionFallbackDesc =>
-      'Uden Bluetooth/USB registrerer appen parkering via bevægelse. Kører du og standser, men den aldrig registrerer at du går, udløses alarmen efter denne tid. Længere = færre falske alarmer i trafik, men langsommere. Fra bruger kun gang-registrering.';
+      'Kun for biler uden Bluetooth/USB. Kører du og standser, men appen aldrig registrerer at du går, udløses alarmen efter denne tid. Fra som standard (lav sikkerhed — kan fejle i trafik).';
+
+  @override
+  String get motionFallbackHasCar =>
+      'Din bil registreres via Bluetooth/USB, så denne reserve er ikke nødvendig.';
 
   @override
   String get manageCars => 'Administrer biler';

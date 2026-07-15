@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
+import '../repositories/car_repository.dart';
 import '../repositories/other_settings_repository.dart';
 import '../theme.dart';
 import '../widgets/list_card.dart';
@@ -17,11 +18,13 @@ class OtherSettingsScreen extends StatefulWidget {
 
 class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
   final _repo = OtherSettingsRepository();
+  final _carRepo = CarRepository();
 
   // Selectable fallback windows, in seconds (0 = off).
   static const _options = [0, 60, 120, 180, 300];
 
   int _fallbackSeconds = OtherSettingsRepository.defaultFallbackSeconds;
+  bool _hasConnectedCar = false;
   bool _loaded = false;
 
   @override
@@ -32,9 +35,12 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
 
   Future<void> _load() async {
     final s = await _repo.getMotionFallbackSeconds();
+    final bt = await _carRepo.getSelectedCarAddresses();
+    final usb = await _carRepo.getSelectedUsbAccessories();
     if (mounted) {
       setState(() {
         _fallbackSeconds = s;
+        _hasConnectedCar = bt.isNotEmpty || usb.isNotEmpty;
         _loaded = true;
       });
     }
@@ -65,16 +71,23 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
           Text(l10n.motionFallbackTitle,
               style: const TextStyle(fontWeight: FontWeight.bold, color: hpText)),
           const SizedBox(height: 6),
-          Text(l10n.motionFallbackDesc,
-              style: const TextStyle(color: hpMuted, fontSize: 13, height: 1.4)),
-          const SizedBox(height: 12),
-          for (final s in _options) ...[
-            _RadioTile(
-              title: _label(l10n, s),
-              selected: _fallbackSeconds == s,
-              onTap: () => _select(s),
-            ),
-            const SizedBox(height: 8),
+          if (_hasConnectedCar)
+            // Has a BT/USB car → the reliable trigger handles it; the fallback
+            // doesn't apply, so don't offer the (confusing) timer.
+            Text(l10n.motionFallbackHasCar,
+                style: const TextStyle(color: hpMuted, fontSize: 13, height: 1.4))
+          else ...[
+            Text(l10n.motionFallbackDesc,
+                style: const TextStyle(color: hpMuted, fontSize: 13, height: 1.4)),
+            const SizedBox(height: 12),
+            for (final s in _options) ...[
+              _RadioTile(
+                title: _label(l10n, s),
+                selected: _fallbackSeconds == s,
+                onTap: () => _select(s),
+              ),
+              const SizedBox(height: 8),
+            ],
           ],
         ],
         const SizedBox(height: 8),

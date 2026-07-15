@@ -162,6 +162,7 @@ void _onStart(ServiceInstance service) async {
     'usbAcc': startTs,
     'usbPower': startTs,
     'motion': startTs,
+    'fallback': startTs,
   };
 
   Timer.periodic(const Duration(seconds: 3), (_) async {
@@ -227,6 +228,24 @@ void _onStart(ServiceInstance service) async {
         await tryFireReminder(requireMovement: true, driveStart: driveStartLoc);
       }
       driveStartLoc = null; // consumed for this drive segment
+    }
+
+    // ── Motion fallback (drove, then stayed STILL/UNKNOWN — never walked) ─────
+    // Low-confidence, so only for users with NO BT/USB car (they rely purely on
+    // motion). BT/USB users get their reliable trigger instead and never see it.
+    final fallbackTs = int.tryParse(prefs.getString('motion_fallback_event') ?? '');
+    if (fallbackTs != null && fallbackTs > lastSeen['fallback']!) {
+      lastSeen['fallback'] = fallbackTs;
+      final hasConnectedCar =
+          selectedAddresses.isNotEmpty || selectedUsbAccessories.isNotEmpty;
+      if (!hasConnectedCar &&
+          _shouldFire(
+              trigger: _Trigger.motion,
+              connectionDurationMs: null,
+              inVehicleRecent: inVehicleRecent)) {
+        await tryFireReminder(requireMovement: true, driveStart: driveStartLoc);
+      }
+      driveStartLoc = null;
     }
 
     // ── Bluetooth: monitored car stereo disconnected (high trust) ────────────

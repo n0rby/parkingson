@@ -188,7 +188,11 @@ class AppLocalizationsIs extends AppLocalizations {
 
   @override
   String get motionFallbackDesc =>
-      'Without Bluetooth/USB, the app detects parking from motion. If you drive and stop but it never detects you walking, it fires the alarm after this delay. Longer = fewer false alarms in traffic, but slower. Off uses walking only.';
+      'Only for cars without Bluetooth/USB. If you drive and stop but the app never detects you walking, it fires the alarm after this delay. Off by default (low confidence — can misfire in traffic).';
+
+  @override
+  String get motionFallbackHasCar =>
+      'Your car is detected via Bluetooth/USB, so this fallback isn\'t needed.';
 
   @override
   String get manageCars => 'Sýsla með bíla';
