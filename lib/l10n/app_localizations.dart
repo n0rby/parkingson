@@ -139,7 +139,7 @@ abstract class AppLocalizations {
   /// No description provided for @btOnlyMode.
   ///
   /// In en, this message translates to:
-  /// **'Use Bluetooth only, to reduce false alarms'**
+  /// **'Only monitor cars with Bluetooth or USB, to reduce false alarms'**
   String get btOnlyMode;
 
   /// No description provided for @carsBody.
@@ -307,7 +307,7 @@ abstract class AppLocalizations {
   /// No description provided for @permBatteryDesc.
   ///
   /// In en, this message translates to:
-  /// **'So battery saving doesn\'t stop monitoring'**
+  /// **'Uses very little power and applies to this app only — so battery saving can\'t stop monitoring'**
   String get permBatteryDesc;
 
   /// No description provided for @grantAllPermissions.

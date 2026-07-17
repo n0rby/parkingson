@@ -47,9 +47,12 @@ class MainActivity : FlutterActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Opening the app (from icon, recents or the notification) stops any
-        // ongoing DND alarm vibration.
-        AlarmPlayer.stopVibration(this)
+        // Note: we deliberately do NOT stop the alarm vibration here. The
+        // full-screen reminder brings the app to the foreground on its own, so
+        // stopping on resume would cut the pulse to ~1 s. The reminder screen now
+        // owns the vibration lifecycle (it keeps buzzing on a silenced phone
+        // until the user unlocks/engages, dismisses, or the no-response timeout),
+        // and swiping the notification away or the 30 s safety stop also end it.
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -73,6 +76,7 @@ class MainActivity : FlutterActivity() {
                         AlarmPlayer.stopVoice(this)
                         result.success(null)
                     }
+                    "isVoiceSuppressed" -> result.success(AlarmPlayer.isVoiceSuppressed(this))
                     "speak" -> {
                         Speaker.speak(
                             this,

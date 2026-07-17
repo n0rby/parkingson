@@ -43,6 +43,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
   bool _capturing = false;
   // Let the alarm siren play once before the reminder silences it.
   bool _sirenPlayed = false;
+  // When the phone is silenced (silent/vibrate ringer, DND, or the alarm is
+  // muted), the native alarm only vibrates — so the reminder screen stays silent
+  // too and never speaks aloud. Set once when the screen opens.
+  bool _phoneSilenced = false;
   // If the user doesn't react (speak or tap a button) within this window, the
   // reminder stops listening and closes itself. Just this one timer.
   // TODO: pause this while a confirmation is being spoken instead of relying on
@@ -102,6 +106,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
     _bumpIdleTimeout();
     const channel = MethodChannel('dk.parkingson/alarm');
 
+    // Mirror the native alarm: if the phone is silenced, don't speak aloud.
+    try {
+      _phoneSilenced = await channel.invokeMethod('isVoiceSuppressed') == true;
+    } catch (_) {}
+
     // Cancel the native spoken reminder right away (the siren keeps playing).
     // Otherwise, if a screen lock delays this screen past the native voice's
     // trigger, both it and the announcement below play and you hear it twice.
@@ -109,22 +118,29 @@ class _ReminderScreenState extends State<ReminderScreen> {
       await channel.invokeMethod('stopAlarmVoice');
     } catch (_) {}
 
-    // Let the alarm siren actually play before we silence it. When the reminder
-    // opens instantly (device unlocked), stopping it right away kills the siren
-    // before it's even audible — you'd only hear the spoken reminder. Wait once
-    // (~the siren's length, and before the native voice at 3.3 s), then stop it
-    // so the announcement below isn't captured by the recognizer.
-    if (!_sirenPlayed) {
-      _sirenPlayed = true;
-      await Future.delayed(const Duration(milliseconds: 2500));
-      if (!mounted) {
-        _capturing = false;
-        return;
+    // Non-silenced: let the alarm siren actually play before we silence it. When
+    // the reminder opens instantly (device unlocked), stopping it right away
+    // kills the siren before it's even audible — you'd only hear the spoken
+    // reminder. Wait once (~the siren's length, and before the native voice at
+    // 3.3 s), then stop it so the announcement below isn't captured.
+    //
+    // Silenced phone: there is no siren, only the vibration pulse. Don't stop it
+    // here — let it keep buzzing so the user notices even in a pocket. It's
+    // stopped just below once they engage (unlock), and is bounded by the
+    // no-response timeout and the native 30 s safety stop.
+    if (!_phoneSilenced) {
+      if (!_sirenPlayed) {
+        _sirenPlayed = true;
+        await Future.delayed(const Duration(milliseconds: 2500));
+        if (!mounted) {
+          _capturing = false;
+          return;
+        }
       }
+      try {
+        await channel.invokeMethod('stopAlarm');
+      } catch (_) {}
     }
-    try {
-      await channel.invokeMethod('stopAlarm');
-    } catch (_) {}
 
     // Speech recognition needs an unlocked device (Android privacy rule). If the
     // full-screen alarm launched us over the lock screen, bring up the unlock
@@ -138,8 +154,23 @@ class _ReminderScreenState extends State<ReminderScreen> {
           if (mounted) setState(() => _voiceState = _VoiceState.idle);
           return;
         }
+        // Let the activity fully resume after the keyguard dismiss before we
+        // speak — TTS fired too eagerly right after unlock can be dropped.
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (!mounted) {
+          _capturing = false;
+          return;
+        }
       }
     } catch (_) {}
+
+    // Silenced phone: the pulse kept buzzing so the user would feel it. Now that
+    // they've engaged (unlocked the phone, or it was already open), stop it.
+    if (_phoneSilenced) {
+      try {
+        await channel.invokeMethod('stopAlarmVibration');
+      } catch (_) {}
+    }
 
     // 1) Speak "remember parking" and wait for it to finish.
     await _announce();
@@ -163,6 +194,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
   /// is never picked up by the recognizer.
   Future<void> _announce() async {
     if (!mounted) return;
+    // Silenced phone → vibrate-only alarm → no spoken reminder either.
+    if (_phoneSilenced) return;
     final text = AppLocalizations.of(context).ttsRemember;
     final tag = Localizations.localeOf(context).toLanguageTag();
     try {
@@ -223,6 +256,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
   /// Speaks a confirmation and returns only once it has finished, so the
   /// no-response timer can stay paused for exactly as long as we're talking.
   Future<void> _speak(String text) async {
+    // Silenced phone → stay silent for spoken confirmations too.
+    if (_phoneSilenced) return;
     try {
       final tag = Localizations.localeOf(context).toLanguageTag();
       await _tts.setLanguage(tag);

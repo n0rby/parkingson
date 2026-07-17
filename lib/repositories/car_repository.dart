@@ -7,6 +7,10 @@ class CarRepository {
   static const _keyMonitoringMode = 'monitoring_mode';
   static const _keySetupCompleted = 'setup_completed';
   static const _keyBtOnlyMode = 'bt_only_mode';
+  // True once the user has toggled the "monitor BT/USB cars only" checkbox
+  // themselves. Until then the app manages it as a smart default (on when at
+  // least one BT/USB car exists); after that we respect the user's choice.
+  static const _keyBtOnlyUserSet = 'bt_only_user_set';
 
   Future<SharedPreferences> get _prefs => SharedPreferences.getInstance();
 
@@ -60,6 +64,16 @@ class CarRepository {
   Future<void> saveBtOnlyMode(bool enabled) async {
     final p = await _prefs;
     await p.setBool(_keyBtOnlyMode, enabled);
+  }
+
+  Future<bool> getBtOnlyModeUserSet() async {
+    final p = await _prefs;
+    return p.getBool(_keyBtOnlyUserSet) ?? false;
+  }
+
+  Future<void> saveBtOnlyModeUserSet(bool userSet) async {
+    final p = await _prefs;
+    await p.setBool(_keyBtOnlyUserSet, userSet);
   }
 
   Future<bool> isSelectedCar(String address) async {

@@ -23,7 +23,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get btOnlyMode =>
-      'Brug kun BT, for at reducere antallet af falske alarmer';
+      'Overvåg kun biler med Bluetooth eller USB, for at reducere antallet af falske alarmer';
 
   @override
   String get carsBody =>
@@ -113,7 +113,8 @@ class AppLocalizationsDa extends AppLocalizations {
   String get permBattery => 'Ubegrænset baggrund';
 
   @override
-  String get permBatteryDesc => 'Så batterisparing ikke stopper overvågningen';
+  String get permBatteryDesc =>
+      'Bruger meget lidt strøm og gælder kun denne app — så batterisparing ikke stopper overvågningen';
 
   @override
   String get grantAllPermissions => 'Giv alle tilladelser';

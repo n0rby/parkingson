@@ -34,7 +34,7 @@ class ParkingsonApp extends StatefulWidget {
   State<ParkingsonApp> createState() => _ParkingsonAppState();
 }
 
-class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserver {
+class _ParkingsonAppState extends State<ParkingsonApp> {
   final _carRepo = CarRepository();
   final _billingRepo = BillingRepository();
   final _ignoredRepo = IgnoredLocationRepository();
@@ -48,6 +48,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
   Set<String> _selectedAddresses = {};
   Set<String> _usbAccessories = {};
   bool _btOnlyMode = false;
+  bool _btOnlyUserSet = false;
   bool _isPremium = false;
   List<IgnoredLocation> _ignoredLocations = [];
   LocationSnapshot? _lastParkingLocation;
@@ -60,7 +61,6 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _loadState();
     _billingRepo.initialize().then((_) {
       _billingRepo.premiumStream.listen((v) {
@@ -72,18 +72,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _motionService.stopMonitoring();
     _billingRepo.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Opening the app (any way) stops the Do Not Disturb alarm vibration.
-    if (state == AppLifecycleState.resumed) {
-      _stopAlarmVibration();
-    }
   }
 
   void _stopAlarmVibration() {
@@ -109,6 +100,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
 
   Future<void> _loadState() async {
     final btOnly = await _carRepo.getBtOnlyMode();
+    final btOnlyUserSet = await _carRepo.getBtOnlyModeUserSet();
     final carAddresses = await _carRepo.getSelectedCarAddresses();
     final usbAccessories = await _carRepo.getSelectedUsbAccessories();
     final setupDone = await _carRepo.isSetupCompleted();
@@ -119,6 +111,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
     if (mounted) {
       setState(() {
         _btOnlyMode = btOnly;
+        _btOnlyUserSet = btOnlyUserSet;
         _selectedAddresses = carAddresses;
         _usbAccessories = usbAccessories;
         _ignoredLocations = ignored;
@@ -145,6 +138,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
         _motionService.updateAddresses(likely);
       }
     }
+    // Pre-selected (or already-selected) BT/USB cars auto-enable "monitor BT/USB
+    // only" as a smart default, unless the user has set it themselves.
+    await _syncBtOnlyDefault();
     if (mounted) setState(() { _pairedDevices = paired; _screen = _Screen.cars; });
   }
 
@@ -169,6 +165,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
     setState(() => _usbAccessories = updated);
     await _carRepo.saveSelectedUsbAccessories(updated);
     _motionService.updateUsbAccessories(updated);
+    await _syncBtOnlyDefault();
   }
 
   Future<void> _removeUsbAccessory(String id) async {
@@ -176,6 +173,23 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
     setState(() => _usbAccessories = updated);
     await _carRepo.saveSelectedUsbAccessories(updated);
     _motionService.updateUsbAccessories(updated);
+    await _syncBtOnlyDefault();
+  }
+
+  /// Smart default for "monitor BT/USB cars only": as long as the user hasn't
+  /// set the checkbox themselves, keep it in sync with whether any BT/USB car
+  /// exists — on when there's at least one (fewer false alarms), off otherwise.
+  /// Once the user toggles it (see onBtOnlyModeChange), we stop touching it.
+  Future<void> _syncBtOnlyDefault() async {
+    if (_btOnlyUserSet) return;
+    final shouldEnable =
+        _selectedAddresses.isNotEmpty || _usbAccessories.isNotEmpty;
+    if (_btOnlyMode == shouldEnable) return;
+    if (!mounted) return;
+    setState(() => _btOnlyMode = shouldEnable);
+    await _carRepo.saveBtOnlyMode(shouldEnable);
+    const MethodChannel('dk.parkingson/alarm').invokeMethod(
+        shouldEnable ? 'stopMotionDetection' : 'startMotionDetection');
   }
 
   void _startMonitoring() {
@@ -243,10 +257,16 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
             setState(() => _selectedAddresses = addresses);
             await _carRepo.saveSelectedCarAddresses(addresses);
             _motionService.updateAddresses(addresses);
+            await _syncBtOnlyDefault();
           },
           onBtOnlyModeChange: (v) async {
-            setState(() => _btOnlyMode = v);
+            // The user set it themselves — stop auto-managing it from now on.
+            setState(() {
+              _btOnlyMode = v;
+              _btOnlyUserSet = true;
+            });
             await _carRepo.saveBtOnlyMode(v);
+            await _carRepo.saveBtOnlyModeUserSet(true);
             const channel = MethodChannel('dk.parkingson/alarm');
             channel.invokeMethod(
                 v ? 'stopMotionDetection' : 'startMotionDetection');
@@ -308,13 +328,18 @@ class _ParkingsonAppState extends State<ParkingsonApp> with WidgetsBindingObserv
                   longitude: 0,
                   capturedAtMillis: DateTime.now().millisecondsSinceEpoch,
                 );
-            // Short delay so you can lock the phone after tapping, to test the
-            // full-screen-over-lock-screen behaviour.
-            await Future<void>.delayed(const Duration(seconds: 2));
+            // Short delay so you can lock the phone (or background the app) after
+            // tapping, to test the full-screen-over-lock-screen behaviour and the
+            // swipe-away-to-stop notification.
+            await Future<void>.delayed(const Duration(seconds: 10));
             // Show the visual notification and fire the DND-aware alarm
             // (sound + voice, or vibration, are handled natively).
             await NotificationService().showParkingReminder(payload: snapshot.encode());
-            await fireAlarm(l10n.ttsRemember);
+            await fireAlarm(
+              l10n.ttsRemember,
+              title: l10n.notifParkingTitle,
+              body: l10n.notifParkingBody,
+            );
             if (mounted) {
               setState(() {
                 _reminderLocation = snapshot;

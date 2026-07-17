@@ -6,7 +6,7 @@
   "getStarted": "Kom i gang",
 
   "carsTitle": "Vælg dine biler",
-  "btOnlyMode": "Brug kun BT, for at reducere antallet af falske alarmer",
+  "btOnlyMode": "Overvåg kun biler med Bluetooth eller USB, for at reducere antallet af falske alarmer",
   "carsBody": "Vælg din bils Bluetooth — den forbindelse telefonen laver til bilens stereo, når du sætter dig ind. Vælg ikke hovedtelefoner eller headset. Vi har forhåndsvalgt dem der ligner biler.",
   "carsWithBluetooth": "Biler med Bluetooth",
   "noPairedDevices": "Ingen parrede Bluetooth-enheder fundet.",
@@ -35,7 +35,7 @@
   "permNotifications": "Notifikationer",
   "permNotificationsDesc": "Send påmindelser om parkering",
   "permBattery": "Ubegrænset baggrund",
-  "permBatteryDesc": "Så batterisparing ikke stopper overvågningen",
+  "permBatteryDesc": "Bruger meget lidt strøm og gælder kun denne app — så batterisparing ikke stopper overvågningen",
   "grantAllPermissions": "Giv alle tilladelser",
   "permMicrophone": "Mikrofon",
   "permMicrophoneDesc": "Til stemmekommandoer på alarmen",

@@ -6,7 +6,7 @@
   "getStarted": "Get started",
 
   "carsTitle": "Choose your cars",
-  "btOnlyMode": "Use Bluetooth only, to reduce false alarms",
+  "btOnlyMode": "Only monitor cars with Bluetooth or USB, to reduce false alarms",
   "carsBody": "Choose your car's Bluetooth — the connection your phone makes to the car stereo when you get in. Don't choose headphones or a headset. We've pre-selected the ones that look like cars.",
   "carsWithBluetooth": "Cars with Bluetooth",
   "noPairedDevices": "No paired Bluetooth devices found.",
@@ -35,7 +35,7 @@
   "permNotifications": "Notifications",
   "permNotificationsDesc": "Send parking reminders",
   "permBattery": "Unrestricted background",
-  "permBatteryDesc": "So battery saving doesn't stop monitoring",
+  "permBatteryDesc": "Uses very little power and applies to this app only — so battery saving can't stop monitoring",
   "grantAllPermissions": "Grant all permissions",
   "permMicrophone": "Microphone",
   "permMicrophoneDesc": "For voice commands on the reminder",

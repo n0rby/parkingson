@@ -33,9 +33,6 @@ const _visualChannel = AndroidNotificationChannel(
   enableVibration: false,
 );
 
-// How long the reminder notification stays before Android auto-dismisses it.
-const _reminderTimeoutMs = 20000;
-
 const _pendingVoiceKey = 'pending_alarm_voice';
 
 final _plugin = FlutterLocalNotificationsPlugin();
@@ -43,7 +40,12 @@ final _plugin = FlutterLocalNotificationsPlugin();
 /// Triggers the native, DND-aware alarm (loud sound, or pulse vibration in Do
 /// Not Disturb) and remembers the phrase to speak when the app is opened.
 /// Works from both the foreground and the background isolate.
-Future<void> fireAlarm(String voiceText) async {
+///
+/// On Android the reminder notification is also posted natively (from
+/// [title]/[body]) so a swipe-away can stop the alarm — see
+/// `ReminderNotification` / `AlarmReceiver` on the Kotlin side. iOS posts its
+/// notification via flutter_local_notifications instead (this is a no-op there).
+Future<void> fireAlarm(String voiceText, {String? title, String? body}) async {
   if (!Platform.isAndroid) return;
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString(
@@ -56,6 +58,10 @@ Future<void> fireAlarm(String voiceText) async {
     // explicit broadcast to our (non-exported) AlarmReceiver.
     action: 'dk.parkingson.parkingson.PLAY_ALARM',
     package: 'henrock.n0rby.parkingson',
+    arguments: <String, dynamic>{
+      'title': ?title,
+      'body': ?body,
+    },
   );
   try {
     await intent.sendBroadcast();
@@ -102,18 +108,11 @@ class NotificationService {
   }
 
   Future<void> showParkingReminder({String? payload}) async {
+    // Android posts the reminder notification natively (see [fireAlarm] →
+    // ReminderNotification) so swiping it away can stop the alarm. iOS still
+    // uses the local-notifications plugin.
+    if (!Platform.isIOS) return;
     final l10n = _bgL10n();
-    const androidDetails = AndroidNotificationDetails(
-      _visualChannelId,
-      _visualChannelName,
-      importance: Importance.high,
-      priority: Priority.high,
-      playSound: false,
-      enableVibration: false,
-      timeoutAfter: _reminderTimeoutMs,
-      category: AndroidNotificationCategory.alarm,
-      fullScreenIntent: true,
-    );
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentSound: true,
@@ -122,7 +121,7 @@ class NotificationService {
       _reminderNotificationId,
       l10n.notifParkingTitle,
       l10n.notifParkingBody,
-      const NotificationDetails(android: androidDetails, iOS: iosDetails),
+      const NotificationDetails(iOS: iosDetails),
       payload: payload,
     );
   }
@@ -134,74 +133,59 @@ class NotificationService {
 
 Future<void> showTimerAlarmFromBackground({required int walkMinutes}) async {
   final l10n = _bgL10n();
-  await _plugin.initialize(
-    const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: DarwinInitializationSettings(),
-    ),
-  );
-  final android = _plugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-  await android?.createNotificationChannel(_visualChannel);
+  // Android posts this notification natively (see [fireAlarm]) so a swipe-away
+  // can stop the alarm; iOS uses the local-notifications plugin.
+  if (Platform.isIOS) {
+    await _plugin.initialize(
+      const InitializationSettings(iOS: DarwinInitializationSettings()),
+    );
+    await _plugin.show(
+      2,
+      l10n.notifWalkBackTitle,
+      l10n.notifWalkBackBody(walkMinutes),
+      const NotificationDetails(
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentSound: true,
+          interruptionLevel: InterruptionLevel.timeSensitive,
+        ),
+      ),
+    );
+  }
 
-  await _plugin.show(
-    2,
+  // Native, DND-aware alarm (loud sound, or pulse vibration in Do Not Disturb),
+  // plus the native reminder notification on Android.
+  await fireAlarm(
     l10n.notifWalkBackTitle,
-    l10n.notifWalkBackBody(walkMinutes),
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        _visualChannelId, _visualChannelName,
-        importance: Importance.high,
-        priority: Priority.high,
-        category: AndroidNotificationCategory.alarm,
-        fullScreenIntent: true,
-        playSound: false,
-        enableVibration: false,
-      ),
-      iOS: DarwinNotificationDetails(
-        presentAlert: true,
-        presentSound: true,
-        interruptionLevel: InterruptionLevel.timeSensitive,
-      ),
-    ),
+    title: l10n.notifWalkBackTitle,
+    body: l10n.notifWalkBackBody(walkMinutes),
   );
-
-  // Native, DND-aware alarm (loud sound, or pulse vibration in Do Not Disturb).
-  await fireAlarm(l10n.notifWalkBackTitle);
 }
 
 Future<void> showParkingReminderFromBackground({String? payload}) async {
   final l10n = _bgL10n();
-  await _plugin.initialize(
-    const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: DarwinInitializationSettings(),
-    ),
-  );
-  final android = _plugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-  await android?.createNotificationChannel(_visualChannel);
-
-  await _plugin.show(
-    _reminderNotificationId,
-    l10n.notifParkingTitle,
-    l10n.notifParkingBody,
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        _visualChannelId, _visualChannelName,
-        importance: Importance.high,
-        priority: Priority.high,
-        category: AndroidNotificationCategory.alarm,
-        fullScreenIntent: true,
-        playSound: false,
-        enableVibration: false,
-        timeoutAfter: _reminderTimeoutMs,
+  // Android posts this notification natively (see [fireAlarm]) so a swipe-away
+  // can stop the alarm; iOS uses the local-notifications plugin.
+  if (Platform.isIOS) {
+    await _plugin.initialize(
+      const InitializationSettings(iOS: DarwinInitializationSettings()),
+    );
+    await _plugin.show(
+      _reminderNotificationId,
+      l10n.notifParkingTitle,
+      l10n.notifParkingBody,
+      const NotificationDetails(
+        iOS: DarwinNotificationDetails(presentAlert: true, presentSound: true),
       ),
-      iOS: DarwinNotificationDetails(presentAlert: true, presentSound: true),
-    ),
-    payload: payload,
-  );
+      payload: payload,
+    );
+  }
 
-  // Native, DND-aware alarm (loud sound, or pulse vibration in Do Not Disturb).
-  await fireAlarm(l10n.ttsRemember);
+  // Native, DND-aware alarm (loud sound, or pulse vibration in Do Not Disturb),
+  // plus the native reminder notification on Android.
+  await fireAlarm(
+    l10n.ttsRemember,
+    title: l10n.notifParkingTitle,
+    body: l10n.notifParkingBody,
+  );
 }

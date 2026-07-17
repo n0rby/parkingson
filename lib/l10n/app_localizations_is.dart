@@ -23,7 +23,7 @@ class AppLocalizationsIs extends AppLocalizations {
 
   @override
   String get btOnlyMode =>
-      'Nota aðeins Bluetooth til að fækka fölskum viðvörunum';
+      'Fylgjast aðeins með bílum með Bluetooth eða USB, til að fækka fölskum viðvörunum';
 
   @override
   String get carsBody =>
@@ -113,7 +113,8 @@ class AppLocalizationsIs extends AppLocalizations {
   String get permBattery => 'Ótakmarkaður bakgrunnur';
 
   @override
-  String get permBatteryDesc => 'Svo rafhlöðusparnaður stöðvi ekki vöktun';
+  String get permBatteryDesc =>
+      'Notar mjög lítið afl og gildir aðeins um þetta forrit — svo rafhlöðusparnaður stöðvi ekki vöktun';
 
   @override
   String get grantAllPermissions => 'Veita allar heimildir';

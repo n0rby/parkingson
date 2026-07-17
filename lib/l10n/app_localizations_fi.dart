@@ -23,7 +23,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get btOnlyMode =>
-      'Käytä vain Bluetoothia vähentääksesi vääriä hälytyksiä';
+      'Valvo vain autoja, joissa on Bluetooth tai USB, vähentääksesi vääriä hälytyksiä';
 
   @override
   String get carsBody =>
@@ -114,7 +114,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get permBattery => 'Rajoittamaton taustakäyttö';
 
   @override
-  String get permBatteryDesc => 'Jotta virransäästö ei pysäytä valvontaa';
+  String get permBatteryDesc =>
+      'Kuluttaa hyvin vähän virtaa ja koskee vain tätä sovellusta – jottei virransäästö pysäytä valvontaa';
 
   @override
   String get grantAllPermissions => 'Myönnä kaikki käyttöoikeudet';

@@ -23,7 +23,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get btOnlyMode =>
-      'Använd endast Bluetooth för att minska antalet falsklarm';
+      'Övervaka endast bilar med Bluetooth eller USB, för att minska antalet falsklarm';
 
   @override
   String get carsBody =>
@@ -114,7 +114,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get permBatteryDesc =>
-      'Så att batterisparläge inte stoppar övervakningen';
+      'Använder mycket lite ström och gäller bara den här appen — så att batterisparläge inte stoppar övervakningen';
 
   @override
   String get grantAllPermissions => 'Ge alla behörigheter';

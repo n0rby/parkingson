@@ -23,7 +23,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get btOnlyMode =>
-      'Usar solo Bluetooth para reducir las falsas alarmas';
+      'Vigilar solo coches con Bluetooth o USB, para reducir las falsas alarmas';
 
   @override
   String get carsBody =>
@@ -116,7 +116,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get permBatteryDesc =>
-      'Para que el ahorro de batería no detenga la supervisión';
+      'Usa muy poca batería y solo se aplica a esta app, para que el ahorro de batería no detenga la supervisión';
 
   @override
   String get grantAllPermissions => 'Conceder todos los permisos';

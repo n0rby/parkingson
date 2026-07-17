@@ -22,7 +22,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get carsTitle => 'Choose your cars';
 
   @override
-  String get btOnlyMode => 'Use Bluetooth only, to reduce false alarms';
+  String get btOnlyMode =>
+      'Only monitor cars with Bluetooth or USB, to reduce false alarms';
 
   @override
   String get carsBody =>
@@ -111,7 +112,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get permBattery => 'Unrestricted background';
 
   @override
-  String get permBatteryDesc => 'So battery saving doesn\'t stop monitoring';
+  String get permBatteryDesc =>
+      'Uses very little power and applies to this app only — so battery saving can\'t stop monitoring';
 
   @override
   String get grantAllPermissions => 'Grant all permissions';

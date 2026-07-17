@@ -6,7 +6,7 @@
   "getStarted": "Loslegen",
 
   "carsTitle": "Wähle deine Autos",
-  "btOnlyMode": "Nur Bluetooth verwenden, um Fehlalarme zu reduzieren",
+  "btOnlyMode": "Nur Autos mit Bluetooth oder USB überwachen, um Fehlalarme zu reduzieren",
   "carsBody": "Wähle das Bluetooth deines Autos — die Verbindung, die dein Telefon beim Einsteigen zum Autoradio herstellt. Wähle keine Kopfhörer oder Headsets. Wir haben die ausgewählt, die nach Autos aussehen.",
   "carsWithBluetooth": "Autos mit Bluetooth",
   "noPairedDevices": "Keine gekoppelten Bluetooth-Geräte gefunden.",
@@ -30,7 +30,7 @@
   "permNotifications": "Benachrichtigungen",
   "permNotificationsDesc": "Parkerinnerungen senden",
   "permBattery": "Uneingeschränkter Hintergrund",
-  "permBatteryDesc": "Damit Energiesparen die Überwachung nicht stoppt",
+  "permBatteryDesc": "Verbraucht sehr wenig Strom und gilt nur für diese App – damit Energiesparen die Überwachung nicht stoppt",
   "grantAllPermissions": "Alle Berechtigungen erteilen",
   "permMicrophone": "Mikrofon",
   "permMicrophoneDesc": "Für Sprachbefehle bei der Erinnerung",

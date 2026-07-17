@@ -31,6 +31,7 @@ object AlarmPlayer {
     private val handler = Handler(Looper.getMainLooper())
     private var pendingSpeak: Runnable? = null
     private var currentPlayer: MediaPlayer? = null
+    private var audioFocusRequest: AudioFocusRequest? = null
 
     fun isDndActive(context: Context): Boolean {
         val nm = context.getSystemService(NotificationManager::class.java) ?: return false
@@ -40,6 +41,28 @@ object AlarmPlayer {
             NotificationManager.INTERRUPTION_FILTER_ALARMS -> true
             else -> false
         }
+    }
+
+    /**
+     * True when the phone is genuinely silenced — Do Not Disturb, a silent/
+     * vibrate ringer, or (app-volume mode) app volume 0. The reminder screen uses
+     * this to stay silent (no spoken reminder) and to keep the vibration pulse
+     * running until the user engages.
+     *
+     * Deliberately NOT the full [isAlarmMuted] check: that also treats a low
+     * media/notification volume or an alarm volume at its minimum as "muted",
+     * which would wrongly silence the spoken reminder on a phone the user has set
+     * to "Sound" (media volume is commonly 0). Voice follows the ringer, not the
+     * media/alarm sliders.
+     */
+    fun isVoiceSuppressed(context: Context): Boolean {
+        if (isDndActive(context)) return true
+        val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        if (prefs.getString("flutter.sound_mode", "phone") == "app") {
+            return prefs.getLong("flutter.app_volume", 100L).toInt() <= 0
+        }
+        val am = context.getSystemService(AudioManager::class.java) ?: return true
+        return am.ringerMode != AudioManager.RINGER_MODE_NORMAL
     }
 
     fun trigger(context: Context) {
@@ -109,7 +132,24 @@ object AlarmPlayer {
         } catch (_: Exception) {
         }
         currentPlayer = null
+        abandonAudioFocus(context)
         stopVibration(context)
+        ReminderNotification.cancel(context)
+    }
+
+    /**
+     * Releases the exclusive audio focus grabbed for the siren. Without this the
+     * spoken reminder (TTS) that follows — e.g. after the user unlocks the phone
+     * — is blocked and never plays.
+     */
+    private fun abandonAudioFocus(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val request = audioFocusRequest ?: return
+        audioFocusRequest = null
+        try {
+            context.getSystemService(AudioManager::class.java)?.abandonAudioFocusRequest(request)
+        } catch (_: Exception) {
+        }
     }
 
     /**
@@ -275,16 +315,18 @@ object AlarmPlayer {
         val audioManager = context.getSystemService(AudioManager::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            audioManager.requestAudioFocus(
-                AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
-                    .setAudioAttributes(
-                        AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .build()
-                    )
-                    .build()
-            )
+            // Keep the request so we can abandon it later. If we never release it,
+            // the exclusive focus blocks the spoken reminder (TTS) that follows.
+            val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+                .setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build()
+                )
+                .build()
+            audioFocusRequest = request
+            audioManager?.requestAudioFocus(request)
         }
 
         try {
@@ -298,6 +340,7 @@ object AlarmPlayer {
             )
             mp.setVolume(1.0f, 1.0f)
             mp.setDataSource(context.applicationContext, uri)
+            val appContext = context.applicationContext
             mp.setOnPreparedListener { player ->
                 player.setVolume(1.0f, 1.0f)
                 player.start()
@@ -305,6 +348,9 @@ object AlarmPlayer {
                     try { if (player.isPlaying) player.stop() } catch (_: Exception) {}
                     player.release()
                     if (currentPlayer === player) currentPlayer = null
+                    // Release focus once the siren ends so the reminder voice
+                    // (native or in-app TTS) can play.
+                    abandonAudioFocus(appContext)
                 }, 3000)
             }
             mp.setOnErrorListener { p, _, _ ->
