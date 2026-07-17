@@ -120,6 +120,16 @@ class AppLocalizationsSv extends AppLocalizations {
   String get grantAllPermissions => 'Ge alla behörigheter';
 
   @override
+  String get checkPermissions => 'Kontrollera appbehörigheter';
+
+  @override
+  String get checkPermissionsDesc =>
+      'Ge åtkomst till Bluetooth, plats och rörelse igen';
+
+  @override
+  String get openAppSettings => 'Öppna appinställningar';
+
+  @override
   String get permMicrophone => 'Mikrofon';
 
   @override

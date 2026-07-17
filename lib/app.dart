@@ -57,6 +57,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
   // True while the parking-apps screen is shown as a step of the initial setup
   // flow (vs. opened from the Opsætning submenu).
   bool _parkingAppsSetupStep = false;
+  // True while the permissions screen is open as a re-check from Setup (vs. the
+  // initial setup flow), so granting returns to Setup instead of proceeding.
+  bool _permissionsFromSetup = false;
 
   @override
   void initState() {
@@ -196,11 +199,13 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
     _motionService.startMonitoring(
       onParkingDetected: (snapshot) {
         // The background isolate already fired the alarm (sound + voice are
-        // handled natively); just open the reminder screen.
+        // handled natively); just open the reminder screen. snapshot is null
+        // when there was no GPS fix — still open it so the alarm can be stopped,
+        // but keep the last known parking location.
         if (mounted) {
           setState(() {
             _reminderLocation = snapshot;
-            _lastParkingLocation = snapshot;
+            if (snapshot != null) _lastParkingLocation = snapshot;
             _screen = _Screen.reminder;
           });
         }
@@ -286,7 +291,21 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
 
       case _Screen.permissions:
         return PermissionsScreen(
-          onActivate: _goToCars,
+          // During first-time setup, granting proceeds to the car picker. When
+          // opened from Setup as a re-check, return there and refresh the paired
+          // device list (a just-granted Bluetooth permission reveals the cars).
+          onActivate: _permissionsFromSetup
+              ? () async {
+                  final paired = await _btService.getPairedDevices();
+                  if (mounted) {
+                    setState(() {
+                      _pairedDevices = paired;
+                      _permissionsFromSetup = false;
+                      _screen = _Screen.setup;
+                    });
+                  }
+                }
+              : _goToCars,
         );
 
       case _Screen.home:
@@ -351,6 +370,10 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
           onParkingApps: () => setState(() {
             _parkingAppsSetupStep = false;
             _screen = _Screen.parkingApps;
+          }),
+          onCheckPermissions: () => setState(() {
+            _permissionsFromSetup = true;
+            _screen = _Screen.permissions;
           }),
           onOther: () => setState(() => _screen = _Screen.otherSettings),
           onBack: () => setState(() => _screen = _Screen.home),
@@ -425,16 +448,17 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
         );
 
       case _Screen.reminder:
-        if (_reminderLocation == null) {
-          return const SizedBox.shrink();
-        }
         return ReminderScreen(
-          parkingLocation: _reminderLocation!,
+          // Null when parking was detected without a GPS fix — the screen hides
+          // the location-specific "ignore here" action in that case.
+          parkingLocation: _reminderLocation,
           onAddIgnoredLocation: () async {
+            final location = _reminderLocation;
+            if (location == null) return;
             _stopAlarmVibration();
             final name = await _locationService.reverseGeocode(
-                _reminderLocation!.latitude, _reminderLocation!.longitude);
-            await _ignoredRepo.addIgnoredLocation(_reminderLocation!, name: name);
+                location.latitude, location.longitude);
+            await _ignoredRepo.addIgnoredLocation(location, name: name);
             final updated = await _ignoredRepo.getIgnoredLocations();
             setState(() {
               _ignoredLocations = updated;

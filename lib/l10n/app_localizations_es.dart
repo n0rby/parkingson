@@ -122,6 +122,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get grantAllPermissions => 'Conceder todos los permisos';
 
   @override
+  String get checkPermissions => 'Comprobar permisos de la app';
+
+  @override
+  String get checkPermissionsDesc =>
+      'Vuelve a conceder acceso a Bluetooth, ubicación y movimiento';
+
+  @override
+  String get openAppSettings => 'Abrir ajustes de la app';
+
+  @override
   String get permMicrophone => 'Micrófono';
 
   @override

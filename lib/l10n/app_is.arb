@@ -29,6 +29,9 @@
   "permBattery": "Ótakmarkaður bakgrunnur",
   "permBatteryDesc": "Notar mjög lítið afl og gildir aðeins um þetta forrit — svo rafhlöðusparnaður stöðvi ekki vöktun",
   "grantAllPermissions": "Veita allar heimildir",
+  "checkPermissions": "Athuga heimildir forrits",
+  "checkPermissionsDesc": "Veita Bluetooth-, staðsetningar- og hreyfiaðgang aftur",
+  "openAppSettings": "Opna stillingar forrits",
   "permMicrophone": "Hljóðnemi",
   "permMicrophoneDesc": "Fyrir raddskipanir í áminningunni",
 

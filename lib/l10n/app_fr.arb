@@ -29,6 +29,9 @@
   "permBattery": "Arrière-plan sans restriction",
   "permBatteryDesc": "Consomme très peu d'énergie et ne concerne que cette application, pour que l'économie de batterie n'arrête pas la surveillance",
   "grantAllPermissions": "Accorder toutes les autorisations",
+  "checkPermissions": "Vérifier les autorisations de l'app",
+  "checkPermissionsDesc": "Redonner l'accès au Bluetooth, à la localisation et au mouvement",
+  "openAppSettings": "Ouvrir les paramètres de l'app",
   "permMicrophone": "Microphone",
   "permMicrophoneDesc": "Pour les commandes vocales du rappel",
 

@@ -32,6 +32,9 @@
   "permBattery": "Uneingeschränkter Hintergrund",
   "permBatteryDesc": "Verbraucht sehr wenig Strom und gilt nur für diese App – damit Energiesparen die Überwachung nicht stoppt",
   "grantAllPermissions": "Alle Berechtigungen erteilen",
+  "checkPermissions": "App-Berechtigungen prüfen",
+  "checkPermissionsDesc": "Zugriff auf Bluetooth, Standort und Bewegung erneut erteilen",
+  "openAppSettings": "App-Einstellungen öffnen",
   "permMicrophone": "Mikrofon",
   "permMicrophoneDesc": "Für Sprachbefehle bei der Erinnerung",
 

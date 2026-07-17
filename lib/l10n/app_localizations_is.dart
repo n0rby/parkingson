@@ -120,6 +120,16 @@ class AppLocalizationsIs extends AppLocalizations {
   String get grantAllPermissions => 'Veita allar heimildir';
 
   @override
+  String get checkPermissions => 'Athuga heimildir forrits';
+
+  @override
+  String get checkPermissionsDesc =>
+      'Veita Bluetooth-, staðsetningar- og hreyfiaðgang aftur';
+
+  @override
+  String get openAppSettings => 'Opna stillingar forrits';
+
+  @override
   String get permMicrophone => 'Hljóðnemi';
 
   @override

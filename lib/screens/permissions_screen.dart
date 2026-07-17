@@ -84,6 +84,13 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
           label: l10n.grantAllPermissions,
           onPressed: _requesting ? null : _requestAll,
         ),
+        const SizedBox(height: 8),
+        // Fallback for permissions the user has permanently denied (the request
+        // dialog no longer appears for those) — jump straight to app settings.
+        TextButton(
+          onPressed: openAppSettings,
+          child: Text(l10n.openAppSettings),
+        ),
       ],
     );
   }

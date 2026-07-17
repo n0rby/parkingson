@@ -120,6 +120,16 @@ class AppLocalizationsNb extends AppLocalizations {
   String get grantAllPermissions => 'Gi alle tillatelser';
 
   @override
+  String get checkPermissions => 'Kontroller apptillatelser';
+
+  @override
+  String get checkPermissionsDesc =>
+      'Gi tilgang til Bluetooth, posisjon og bevegelse på nytt';
+
+  @override
+  String get openAppSettings => 'Åpne appinnstillinger';
+
+  @override
   String get permMicrophone => 'Mikrofon';
 
   @override

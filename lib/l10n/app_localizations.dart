@@ -316,6 +316,24 @@ abstract class AppLocalizations {
   /// **'Grant all permissions'**
   String get grantAllPermissions;
 
+  /// No description provided for @checkPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Check app permissions'**
+  String get checkPermissions;
+
+  /// No description provided for @checkPermissionsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-grant Bluetooth, location and motion access'**
+  String get checkPermissionsDesc;
+
+  /// No description provided for @openAppSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open app settings'**
+  String get openAppSettings;
+
   /// No description provided for @permMicrophone.
   ///
   /// In en, this message translates to:

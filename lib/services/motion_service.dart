@@ -76,16 +76,17 @@ class MotionService {
   }
 
   Future<void> startMonitoring({
-    required void Function(LocationSnapshot) onParkingDetected,
+    required void Function(LocationSnapshot? location) onParkingDetected,
   }) async {
     await _service.startService();
 
-    // Listen for parking events from the background isolate
+    // Listen for parking events from the background isolate. A null location
+    // means parking was detected but no GPS fix was available (e.g. an
+    // underground car park) — the reminder still opens so the alarm can be
+    // stopped, just without the location-specific actions.
     _service.on(_evtParkingDetected).listen((data) {
       final encoded = data?[_evtPayloadKey] as String?;
-      if (encoded == null) return;
-      final snapshot = LocationSnapshot.decode(encoded);
-      if (snapshot != null) onParkingDetected(snapshot);
+      onParkingDetected(encoded == null ? null : LocationSnapshot.decode(encoded));
     });
   }
 

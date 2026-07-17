@@ -120,6 +120,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get grantAllPermissions => 'Alle Berechtigungen erteilen';
 
   @override
+  String get checkPermissions => 'App-Berechtigungen prüfen';
+
+  @override
+  String get checkPermissionsDesc =>
+      'Zugriff auf Bluetooth, Standort und Bewegung erneut erteilen';
+
+  @override
+  String get openAppSettings => 'App-Einstellungen öffnen';
+
+  @override
   String get permMicrophone => 'Mikrofon';
 
   @override

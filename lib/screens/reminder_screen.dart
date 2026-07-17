@@ -17,7 +17,10 @@ import '../widgets/screen_scaffold.dart';
 enum _VoiceState { idle, listening, timerSet, notUnderstood }
 
 class ReminderScreen extends StatefulWidget {
-  final LocationSnapshot parkingLocation;
+  // Null when parking was detected without a GPS fix (e.g. an underground car
+  // park). The reminder still opens so the alarm can be stopped; the
+  // location-specific "ignore here" action is hidden.
+  final LocationSnapshot? parkingLocation;
   final VoidCallback onAddIgnoredLocation;
   final VoidCallback onDismiss;
 
@@ -238,8 +241,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Future<void> _applyDuration(Duration d) async {
     await _timerRepo.setTimer(ParkingTimer(
       expiresAt: DateTime.now().add(d),
-      carLatitude: widget.parkingLocation.latitude,
-      carLongitude: widget.parkingLocation.longitude,
+      carLatitude: widget.parkingLocation?.latitude ?? 0,
+      carLongitude: widget.parkingLocation?.longitude ?? 0,
     ));
     if (!mounted) return;
     final l10n = AppLocalizations.of(context);
@@ -305,21 +308,24 @@ class _ReminderScreenState extends State<ReminderScreen> {
         ),
         const SizedBox(height: 16),
         const ParkingAppButtons(),
-        const SizedBox(height: 24),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: widget.onAddIgnoredLocation,
-            child: Text(l10n.ignoreThisLocation),
+        // "Ignore here" only makes sense with a known location.
+        if (widget.parkingLocation != null) ...[
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: widget.onAddIgnoredLocation,
+              child: Text(l10n.ignoreThisLocation),
+            ),
           ),
-        ),
+        ],
 
         // ── Parking timer ─────────────────────────────────────────────────
         const SizedBox(height: 16),
         ParkingTimerSelector(
           key: ValueKey(_timerKey),
-          carLatitude: widget.parkingLocation.latitude,
-          carLongitude: widget.parkingLocation.longitude,
+          carLatitude: widget.parkingLocation?.latitude ?? 0,
+          carLongitude: widget.parkingLocation?.longitude ?? 0,
           loadExisting: _timerLoadExisting,
         ),
 

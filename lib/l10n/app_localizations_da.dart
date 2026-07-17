@@ -120,6 +120,16 @@ class AppLocalizationsDa extends AppLocalizations {
   String get grantAllPermissions => 'Giv alle tilladelser';
 
   @override
+  String get checkPermissions => 'Kontroller app tilladelser';
+
+  @override
+  String get checkPermissionsDesc =>
+      'Gengiv adgang til Bluetooth, placering og bevægelse';
+
+  @override
+  String get openAppSettings => 'Åbn app-indstillinger';
+
+  @override
   String get permMicrophone => 'Mikrofon';
 
   @override

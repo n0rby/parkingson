@@ -121,6 +121,16 @@ class AppLocalizationsFi extends AppLocalizations {
   String get grantAllPermissions => 'Myönnä kaikki käyttöoikeudet';
 
   @override
+  String get checkPermissions => 'Tarkista sovelluksen luvat';
+
+  @override
+  String get checkPermissionsDesc =>
+      'Myönnä Bluetooth-, sijainti- ja liikeoikeudet uudelleen';
+
+  @override
+  String get openAppSettings => 'Avaa sovelluksen asetukset';
+
+  @override
   String get permMicrophone => 'Mikrofoni';
 
   @override

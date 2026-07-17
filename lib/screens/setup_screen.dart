@@ -11,6 +11,7 @@ class SetupScreen extends StatelessWidget {
   final VoidCallback onTestAlarm;
   final VoidCallback onSound;
   final VoidCallback onParkingApps;
+  final VoidCallback onCheckPermissions;
   final VoidCallback onOther;
   final VoidCallback onBack;
 
@@ -20,6 +21,7 @@ class SetupScreen extends StatelessWidget {
     required this.onTestAlarm,
     required this.onSound,
     required this.onParkingApps,
+    required this.onCheckPermissions,
     required this.onOther,
     required this.onBack,
   });
@@ -53,6 +55,12 @@ class SetupScreen extends StatelessWidget {
           subtitle: l10n.testReminderDesc,
           onTap: onTestAlarm,
           accent: hpOrange,
+        ),
+        ActionRow(
+          title: l10n.checkPermissions,
+          subtitle: l10n.checkPermissionsDesc,
+          onTap: onCheckPermissions,
+          accent: hpTeal,
         ),
         ActionRow(
           title: l10n.otherTitle,

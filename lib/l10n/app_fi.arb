@@ -29,6 +29,9 @@
   "permBattery": "Rajoittamaton taustakäyttö",
   "permBatteryDesc": "Kuluttaa hyvin vähän virtaa ja koskee vain tätä sovellusta – jottei virransäästö pysäytä valvontaa",
   "grantAllPermissions": "Myönnä kaikki käyttöoikeudet",
+  "checkPermissions": "Tarkista sovelluksen luvat",
+  "checkPermissionsDesc": "Myönnä Bluetooth-, sijainti- ja liikeoikeudet uudelleen",
+  "openAppSettings": "Avaa sovelluksen asetukset",
   "permMicrophone": "Mikrofoni",
   "permMicrophoneDesc": "Muistutuksen äänikomentoja varten",
 

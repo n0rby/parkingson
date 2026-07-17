@@ -37,6 +37,9 @@
   "permBattery": "Unrestricted background",
   "permBatteryDesc": "Uses very little power and applies to this app only — so battery saving can't stop monitoring",
   "grantAllPermissions": "Grant all permissions",
+  "checkPermissions": "Check app permissions",
+  "checkPermissionsDesc": "Re-grant Bluetooth, location and motion access",
+  "openAppSettings": "Open app settings",
   "permMicrophone": "Microphone",
   "permMicrophoneDesc": "For voice commands on the reminder",
 

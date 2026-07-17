@@ -29,6 +29,9 @@
   "permBattery": "Obegränsad bakgrund",
   "permBatteryDesc": "Använder mycket lite ström och gäller bara den här appen — så att batterisparläge inte stoppar övervakningen",
   "grantAllPermissions": "Ge alla behörigheter",
+  "checkPermissions": "Kontrollera appbehörigheter",
+  "checkPermissionsDesc": "Ge åtkomst till Bluetooth, plats och rörelse igen",
+  "openAppSettings": "Öppna appinställningar",
   "permMicrophone": "Mikrofon",
   "permMicrophoneDesc": "För röstkommandon på påminnelsen",
 

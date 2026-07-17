@@ -29,6 +29,9 @@
   "permBattery": "Segundo plano sin restricciones",
   "permBatteryDesc": "Usa muy poca batería y solo se aplica a esta app, para que el ahorro de batería no detenga la supervisión",
   "grantAllPermissions": "Conceder todos los permisos",
+  "checkPermissions": "Comprobar permisos de la app",
+  "checkPermissionsDesc": "Vuelve a conceder acceso a Bluetooth, ubicación y movimiento",
+  "openAppSettings": "Abrir ajustes de la app",
   "permMicrophone": "Micrófono",
   "permMicrophoneDesc": "Para comandos de voz en el aviso",
 
