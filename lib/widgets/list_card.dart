@@ -4,8 +4,14 @@ import '../theme.dart';
 class ListCard extends StatelessWidget {
   final List<Widget> children;
   final VoidCallback? onTap;
+  final double verticalPadding;
 
-  const ListCard({super.key, required this.children, this.onTap});
+  const ListCard({
+    super.key,
+    required this.children,
+    this.onTap,
+    this.verticalPadding = 14,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,7 @@ class ListCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: hpTeal.withValues(alpha: 0.14)),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: verticalPadding),
       child: Row(children: children),
     );
     if (onTap != null) {

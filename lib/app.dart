@@ -49,6 +49,9 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
   Set<String> _usbAccessories = {};
   bool _btOnlyMode = false;
   bool _btOnlyUserSet = false;
+  // Setup completed once (persisted). The "monitor BT/USB only" checkbox is
+  // auto-set only during first-time setup; afterwards we keep the user's choice.
+  bool _setupCompleted = false;
   bool _isPremium = false;
   List<IgnoredLocation> _ignoredLocations = [];
   LocationSnapshot? _lastParkingLocation;
@@ -115,6 +118,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
       setState(() {
         _btOnlyMode = btOnly;
         _btOnlyUserSet = btOnlyUserSet;
+        _setupCompleted = setupDone;
         _selectedAddresses = carAddresses;
         _usbAccessories = usbAccessories;
         _ignoredLocations = ignored;
@@ -184,7 +188,10 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
   /// exists — on when there's at least one (fewer false alarms), off otherwise.
   /// Once the user toggles it (see onBtOnlyModeChange), we stop touching it.
   Future<void> _syncBtOnlyDefault() async {
-    if (_btOnlyUserSet) return;
+    // Only auto-manage the checkbox during first-time setup. Once setup is done
+    // (or the user set it themselves), keep the user's saved choice — reopening
+    // the car screen later must not flip it back.
+    if (_setupCompleted || _btOnlyUserSet) return;
     final shouldEnable =
         _selectedAddresses.isNotEmpty || _usbAccessories.isNotEmpty;
     if (_btOnlyMode == shouldEnable) return;
@@ -398,6 +405,7 @@ class _ParkingsonAppState extends State<ParkingsonApp> {
               _startMonitoring();
               if (mounted) {
                 setState(() {
+                  _setupCompleted = true;
                   _parkingAppsSetupStep = false;
                   _screen = _Screen.home;
                   _showSetupDone = true;

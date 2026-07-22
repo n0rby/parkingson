@@ -127,8 +127,9 @@ class CarsScreen extends StatelessWidget {
                         final car = pairedDevices[index];
                         final selected = selectedAddresses.contains(car.address);
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: ListCard(children: [
+                          // Halved top/bottom spacing so more cars fit the list.
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: ListCard(verticalPadding: 7, children: [
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
