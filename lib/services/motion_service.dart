@@ -158,13 +158,26 @@ void _onStart(ServiceInstance service) async {
   // so we don't fire on stale pre-startup events.
   await prefs.reload();
   final startTs = DateTime.now().millisecondsSinceEpoch;
+  // Baseline each source to the last event we actually processed (persisted
+  // across restarts), NOT to "now". An aggressive OEM kills the service, then a
+  // parking event (BT/motion broadcast) revives it via ServiceStarter — but that
+  // event was written moments before we booted, so baselining to "now" would
+  // treat the very event that woke us as stale and drop it (no alarm). Using the
+  // persisted marker still ignores genuinely old events and never re-fires one
+  // already handled (no duplicate alarms). First-ever run has no marker → now.
+  int baselineFor(String source) =>
+      prefs.getInt('motion_lastseen_$source') ?? startTs;
   final lastSeen = <String, int>{
-    'bt': startTs,
-    'usbAcc': startTs,
-    'usbPower': startTs,
-    'motion': startTs,
-    'fallback': startTs,
+    'bt': baselineFor('bt'),
+    'usbAcc': baselineFor('usbAcc'),
+    'usbPower': baselineFor('usbPower'),
+    'motion': baselineFor('motion'),
+    'fallback': baselineFor('fallback'),
   };
+  void markSeen(String source, int ts) {
+    lastSeen[source] = ts;
+    prefs.setInt('motion_lastseen_$source', ts);
+  }
 
   Timer.periodic(const Duration(seconds: 3), (_) async {
     await prefs.reload();
@@ -175,7 +188,7 @@ void _onStart(ServiceInstance service) async {
     (String, int)? takeFresh(String source, String key) {
       final ev = _parseBtEvent(prefs.getString(key));
       if (ev == null || ev.$2 <= lastSeen[source]!) return null;
-      lastSeen[source] = ev.$2;
+      markSeen(source, ev.$2);
       return ev;
     }
 
@@ -221,7 +234,7 @@ void _onStart(ServiceInstance service) async {
     // own parse rather than takeFresh/_parseBtEvent.
     final motionTs = int.tryParse(prefs.getString('motion_parking_event') ?? '');
     if (motionTs != null && motionTs > lastSeen['motion']!) {
-      lastSeen['motion'] = motionTs;
+      markSeen('motion', motionTs);
       if (_shouldFire(
           trigger: _Trigger.motion,
           connectionDurationMs: null,
@@ -236,7 +249,7 @@ void _onStart(ServiceInstance service) async {
     // motion). BT/USB users get their reliable trigger instead and never see it.
     final fallbackTs = int.tryParse(prefs.getString('motion_fallback_event') ?? '');
     if (fallbackTs != null && fallbackTs > lastSeen['fallback']!) {
-      lastSeen['fallback'] = fallbackTs;
+      markSeen('fallback', fallbackTs);
       final hasConnectedCar =
           selectedAddresses.isNotEmpty || selectedUsbAccessories.isNotEmpty;
       if (!hasConnectedCar &&
